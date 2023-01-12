@@ -23,71 +23,66 @@ class TaskWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime date = DateTime.parse(taskTodo.date);
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppPadding.p15,
-        vertical: AppPadding.p10,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () => Navigator.of(context).pushNamed(
-                Routes.taskDetailsRoute,
-                arguments: taskTodo,
-              ),
-              child: Row(
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        HelperFunctions.getlocaleNumber(
-                          context,
-                          date.toClock(),
-                        ),
-                      ),
-                      Text(date.toHourMark().tr()),
-                    ],
-                  ),
-                  const SizedBox(width: AppSize.s10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(taskTodo.name),
-                      Text(
-                        taskTodo.category,
-                        style: TextStyle(color: ColorManager.kGrey),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              InkWell(
-                onTap: () => BlocProvider.of<HomeBloc>(context).add(
-                  EditTaskEvent(
-                    taskTodo: taskTodo.copyWith(important: !taskTodo.important),
+    return ListTile(
+      title: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => Navigator.of(context).pushNamed(
+          Routes.taskDetailsRoute,
+          arguments: {
+            'task': taskTodo,
+            'hideNotifyIcon': false,
+          },
+        ),
+        child: Row(
+          children: [
+            Column(
+              children: [
+                Text(
+                  HelperFunctions.getlocaleNumber(
+                    context,
+                    date.toClock(),
                   ),
                 ),
-                child: taskTodo.important
-                    ? SvgPicture.asset(
-                        IconAssets.importantColor,
-                        width: AppSize.s25,
-                      )
-                    : SvgPicture.asset(
-                        IconAssets.importantWhite,
-                        width: AppSize.s15,
-                      ),
+                Text(date.toHourMark().tr()),
+              ],
+            ),
+            const SizedBox(width: AppSize.s10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(taskTodo.name),
+                Text(
+                  taskTodo.category,
+                  style: TextStyle(color: ColorManager.kGrey),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            onTap: () => BlocProvider.of<HomeBloc>(context).add(
+              EditTaskEvent(
+                taskTodo: taskTodo.copyWith(important: !taskTodo.important),
               ),
-              SizedBox(width: taskTodo.important ? AppSize.s10 : AppSize.s15),
-              CircleAvatar(
-                radius: AppSize.s20.r,
-                backgroundColor: taskTodo.priority.toColor(),
-              ),
-            ],
+            ),
+            child: taskTodo.important
+                ? SvgPicture.asset(
+                    IconAssets.importantColor,
+                    width: AppSize.s25,
+                  )
+                : SvgPicture.asset(
+                    IconAssets.importantWhite,
+                    width: AppSize.s15,
+                  ),
+          ),
+          SizedBox(width: taskTodo.important ? AppSize.s10 : AppSize.s15),
+          CircleAvatar(
+            radius: AppSize.s20.r,
+            backgroundColor: taskTodo.priority.toColor(),
           ),
         ],
       ),

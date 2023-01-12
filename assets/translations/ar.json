@@ -37,6 +37,7 @@
     "Important": "مميز",
     "Done": "منجز",
     "Later": "لاحقا",
+    "later again": "تأجيل مرة اخرى",
     "expired": "منتهي",
     "Category": "الفئة",
     "Settings": "الاعدادات",
@@ -102,5 +103,10 @@
     "October": "اكتوبر",
     "November": "نوفمبر",
     "December": "ديسمبر",
-    "Today": "اليوم"
+    "Today": "اليوم",
+    "Notification": "اشعار",
+    "Mark Done": "تم انجازه",
+    "problemScussfully": "تم ارسال الشكوى الخاص بك بنجاح",
+    "deleteNotify": "هل أنت متأكد من حذف هذا الإشعار",
+    "deleteAllNotifications": "هل أنت متأكد من جميع الإشعارات"
 }

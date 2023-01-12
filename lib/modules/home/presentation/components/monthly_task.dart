@@ -22,7 +22,7 @@ class MonthlyTask extends StatelessWidget {
     DateTime tappedDate = DateTime.now();
     DateTime selectedDate = DateTime.now();
     List<Map<String, dynamic>> tempList = [];
-    CalendarFormat calendarFormat = CalendarFormat.week;
+    CalendarFormat calendarFormat = CalendarFormat.month;
     bool hideTask = false;
     return StatefulBuilder(
       builder: (context, monthlyState) => CustomScrollToTop(
@@ -37,8 +37,8 @@ class MonthlyTask extends StatelessWidget {
                       color: ColorManager.kWhite,
                       child: TableCalendar(
                         locale: context.locale.toString(),
-                        rowHeight: 40,
-                        daysOfWeekHeight: 20,
+                        rowHeight: 110.h,
+                        daysOfWeekHeight: 60.h,
                         firstDay:
                             DateTime.now().subtract(const Duration(days: 365)),
                         lastDay: DateTime.now().add(const Duration(days: 365)),

@@ -32,6 +32,8 @@ class IconAssets {
   static const String email = "$iconPath/email.svg";
   static const String appTitle = "$iconPath/appTitle.svg";
   static const String clipboard = "$iconPath/clipboard.svg";
+  static const String task = "$iconPath/task.png";
+  static const String notify = "$iconPath/notify.png";
   static const String helpDesk = "$iconPath/help-desk.png";
 }
 

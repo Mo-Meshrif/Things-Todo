@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../app/services/notification_services.dart';
 import '../components/auth_inputs.dart';
 import '../components/forget_password.dart';
 import '../components/login_button.dart';
@@ -40,6 +42,8 @@ class AuthScreen extends StatelessWidget {
           } else if (state is AuthSuccess) {
             sl<AppShared>().setVal(AppConstants.authPassKey, true);
             sl<AppShared>().setVal(AppConstants.userKey, state.user);
+            sl<FirebaseMessaging>().subscribeToTopic(AppConstants.toUser);
+            sl<NotificationServices>().scheduledNotificationsAgain(state.user.id);
             Navigator.of(ctx).pushReplacementNamed(Routes.homeRoute);
             _emailController.clear();
             _passwordController.clear();

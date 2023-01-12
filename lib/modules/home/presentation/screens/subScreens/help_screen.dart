@@ -25,6 +25,7 @@ class HelpScreen extends StatefulWidget {
 
 class _HelpScreenState extends State<HelpScreen> {
   String uid = HelperFunctions.getSavedUser().id;
+  bool textFieldEnable = true;
   List<ChatMessage> messages = [];
   TextEditingController problemController = TextEditingController();
   @override
@@ -57,58 +58,75 @@ class _HelpScreenState extends State<HelpScreen> {
             const SizedBox(
               height: AppSize.s30,
             ),
-            Card(
-              margin: EdgeInsets.zero,
-              child: TextFormField(
-                maxLines: 8,
-                controller: problemController,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  hintText: AppStrings.problemDetails.tr(),
-                  contentPadding: const EdgeInsets.all(AppPadding.p10),
-                  hintStyle: const TextStyle(color: Colors.black),
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: problemController.text.isNotEmpty,
-              child: BlocConsumer<HomeBloc, HomeState>(
-                listener: (context, state) {
-                  if (state is ProblemLoaded) {
-                    if (state.val) {
-                      problemController.clear();
-                    }
-                  }
-                },
-                buildWhen: (previous, current) => previous != current,
-                builder: (context, state) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: AppPadding.p20),
-                    child: state is ProblemLoading
-                        ? CircularProgressIndicator(
-                            color: ColorManager.primary,
-                          )
-                        : ListTile(
-                            onTap: () => homeBloc.add(
-                              SendProblemEvent(
-                                ProblemInput(
-                                  userId: uid,
-                                  problem: problemController.text,
-                                ),
-                              ),
-                            ),
-                            tileColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              side: const BorderSide(color: Colors.grey),
-                            ),
-                            title: const Text(AppStrings.sendProblem).tr(),
-                            trailing: const Icon(Icons.send),
-                          ),
+            BlocConsumer<HomeBloc, HomeState>(
+              listener: (context, state) {
+                if (state is ProblemLoading) {
+                  textFieldEnable = false;
+                } else if (state is ProblemLoaded) {
+                  textFieldEnable = true;
+                  problemController.clear();
+                  HelperFunctions.showSnackBar(
+                    context,
+                    AppStrings.problemScussfully.tr(),
                   );
-                },
-              ),
+                } else if (state is ProblemFailure) {
+                  textFieldEnable = true;
+                  HelperFunctions.showSnackBar(
+                    context,
+                    AppStrings.operationFailed.tr(),
+                  );
+                }
+              },
+              buildWhen: (previous, current) => previous != current,
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    Card(
+                      margin: EdgeInsets.zero,
+                      child: TextFormField(
+                        maxLines: 8,
+                        enabled: textFieldEnable,
+                        controller: problemController,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.problemDetails.tr(),
+                          contentPadding: const EdgeInsets.all(AppPadding.p10),
+                          hintStyle: const TextStyle(color: Colors.black),
+                          border: const OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: problemController.text.isNotEmpty,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: AppPadding.p20),
+                        child: state is ProblemLoading
+                            ? CircularProgressIndicator(
+                                color: ColorManager.primary,
+                              )
+                            : ListTile(
+                                onTap: () => homeBloc.add(
+                                  SendProblemEvent(
+                                    ProblemInput(
+                                      id: UniqueKey().hashCode,
+                                      from: uid,
+                                      problem: problemController.text,
+                                    ),
+                                  ),
+                                ),
+                                tileColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  side: const BorderSide(color: Colors.grey),
+                                ),
+                                title: const Text(AppStrings.sendProblem).tr(),
+                                trailing: const Icon(Icons.send),
+                              ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: AppPadding.p20),

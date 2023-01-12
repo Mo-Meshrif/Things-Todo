@@ -142,7 +142,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _logout(LogoutEvent event, Emitter<AuthState> emit) async {
     emit(AuthPopUpLoading());
     final Either<Failure, dynamic> result =
-        await logoutUseCase(const NoParameters());
+        await logoutUseCase(event.uid);
     result.fold(
       (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (_) => emit(const AuthLogoutSuccess()),

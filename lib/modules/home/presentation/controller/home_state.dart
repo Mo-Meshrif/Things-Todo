@@ -67,6 +67,25 @@ class MonthlyTaskLoaded extends HomeState {
   List<Object?> get props => [monthlyList];
 }
 
+class GetTaskByIdLoading extends HomeState {
+  @override
+  List<Object?> get props => [];
+}
+
+class GetTaskByIdLoaded extends HomeState {
+  final TaskTodo? task;
+  final bool withNav;
+  final bool hideNotifyIcon;
+  const GetTaskByIdLoaded({
+    required this.task,
+    this.withNav = true,
+    this.hideNotifyIcon = false,
+  });
+
+  @override
+  List<Object?> get props => [task];
+}
+
 class EditTaskLoading extends HomeState {
   @override
   List<Object?> get props => [];

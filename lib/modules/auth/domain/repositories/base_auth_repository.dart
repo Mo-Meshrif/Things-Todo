@@ -13,5 +13,5 @@ abstract class BaseAuthRepository {
   Future<Either<Failure, AuthCredential>> facebook();
   Future<Either<Failure, AuthCredential>> twitter();
   Future<Either<Failure, AuthCredential>> google();
-  Future<Either<Failure, void>> logout();
+  Future<Either<Failure, void>> logout(String uid);
 }

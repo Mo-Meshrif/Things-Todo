@@ -20,6 +20,22 @@ class UserModel extends AuthUser {
         pic: json['pic'],
         deviceToken: json['deviceToken'],
       );
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? deviceToken,
+    String? pic,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      deviceToken: deviceToken ?? this.deviceToken,
+      pic: pic ?? this.pic,
+    );
+  }
+
   toJson() => {
         'id': id,
         'name': name,

@@ -8,6 +8,7 @@ import '../usecases/send_problem_use_case.dart';
 abstract class BaseHomeRespository {
   Future<Either<LocalFailure, bool>> addTask(TaskTodo taskTodo);
   Future<Either<LocalFailure, List<TaskTodo>>> getTasks(TaskInputs parameter);
+  Future<Either<LocalFailure, TaskTodo?>> getTaskById(int taskId);
   Future<Either<LocalFailure, TaskTodo?>> editTask(TaskTodo taskTodo);
   Future<Either<LocalFailure, int>> deleteTask(int taskId);
   Future<Either<ServerFailure, bool>> sendMessage(ChatMessage message);

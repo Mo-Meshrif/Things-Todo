@@ -33,7 +33,7 @@ class CustomTaskList extends StatelessWidget {
               (task) => Column(
                 children: [
                   HelperFunctions.isExpired(task.date) && !task.done
-                      ? task.later 
+                      ? task.later
                           ? const Padding(padding: EdgeInsets.zero)
                           : ClipRRect(
                               child: Banner(
@@ -43,8 +43,7 @@ class CustomTaskList extends StatelessWidget {
                                 child: TaskWidget(taskTodo: task),
                               ),
                             )
-                      : (!task.done && !task.later) ||
-                              taskCategory != TaskCategory.all
+                      : !task.done || taskCategory != TaskCategory.all
                           ? Dismissible(
                               key: UniqueKey(),
                               direction: taskCategory == TaskCategory.all
@@ -87,7 +86,9 @@ class CustomTaskList extends StatelessWidget {
                                     ),
                                     const SizedBox(width: AppSize.s10),
                                     Text(
-                                      AppStrings.later,
+                                      task.later
+                                          ? AppStrings.laterAgain
+                                          : AppStrings.later,
                                       style:
                                           TextStyle(color: ColorManager.kWhite),
                                     ).tr(),
@@ -126,64 +127,29 @@ class CustomTaskList extends StatelessWidget {
                                   return Future.value(false);
                                 }
                               },
-                              child: TaskWidget(taskTodo: task),
-                            )
-                          : task.done
-                              ? ClipRRect(
-                                  child: Banner(
-                                    message: AppStrings.done.tr(),
-                                    location: BannerLocation.topEnd,
-                                    color: ColorManager.kGreen,
-                                    child: TaskWidget(taskTodo: task),
-                                  ),
-                                )
-                              : Dismissible(
-                                  key: UniqueKey(),
-                                  direction: DismissDirection.startToEnd,
-                                  background: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: AppPadding.p10),
-                                    color: ColorManager.kGreen,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                          IconAssets.clipboard,
-                                          width: AppSize.s20,
-                                          color: ColorManager.kWhite,
-                                        ),
-                                        const SizedBox(width: AppSize.s10),
-                                        Text(
-                                          AppStrings.done,
-                                          style: TextStyle(
-                                              color: ColorManager.kWhite),
-                                        ).tr(),
-                                      ],
-                                    ),
-                                  ),
-                                  onDismissed: (direction) =>
-                                      BlocProvider.of<HomeBloc>(context).add(
-                                    EditTaskEvent(
-                                      taskTodo: task.copyWith(
-                                        done: true,
-                                        later: false,
+                              child: task.later
+                                  ? ClipRRect(
+                                      child: Banner(
+                                        message: AppStrings.later.tr(),
+                                        location: BannerLocation.topEnd,
+                                        color: ColorManager.kRed,
+                                        child: TaskWidget(taskTodo: task),
                                       ),
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    child: Banner(
-                                      message: AppStrings.later.tr(),
-                                      location: BannerLocation.topEnd,
-                                      color: ColorManager.kRed,
-                                      child: TaskWidget(taskTodo: task),
-                                    ),
-                                  ),
-                                ),
+                                    )
+                                  : TaskWidget(taskTodo: task),
+                            )
+                          : ClipRRect(
+                              child: Banner(
+                                message: AppStrings.done.tr(),
+                                location: BannerLocation.topEnd,
+                                color: ColorManager.kGreen,
+                                child: TaskWidget(taskTodo: task),
+                              ),
+                            ),
                   Visibility(
                     visible: taskList.last != task,
                     child: const Divider(
-                      height: AppConstants.oneVal,
+                      height: AppConstants.twoVal,
                     ),
                   )
                 ],

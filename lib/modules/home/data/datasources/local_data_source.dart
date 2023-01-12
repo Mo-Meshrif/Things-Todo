@@ -6,8 +6,9 @@ import '../../domain/usecases/get_tasks_use_case.dart';
 import '../models/task_model.dart';
 
 abstract class BaseHomeLocalDataSource {
-  Future<bool> addTask(TaskModel taskModel);
+  Future<int> addTask(TaskModel taskModel);
   Future<List<TaskModel>> getTasks(TaskInputs parameter);
+  Future<TaskModel?> getTaskById(int taskId);
   Future<TaskModel?> editTask(TaskModel taskModel);
   Future<int> deleteTask(int taskId);
 }
@@ -38,7 +39,7 @@ class HomeLocalDataSource implements BaseHomeLocalDataSource {
   }
 
   @override
-  Future<bool> addTask(TaskModel taskModel) async {
+  Future<int> addTask(TaskModel taskModel) async {
     try {
       var dbClient = await database;
       int id = await dbClient!.insert(
@@ -46,7 +47,7 @@ class HomeLocalDataSource implements BaseHomeLocalDataSource {
         taskModel.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      return id == 0 ? false : true;
+      return id;
     } on DatabaseException catch (e) {
       throw LocalExecption(e.toString());
     }
@@ -54,20 +55,39 @@ class HomeLocalDataSource implements BaseHomeLocalDataSource {
 
   @override
   Future<List<TaskModel>> getTasks(TaskInputs parameter) async {
-    String uid = HelperFunctions.getSavedUser().id;
-    var dbClient = await database;
-    List<Map<String, Object?>> maps = await dbClient!.query(
-      'tasks',
-      orderBy: 'id DESC',
-      where: 'uid=? AND ' + parameter.where,
-      whereArgs: [
-        ...[uid],
-        ...parameter.whereArgs
-      ],
-    );
-    return maps.isNotEmpty
-        ? maps.map((e) => TaskModel.fromJson(e)).toList()
-        : [];
+    try {
+      String uid = HelperFunctions.getSavedUser().id;
+      var dbClient = await database;
+      List<Map<String, Object?>> maps = await dbClient!.query(
+        'tasks',
+        orderBy: 'date DESC',
+        where: 'uid=? AND ' + parameter.where,
+        whereArgs: [
+          ...[uid],
+          ...parameter.whereArgs
+        ],
+      );
+      return maps.isNotEmpty
+          ? maps.map((e) => TaskModel.fromJson(e)).toList()
+          : [];
+    } on DatabaseException catch (e) {
+      throw LocalExecption(e.toString());
+    }
+  }
+
+  @override
+  Future<TaskModel?> getTaskById(int taskId) async {
+    try {
+      var dbClient = await database;
+      List<Map<String, Object?>> maps = await dbClient!.query(
+        'tasks',
+        where: 'id=?',
+        whereArgs: [taskId],
+      );
+      return maps.isNotEmpty ? TaskModel.fromJson(maps[0]) : null;
+    } on DatabaseException catch (e) {
+      throw LocalExecption(e.toString());
+    }
   }
 
   @override

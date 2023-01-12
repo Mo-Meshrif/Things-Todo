@@ -113,7 +113,6 @@ class DailyTask extends StatelessWidget {
                           scrollDirection: properties.scrollDirection,
                           reverse: properties.reverse,
                           primary: properties.primary,
-                          padding: const EdgeInsets.only(top: AppPadding.p12),
                           child: CustomTaskList(
                             taskList: state.dailyList,
                           ),

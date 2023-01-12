@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
 import '../../modules/auth/domain/usecases/logout_use_case.dart';
 import '../../modules/home/data/datasources/local_data_source.dart';
+import 'notification_services.dart';
 import '../../modules/home/data/datasources/remote_data_source.dart';
 import '../../modules/home/data/repositories/home_repository_impl.dart';
 import '../../modules/home/domain/repositories/base_home_repository.dart';
@@ -16,6 +18,7 @@ import '../../modules/home/domain/usecases/add_task_use_case.dart';
 import '../../modules/home/domain/usecases/delete_task_use_case.dart';
 import '../../modules/home/domain/usecases/edit_task_use_case.dart';
 import '../../modules/home/domain/usecases/get_chat_list_use_case.dart';
+import '../../modules/home/domain/usecases/get_task_by_id_use_case.dart';
 import '../../modules/home/domain/usecases/get_tasks_use_case.dart';
 import '../../modules/home/domain/usecases/send_message_use_case.dart';
 import '../../modules/home/domain/usecases/send_problem_use_case.dart';
@@ -39,7 +42,7 @@ import '../helper/shared_helper.dart';
 final sl = GetIt.instance;
 
 class ServicesLocator {
-  static init() {
+  static Future<void> init() async {
     //Local shared
     final storage = GetStorage();
     sl.registerLazySingleton<GetStorage>(() => storage);
@@ -71,6 +74,9 @@ class ServicesLocator {
     //Firebase firestore
     final firebaseStorage = FirebaseStorage.instance;
     sl.registerLazySingleton<FirebaseStorage>(() => firebaseStorage);
+    //AwesomeNotifications
+    final awesomeNotifications = AwesomeNotifications();
+    sl.registerLazySingleton<AwesomeNotifications>(() => awesomeNotifications);
     //DataSources
     sl.registerLazySingleton<BaseAuthRemoteDataSource>(
       () => AuthRemoteDataSource(sl(), sl(), sl(), sl(), sl(), sl()),
@@ -81,11 +87,14 @@ class ServicesLocator {
     sl.registerLazySingleton<BaseHomeRemoteDataSource>(
       () => HomeRemoteDataSource(sl(), sl()),
     );
+    sl.registerLazySingleton<NotificationServices>(
+      () => NotificationServicesImpl(sl()),
+    );
     //Repositories
     sl.registerLazySingleton<BaseAuthRepository>(
         () => AuthRepositoryImpl(sl(), sl()));
     sl.registerLazySingleton<BaseHomeRespository>(
-        () => HomeRepositoryImpl(sl(), sl(), sl()));
+        () => HomeRepositoryImpl(sl(), sl(), sl(), sl()));
     //UseCases
     sl.registerLazySingleton(() => LoginUseCase(sl()));
     sl.registerLazySingleton(() => SignUpUseCase(sl()));
@@ -97,6 +106,7 @@ class ServicesLocator {
     sl.registerLazySingleton(() => LogoutUseCase(sl()));
     sl.registerLazySingleton(() => AddTaskUseCase(sl()));
     sl.registerLazySingleton(() => GetTasksUseCase(sl()));
+    sl.registerLazySingleton(() => GetTaskByIdUseCae(sl()));
     sl.registerLazySingleton(() => EditTaskUseCase(sl()));
     sl.registerLazySingleton(() => DeleteTaskUseCase(sl()));
     sl.registerLazySingleton(() => SendMessageUseCase(sl()));
@@ -120,10 +130,11 @@ class ServicesLocator {
       () => HomeBloc(
         addTaskUseCase: sl(),
         getTasksUseCase: sl(),
+        getTaskByIdUseCase: sl(),
         editTaskUseCase: sl(),
         deleteTaskUseCase: sl(),
         sendMessageUseCase: sl(),
-        getChatListUseCae: sl(),
+        getChatListUseCase: sl(),
         updateMessageUseCase: sl(),
         sendProblemUseCase: sl(),
       ),

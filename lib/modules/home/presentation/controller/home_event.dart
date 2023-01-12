@@ -26,6 +26,17 @@ class GetMonthlyTasksEvent extends HomeEvent {
   });
 }
 
+class GetTaskByIdEvent extends HomeEvent {
+  final int taskId;
+  final bool withNav;
+  final bool hideNotifyIcon;
+  const GetTaskByIdEvent({
+    required this.taskId,
+    this.withNav = true,
+    this.hideNotifyIcon = false,
+  });
+}
+
 class EditTaskEvent extends HomeEvent {
   final TaskTodo taskTodo;
   const EditTaskEvent({required this.taskTodo});

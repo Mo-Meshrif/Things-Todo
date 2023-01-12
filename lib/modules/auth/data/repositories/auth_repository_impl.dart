@@ -104,10 +104,10 @@ class AuthRepositoryImpl implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> logout() async {
+  Future<Either<Failure, void>> logout(String uid) async {
     if (await networkServices.isConnected()) {
       try {
-        return Right(await baseAuthRemoteDataSource.logout());
+        return Right(await baseAuthRemoteDataSource.logout(uid));
       } on ServerExecption catch (failure) {
         return Left(ServerFailure(msg: failure.msg));
       }

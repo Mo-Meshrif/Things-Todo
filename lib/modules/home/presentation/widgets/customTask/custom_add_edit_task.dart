@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as format;
 import '../../../../../app/helper/enums.dart';
 import '../../../../../app/helper/helper_functions.dart';
@@ -55,13 +56,7 @@ class AddEditTaskWidget extends StatelessWidget {
                       innerState(
                         () {
                           if (tempTime == null) {
-                            if (editTask == null) {
-                              dateTime = DateTime.now();
-                            } else {
-                              dateTime = DateTime.parse(
-                                editTask!.date,
-                              );
-                            }
+                            dateTime = DateTime.now();
                           } else {
                             dateTime = tempTime;
                           }
@@ -141,7 +136,10 @@ class AddEditTaskWidget extends StatelessWidget {
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               horizontalTitleGap: AppConstants.oneVal,
-                              title: const Text(AppStrings.high).tr(),
+                              title: Text(
+                                AppStrings.high,
+                                style: TextStyle(fontSize: AppSize.s36.sp),
+                              ).tr(),
                               leading: Radio<TaskPriority>(
                                 value: TaskPriority.high,
                                 activeColor: ColorManager.kRed,
@@ -155,7 +153,10 @@ class AddEditTaskWidget extends StatelessWidget {
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               horizontalTitleGap: AppConstants.oneVal,
-                              title: const Text(AppStrings.medium).tr(),
+                              title: Text(
+                                AppStrings.medium,
+                                style: TextStyle(fontSize: AppSize.s36.sp),
+                              ).tr(),
                               leading: Radio<TaskPriority>(
                                 value: TaskPriority.medium,
                                 groupValue: taskPriority,
@@ -170,7 +171,10 @@ class AddEditTaskWidget extends StatelessWidget {
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               horizontalTitleGap: AppConstants.oneVal,
-                              title: const Text(AppStrings.low).tr(),
+                              title: Text(
+                                AppStrings.low,
+                                style: TextStyle(fontSize: AppSize.s36.sp),
+                              ).tr(),
                               leading: Radio<TaskPriority>(
                                 value: TaskPriority.low,
                                 activeColor: ColorManager.kYellow,

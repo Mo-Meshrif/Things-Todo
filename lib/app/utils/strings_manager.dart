@@ -38,6 +38,7 @@ class AppStrings {
   static const important = 'Important';
   static const done = 'Done';
   static const later = 'Later';
+  static const laterAgain = 'later again';
   static const expired = 'expired';
   static const category = 'Category';
   static const settings = 'Settings';
@@ -85,4 +86,8 @@ class AppStrings {
   static const friday = 'FRI';
   static const saturaday = 'SAT';
   static const sunday = 'SUN';
+  static const notifications = 'Notifications';
+  static const deleteNotify = 'deleteNotify';
+  static const deleteAllNotifications = 'deleteAllNotifications';
+  static const problemScussfully = 'problemScussfully';
 }

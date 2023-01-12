@@ -39,5 +39,6 @@ class TwitterLoginEvent extends AuthEvent {}
 class GoogleLoginEvent extends AuthEvent {}
 
 class LogoutEvent extends AuthEvent {
-  const LogoutEvent();
+  final String uid;
+  const LogoutEvent({required this.uid});
 }

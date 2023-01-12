@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../../../../app/services/notification_services.dart';
 import '/app/helper/extentions.dart';
 import '../../../../app/errors/exception.dart';
 import '../../../../app/errors/failure.dart';
@@ -18,34 +19,39 @@ import '../models/task_model.dart';
 class HomeRepositoryImpl implements BaseHomeRespository {
   final BaseHomeRemoteDataSource baseHomeRemoteDataSource;
   final BaseHomeLocalDataSource baseHomeLocalDataSource;
+  final NotificationServices notificationServices;
   final NetworkServices networkServices;
 
-  HomeRepositoryImpl(this.baseHomeLocalDataSource,
-      this.baseHomeRemoteDataSource, this.networkServices);
+  HomeRepositoryImpl(
+    this.baseHomeLocalDataSource,
+    this.baseHomeRemoteDataSource,
+    this.notificationServices,
+    this.networkServices,
+  );
   @override
   Future<Either<LocalFailure, bool>> addTask(TaskTodo taskTodo) async {
     try {
       final DateTime date = DateTime.parse(taskTodo.date);
       int firstDayOfWeek = date.firstDayOfWeek();
-      final isAdded = await baseHomeLocalDataSource.addTask(
-        TaskModel(
-          uid: HelperFunctions.getSavedUser().id,
-          name: taskTodo.name,
-          description: taskTodo.description,
-          category: taskTodo.category,
-          date: taskTodo.date,
-          day: date.day,
-          firstDayOfWeek: firstDayOfWeek,
-          endDayOfWeek: firstDayOfWeek + 6,
-          month: date.month,
-          year: date.year,
-          priority: taskTodo.priority,
-          important: taskTodo.important,
-          done: taskTodo.done,
-          later: taskTodo.later,
-        ),
+      TaskModel taskModel = TaskModel(
+        uid: HelperFunctions.getSavedUser().id,
+        name: taskTodo.name,
+        description: taskTodo.description,
+        category: taskTodo.category,
+        date: taskTodo.date,
+        day: date.day,
+        firstDayOfWeek: firstDayOfWeek,
+        endDayOfWeek: firstDayOfWeek + 6,
+        month: date.month,
+        year: date.year,
+        priority: taskTodo.priority,
+        important: taskTodo.important,
+        done: taskTodo.done,
+        later: taskTodo.later,
       );
-      return Right(isAdded);
+      final id = await baseHomeLocalDataSource.addTask(taskModel);
+      _createTaskReminder(taskTodo.copyWith(id: id));
+      return Right(id == 0 ? false : true);
     } on LocalExecption catch (failure) {
       return Left(LocalFailure(msg: failure.msg));
     }
@@ -63,28 +69,50 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   }
 
   @override
+  Future<Either<LocalFailure, TaskTodo?>> getTaskById(int taskId) async {
+    try {
+      final task = await baseHomeLocalDataSource.getTaskById(taskId);
+      return Right(task);
+    } on LocalExecption catch (failure) {
+      return Left(LocalFailure(msg: failure.msg));
+    }
+  }
+
+  @override
   Future<Either<LocalFailure, TaskTodo?>> editTask(TaskTodo taskTodo) async {
     try {
       final DateTime date = DateTime.parse(taskTodo.date);
       int firstDayOfWeek = date.firstDayOfWeek();
-      final task = await baseHomeLocalDataSource.editTask(
-        TaskModel(
-          id: taskTodo.id,
-          uid: HelperFunctions.getSavedUser().id,
-          name: taskTodo.name,
-          description: taskTodo.description,
-          category: taskTodo.category,
-          date: taskTodo.date,
-          day: date.day,
-          firstDayOfWeek: firstDayOfWeek,
-          endDayOfWeek: firstDayOfWeek + 6,
-          month: date.month,
-          year: date.year,
-          priority: taskTodo.priority,
-          important: taskTodo.important,
-          done: taskTodo.done,
-          later: taskTodo.later,
-        ),
+      TaskModel taskModel = TaskModel(
+        id: taskTodo.id,
+        uid: HelperFunctions.getSavedUser().id,
+        name: taskTodo.name,
+        description: taskTodo.description,
+        category: taskTodo.category,
+        date: taskTodo.date,
+        day: date.day,
+        firstDayOfWeek: firstDayOfWeek,
+        endDayOfWeek: firstDayOfWeek + 6,
+        month: date.month,
+        year: date.year,
+        priority: taskTodo.priority,
+        important: taskTodo.important,
+        done: taskTodo.done,
+        later: taskTodo.later,
+      );
+      final task = await baseHomeLocalDataSource.editTask(taskModel);
+      _createTaskReminder(
+        task == null
+            ? taskTodo.copyWith(id: 0)
+            : TaskTodo(
+                id: task.id,
+                name: task.name,
+                category: task.category,
+                date: task.date,
+                description: task.description,
+                priority: task.priority,
+                important: task.important,
+              ),
       );
       return Right(task);
     } on LocalExecption catch (failure) {
@@ -96,6 +124,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   Future<Either<LocalFailure, int>> deleteTask(int taskId) async {
     try {
       final id = await baseHomeLocalDataSource.deleteTask(taskId);
+      _cancelScheduledNotifications(id);
       return Right(id);
     } on LocalExecption catch (failure) {
       return Left(LocalFailure(msg: failure.msg));
@@ -177,5 +206,20 @@ class HomeRepositoryImpl implements BaseHomeRespository {
     } else {
       return const Left(ServerFailure(msg: AppConstants.noConnection));
     }
+  }
+
+  _createTaskReminder(TaskTodo taskTodo, {bool isEdit = false}) async {
+    if (taskTodo.id != 0) {
+      if (isEdit) {
+        _cancelScheduledNotifications(taskTodo.id!);
+      }
+      await notificationServices.createTaskReminderNotification(
+        taskTodo,
+      );
+    }
+  }
+
+  _cancelScheduledNotifications(int id) async {
+    await notificationServices.cancelScheduledNotifications(id);
   }
 }

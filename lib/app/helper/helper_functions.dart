@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:arabic_numbers/arabic_numbers.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -11,7 +12,11 @@ import 'package:http/http.dart' as http;
 import 'dart:math' as math;
 import '../../modules/auth/domain/entities/user.dart';
 import '../../modules/home/presentation/controller/home_bloc.dart';
+import '../app.dart';
 import '../common/models/alert_action_model.dart';
+import '../common/models/notifiy_model.dart';
+import '../services/notification_services.dart';
+import '../utils/routes_manager.dart';
 import '../utils/strings_manager.dart';
 import '/app/helper/extentions.dart';
 import '/app/helper/shared_helper.dart';
@@ -60,11 +65,11 @@ class HelperFunctions {
                   : actions
                       .map((action) => TextButton(
                             style: TextButton.styleFrom(
-                              backgroundColor:
+                              foregroundColor:
                                   action.color ?? ColorManager.primary,
                             ),
                             onPressed: action.onPressed,
-                            child: Text(action.title).tr(),
+                            child: Text(action.title),
                           ))
                       .toList(),
             ),
@@ -82,9 +87,7 @@ class HelperFunctions {
                             textStyle: TextStyle(
                               color: action.color ?? ColorManager.primary,
                             ),
-                            child: Text(
-                              action.title,
-                            ).tr(),
+                            child: Text(action.title),
                             onPressed: action.onPressed,
                           ))
                       .toList(),
@@ -367,5 +370,82 @@ class HelperFunctions {
     }
     tempList.sort((a, b) => a['day'].compareTo(b['day']));
     return tempList;
+  }
+
+  //Check notifications permission
+  static checkNotificationsPermission(BuildContext context) {
+    sl<AwesomeNotifications>().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        if (Platform.isIOS) {
+          sl<AwesomeNotifications>().requestPermissionToSendNotifications();
+        } else {
+          showAlert(
+            context: context,
+            title: 'Allow Notifications',
+            content: const Text('Our app would like to send you notifications'),
+            actions: [
+              AlertActionModel(
+                title: 'Allow',
+                onPressed: () => sl<AwesomeNotifications>()
+                    .requestPermissionToSendNotifications()
+                    .then((_) => Navigator.pop(context)),
+              ),
+              AlertActionModel(
+                title: 'Don\'t Allow',
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        }
+      }
+    });
+  }
+
+  //notification action
+  static handleNotificationAction(
+    BuildContext context,
+    ReceivedNotifyModel event, {
+    bool hideNotifyIcon = false,
+    bool fromNotScreen = false,
+  }) {
+    if (event.type == 'Task') {
+      //Local Notifications
+      debugPrint('Local Notifications action');
+      if (event.buttonKeyPressed!.isNotEmpty && !event.isOpened) {
+        debugPrint('Notification key pressed: ${event.buttonKeyPressed}');
+        BlocProvider.of<HomeBloc>(context).add(
+          GetTaskByIdEvent(taskId: event.id, withNav: false),
+        );
+      } else {
+        BlocProvider.of<HomeBloc>(context).add(
+          GetTaskByIdEvent(
+            taskId: event.id,
+            withNav: true,
+            hideNotifyIcon: hideNotifyIcon,
+          ),
+        );
+      }
+    } else {
+      //Remote notification
+      debugPrint('Remote Notifications action');
+      navigatorKey.currentState?.pushNamed(
+        Routes.tempNotifyScreenRoute,
+        arguments: event,
+      );
+    }
+    if (!event.isOpened) {
+      sl<NotificationServices>().saveNotificationData(
+        event.toJson(),
+        true,
+        fromNotScreen: fromNotScreen,
+      );
+      sl<AwesomeNotifications>().getGlobalBadgeCounter().then(
+        (value) {
+          if (value > 0) {
+            sl<AwesomeNotifications>().setGlobalBadgeCounter(value - 1);
+          }
+        },
+      );
+    }
   }
 }

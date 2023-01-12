@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import '../../modules/home/domain/entities/task_to_do.dart';
 import '../../modules/home/presentation/screens/subScreens/custom_tasks_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/help_screen.dart';
+import '../../modules/home/presentation/screens/subScreens/temp_notify_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/notification_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/search_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/settings_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/task_details_screen.dart';
 import '../common/models/custom_task_args_model.dart';
+import '../common/models/notifiy_model.dart';
 import '../helper/shared_helper.dart';
 import '../services/services_locator.dart';
 import '/modules/home/presentation/screens/home_screen.dart';
@@ -23,6 +24,7 @@ class Routes {
   static const String customRoute = "/custom";
   static const String settingsRoute = "/settings";
   static const String helpRoute = "/help";
+  static const String tempNotifyScreenRoute = "/tempNotifyScreen";
 }
 
 class RouteGenerator {
@@ -33,13 +35,17 @@ class RouteGenerator {
       case Routes.homeRoute:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case Routes.notificationRoute:
-        return MaterialPageRoute(builder: (_) => const NotificationScreen());
+        return MaterialPageRoute(
+          builder: (_) => NotificationScreen(
+            items: settings.arguments as List<ReceivedNotifyModel>,
+          ),
+        );
       case Routes.searchRoute:
         return MaterialPageRoute(builder: (_) => const SearchScreen());
       case Routes.taskDetailsRoute:
         return MaterialPageRoute(
           builder: (_) => TaskDetailsScreen(
-            task: settings.arguments as TaskTodo,
+            args: settings.arguments as Map<String, dynamic>,
           ),
         );
       case Routes.customRoute:
@@ -52,6 +58,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case Routes.helpRoute:
         return MaterialPageRoute(builder: (_) => const HelpScreen());
+      case Routes.tempNotifyScreenRoute:
+        return MaterialPageRoute(
+          builder: (_) => TempNotifyScreen(
+            receivedNotifyModel: settings.arguments as ReceivedNotifyModel,
+          ),
+        );
       default:
         return controlRoute();
     }

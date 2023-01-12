@@ -37,6 +37,7 @@
     "Important": "Important",
     "Done": "Done",
     "Later": "Later",
+    "later again": "Later once again",
     "expired": "expired",
     "Category": "Category",
     "Settings": "Settings",
@@ -102,5 +103,10 @@
     "October": "October",
     "November": "November",
     "December": "December",
-    "Today": "Today"
+    "Today": "Today",
+    "Notification": "Notification",
+    "Mark Done": "Mark Done",
+    "problemScussfully": "Your problem has been submitted successfully",
+    "deleteNotify": "Are you sure to delete this notification",
+    "deleteAllNotifications": "Are you sure to all notifications"
 }

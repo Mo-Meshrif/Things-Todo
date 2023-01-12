@@ -26,15 +26,22 @@ class AppConstants {
   static const String nullError = 'null';
   static const String userKey = 'userKey';
   static const String authPassKey = 'authPassKey';
+  static const String toUser = 'User';
+  static const String toAdmin = 'Admin';
   static const int durationInSec = 3;
   static const int homeTabLength = 3;
   static const double oneVal = 1.0;
   static const double zeroVal = 0.0;
   static const double twoVal = 2.0;
   static const String ringToneKey = 'ringToneKey';
-  static const String androidAppId='aaaaaaaaaa';
-  static const String iOSAppId='aaaaaaaaaa';
+  static const String androidAppId = 'aaaaaaaaaa';
+  static const String iOSAppId = 'aaaaaaaaaa';
   static const String chatCollection = 'Chat';
   static const String complaintsCollection = 'Complaints';
   static const String userPicKey = 'userPicKey';
+  static const String fcmLink = 'https://fcm.googleapis.com/fcm/send';
+  static const String serverKey =
+      'AAAA8XfpR7U:APA91bHIv_6G4LBkcZuHTXQVxJfHegJujUd8sqsjNPn_fExzN78hUbuYvhzxPytwujrWy4WWG8swcxtw75Zulf63Jh9oEZYCcSqvlR5NK504o17Ia2iGFVGMzjZYy2lkvlMWus9HBPxS';
+  static const String notificaionKey = 'notificaionKey';
+  static const String scheduledNotKey = 'scheduledNotifications';
 }

@@ -17,12 +17,12 @@ import '../../widgets/custom_app_bar.dart';
 import '../../widgets/customTask/custom_task_details.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
-  final TaskTodo task;
-  const TaskDetailsScreen({Key? key, required this.task}) : super(key: key);
+  final Map<String, dynamic> args;
+  const TaskDetailsScreen({Key? key, required this.args}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TaskTodo tempTask = task;
+    TaskTodo tempTask = args['task'];
     return Scaffold(
       body: BlocConsumer<HomeBloc, HomeState>(
         listener: (context, state) {
@@ -38,6 +38,7 @@ class TaskDetailsScreen extends StatelessWidget {
               height: ScreenUtil().screenHeight * AppSize.s03,
               child: CustomAppBar(
                 title: AppStrings.taskDetails,
+                hideNotifyIcon: args['hideNotifyIcon'],
               ),
             ),
             Card(
@@ -45,28 +46,29 @@ class TaskDetailsScreen extends StatelessWidget {
               margin: EdgeInsets.symmetric(
                   vertical: AppPadding.p230.h, horizontal: AppPadding.p15),
               child: ClipRRect(
-                child: HelperFunctions.isExpired(task.date) && !task.done
-                    ? Banner(
-                        message: AppStrings.expired.tr(),
-                        location: BannerLocation.topEnd,
-                        color: ColorManager.kBlack,
-                        child: TaskDetailsWidget(task: tempTask),
-                      )
-                    : tempTask.done
+                child:
+                    HelperFunctions.isExpired(tempTask.date) && !tempTask.done
                         ? Banner(
-                            message: AppStrings.done.tr(),
+                            message: AppStrings.expired.tr(),
                             location: BannerLocation.topEnd,
-                            color: ColorManager.kGreen,
+                            color: ColorManager.kBlack,
                             child: TaskDetailsWidget(task: tempTask),
                           )
-                        : tempTask.later
+                        : tempTask.done
                             ? Banner(
-                                message: AppStrings.later.tr(),
+                                message: AppStrings.done.tr(),
                                 location: BannerLocation.topEnd,
-                                color: ColorManager.kRed,
+                                color: ColorManager.kGreen,
                                 child: TaskDetailsWidget(task: tempTask),
                               )
-                            : TaskDetailsWidget(task: tempTask),
+                            : tempTask.later
+                                ? Banner(
+                                    message: AppStrings.later.tr(),
+                                    location: BannerLocation.topEnd,
+                                    color: ColorManager.kRed,
+                                    child: TaskDetailsWidget(task: tempTask),
+                                  )
+                                : TaskDetailsWidget(task: tempTask),
               ),
             ),
             Positioned(
@@ -91,7 +93,7 @@ class TaskDetailsScreen extends StatelessWidget {
                             content: const Text(AppStrings.deleteTask).tr(),
                             actions: [
                               AlertActionModel(
-                                title: AppStrings.cancel,
+                                title: AppStrings.cancel.tr(),
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                               AlertActionModel(
@@ -112,7 +114,7 @@ class TaskDetailsScreen extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () {
-                            if (!HelperFunctions.isExpired(task.date)) {
+                            if (!HelperFunctions.isExpired(tempTask.date)) {
                               if (tempTask.done) {
                                 HelperFunctions.showSnackBar(
                                   context,
@@ -152,37 +154,30 @@ class TaskDetailsScreen extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () {
-                            if (!HelperFunctions.isExpired(task.date)) {
+                            if (!HelperFunctions.isExpired(tempTask.date)) {
                               if (tempTask.done) {
                                 HelperFunctions.showSnackBar(
                                   context,
                                   AppStrings.noChangeDone.tr(),
                                 );
                               } else {
-                                if (tempTask.later) {
-                                  HelperFunctions.showSnackBar(
-                                    context,
-                                    AppStrings.alreadyLater.tr(),
-                                  );
-                                } else {
-                                  String? pickTime;
-                                  HelperFunctions.showDataPicker(
-                                      context: context,
-                                      onSave: () {
-                                        Navigator.pop(context);
-                                        BlocProvider.of<HomeBloc>(context).add(
-                                          EditTaskEvent(
-                                            taskTodo: task.copyWith(
-                                              later: true,
-                                              date: pickTime ??
-                                                  DateTime.now().toString(),
-                                            ),
+                                String? pickTime;
+                                HelperFunctions.showDataPicker(
+                                    context: context,
+                                    onSave: () {
+                                      Navigator.pop(context);
+                                      BlocProvider.of<HomeBloc>(context).add(
+                                        EditTaskEvent(
+                                          taskTodo: tempTask.copyWith(
+                                            later: true,
+                                            date: pickTime ??
+                                                DateTime.now().toString(),
                                           ),
-                                        );
-                                      },
-                                      onTimeChanged: (date) =>
-                                          pickTime = date.toString());
-                                }
+                                        ),
+                                      );
+                                    },
+                                    onTimeChanged: (date) =>
+                                        pickTime = date.toString());
                               }
                             } else {
                               HelperFunctions.showSnackBar(
@@ -198,7 +193,7 @@ class TaskDetailsScreen extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () {
-                            if (!HelperFunctions.isExpired(task.date)) {
+                            if (!HelperFunctions.isExpired(tempTask.date)) {
                               if (tempTask.done) {
                                 HelperFunctions.showSnackBar(
                                   context,

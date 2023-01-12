@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -96,6 +97,21 @@ class _RingToneWidgetState extends State<RingToneWidget> {
                             sl<AppShared>().setVal(
                               AppConstants.ringToneKey,
                               ringTone.path,
+                            );
+                            sl<AwesomeNotifications>().setChannel(
+                              NotificationChannel(
+                                channelKey: 'basic_channel',
+                                channelName: 'Basic Notifications',
+                                channelDescription:
+                                    'Notification channel for Basic',
+                                defaultColor: ColorManager.primary,
+                                importance: NotificationImportance.High,
+                                soundSource:
+                                    'resource://raw/${ringTone.path.split('/').last.replaceAll(".mp3", "")}',
+                                channelShowBadge: true,
+                                locked: true,
+                              ),
+                              forceUpdate: true,
                             );
                           }
                         },

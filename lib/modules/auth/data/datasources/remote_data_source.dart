@@ -19,7 +19,7 @@ abstract class BaseAuthRemoteDataSource {
   Future<AuthCredential> facebook();
   Future<AuthCredential> twitter();
   Future<AuthCredential> google();
-  Future<void> logout();
+  Future<void> logout(String uid);
 }
 
 class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
@@ -52,8 +52,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
         deviceToken: await getDeviceToken(),
       );
-      _uploadDataToFireStore(userModel);
-      return userModel;
+      return _uploadDataToFireStore(userModel);
     } catch (e) {
       throw ServerExecption(e.toString());
     }
@@ -72,8 +71,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
         deviceToken: await getDeviceToken(),
       );
-      _uploadDataToFireStore(userModel);
-      return userModel;
+      return _uploadDataToFireStore(userModel);
     } catch (e) {
       throw ServerExecption(e.toString());
     }
@@ -136,8 +134,19 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
   }
 
   @override
-  Future<void> logout() async {
+  Future<void> logout(String uid) async {
     try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _getUserDataFromFireStore(uid);
+      if (querySnapshot.docs.isNotEmpty) {
+        var doc = querySnapshot.docs.first;
+        Map<String, dynamic> map = doc.data();
+        map['deviceToken'] = '';
+        firebaseFirestore
+            .collection(AppConstants.usersCollection)
+            .doc(doc.id)
+            .update(map);
+      }
       return await firebaseAuth.signOut();
     } catch (e) {
       throw ServerExecption(e.toString());
@@ -163,8 +172,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
             : user.photoURL ?? AppConstants.emptyVal,
         deviceToken: await getDeviceToken(),
       );
-      _uploadDataToFireStore(userModel);
-      return userModel;
+      return _uploadDataToFireStore(userModel);
     } on FirebaseAuthException catch (e) {
       if (e.code == AppConstants.differentCredential) {
         return _link(e.credential!);
@@ -174,21 +182,32 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
     }
   }
 
-  Future<void> _uploadDataToFireStore(UserModel userModel) async {
-    final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await firebaseFirestore
-            .collection(AppConstants.usersCollection)
-            .where(AppConstants.userIdFeild, isEqualTo: userModel.id)
-            .get();
-    if (querySnapshot.docs.isNotEmpty) {
+  Future<QuerySnapshot<Map<String, dynamic>>> _getUserDataFromFireStore(
+          String uid) =>
       firebaseFirestore
           .collection(AppConstants.usersCollection)
-          .doc(querySnapshot.docs[0].id)
-          .update(userModel.toJson());
+          .where(AppConstants.userIdFeild, isEqualTo: uid)
+          .get();
+
+  Future<UserModel> _uploadDataToFireStore(UserModel userModel) async {
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await _getUserDataFromFireStore(userModel.id);
+    if (querySnapshot.docs.isNotEmpty) {
+      var doc = querySnapshot.docs.first;
+      var tempUser = userModel.copyWith(
+        name: userModel.name.isEmpty ? doc.data()['name'] : userModel.name,
+        pic: userModel.pic ?? doc.data()['pic'],
+      );
+      firebaseFirestore
+          .collection(AppConstants.usersCollection)
+          .doc(doc.id)
+          .update(tempUser.toJson());
+      return tempUser;
     } else {
       firebaseFirestore
           .collection(AppConstants.usersCollection)
           .add(userModel.toJson());
+      return userModel;
     }
   }
 

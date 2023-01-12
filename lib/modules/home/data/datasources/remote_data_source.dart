@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:todo/app/common/models/notifiy_model.dart';
 import '../../../../app/errors/exception.dart';
 import '../../../../app/helper/enums.dart';
+import '../../../../app/services/notification_services.dart';
+import '../../../../app/services/services_locator.dart';
 import '../../../../app/utils/constants_manager.dart';
 import '../../domain/usecases/send_problem_use_case.dart';
 import '../models/chat_message_model.dart';
@@ -84,7 +87,17 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
       DocumentReference<Map<String, dynamic>> val = await firebaseFirestore
           .collection(AppConstants.complaintsCollection)
           .add(problemInput.toJson());
-      return val.id.isNotEmpty;
+      if (val.id.isNotEmpty) {
+        return await sl<NotificationServices>()
+            .sendNotification(NotifyActionModel(
+          id: problemInput.id,
+          to: "topic/${AppConstants.toAdmin}",
+          title: 'Problem from user',
+          body: problemInput.problem,
+        ));
+      } else {
+        return false;
+      }
     } catch (e) {
       throw ServerExecption(e.toString());
     }
