@@ -12,7 +12,7 @@ import '../models/chat_message_model.dart';
 
 abstract class BaseHomeRemoteDataSource {
   Future<bool> sendMessage(ChatMessageModel messageModel);
-  Future<Stream<List<ChatMessageModel>>> getChatList(String uid);
+  Stream<List<ChatMessageModel>> getChatList(String uid);
   Future<void> updateMessage(ChatMessageModel messageModel);
   Future<bool> sendProblem(ProblemInput problemInput);
 }
@@ -22,19 +22,15 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
   final FirebaseStorage firebaseStorage;
   HomeRemoteDataSource(this.firebaseFirestore, this.firebaseStorage);
   @override
-  Future<Stream<List<ChatMessageModel>>> getChatList(String uid) async {
-    try {
-      Stream<QuerySnapshot<Map<String, dynamic>>> val = firebaseFirestore
-          .collection(AppConstants.chatCollection)
-          .where('uid', isEqualTo: uid)
-          .orderBy('timestamp', descending: true)
-          .snapshots();
-      return val.map((querySnap) => querySnap.docs
-          .map((queryDoc) => ChatMessageModel.fromSnapshot(queryDoc))
-          .toList());
-    } catch (e) {
-      throw ServerExecption(e.toString());
-    }
+  Stream<List<ChatMessageModel>> getChatList(String uid) {
+    Stream<QuerySnapshot<Map<String, dynamic>>> val = firebaseFirestore
+        .collection(AppConstants.chatCollection)
+        .where('uid', isEqualTo: uid)
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+    return val.map((querySnap) => querySnap.docs
+        .map((queryDoc) => ChatMessageModel.fromSnapshot(queryDoc))
+        .toList());
   }
 
   @override
@@ -43,9 +39,17 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
       if (messageModel.type == MessageType.text) {
         return _uploadToFireStore(messageModel);
       } else {
-        String _filePath = messageModel.content;
-        String voiceLink = await _uploadToFireStorage(_filePath);
-        return _uploadToFireStore(messageModel.copySubWith(content: voiceLink));
+        List<String> contentList = messageModel.content.split(',');
+        List<String> links = await Future.wait(
+          contentList.map(
+            (content) => _uploadToFireStorage(content, messageModel.type),
+          ),
+        );
+        return _uploadToFireStore(
+          messageModel.copySubWith(
+            content: links.join(','),
+          ),
+        );
       }
     } catch (e) {
       throw ServerExecption(e.toString());
@@ -59,9 +63,10 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
     return val.id.isNotEmpty;
   }
 
-  Future<String> _uploadToFireStorage(String filePath) async {
-    TaskSnapshot task = await firebaseStorage
-        .ref('voices')
+  Future<String> _uploadToFireStorage(String filePath, MessageType type) async {
+    Reference reference =
+        firebaseStorage.ref(type == MessageType.pic ? 'images' : 'voices');
+    TaskSnapshot task = await reference
         .child(filePath.substring(filePath.lastIndexOf('/'), filePath.length))
         .putFile(File(filePath));
     //delete file from local

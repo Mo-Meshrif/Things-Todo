@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import '../../modules/home/presentation/screens/subScreens/chat_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/custom_tasks_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/help_screen.dart';
 import '../../modules/home/presentation/screens/subScreens/temp_notify_screen.dart';
@@ -24,6 +25,7 @@ class Routes {
   static const String customRoute = "/custom";
   static const String settingsRoute = "/settings";
   static const String helpRoute = "/help";
+  static const String chatRoute = "/chat";
   static const String tempNotifyScreenRoute = "/tempNotifyScreen";
 }
 
@@ -58,6 +60,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case Routes.helpRoute:
         return MaterialPageRoute(builder: (_) => const HelpScreen());
+      case Routes.chatRoute:
+        return MaterialPageRoute(builder: (_) => const ChatScreen());
       case Routes.tempNotifyScreenRoute:
         return MaterialPageRoute(
           builder: (_) => TempNotifyScreen(

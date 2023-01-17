@@ -52,9 +52,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ClearSearchListEvent>((_, emit) => emit(HomeTranstion()));
     on<SendMessageEvent>(_sendMessage);
     on<UpdateMessageEvent>(_updateMessage);
-    on<GetChatListEvent>(_getChatList);
-    on<LoadChatListEvent>(
-        (event, emit) => emit(ChatLoaded(messages: event.messages)));
     on<SendProblemEvent>(_sendProblem);
   }
 
@@ -193,17 +190,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     );
   }
 
-  FutureOr<void> _getChatList(
-      GetChatListEvent event, Emitter<HomeState> emit) async {
-    emit(ChatLoading());
-    final result = await getChatListUseCase(HelperFunctions.getSavedUser().id);
-    result.fold(
-      (failure) => emit(ChatFailure(msg: failure.msg)),
-      (streamResponse) => streamResponse.listen(
-        (messages) => add(LoadChatListEvent(messages)),
-      ),
-    );
-  }
+  Stream<List<ChatMessage>> getChatList() => getChatListUseCase(
+        HelperFunctions.getSavedUser().id,
+      );
 
   FutureOr<void> _updateMessage(
       UpdateMessageEvent event, Emitter<HomeState> emit) async {

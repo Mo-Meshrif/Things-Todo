@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math' as math;
 import '../../modules/auth/domain/entities/user.dart';
+import '../../modules/home/domain/entities/chat_message.dart';
 import '../../modules/home/presentation/controller/home_bloc.dart';
 import '../app.dart';
 import '../common/models/alert_action_model.dart';
@@ -370,6 +371,29 @@ class HelperFunctions {
     }
     tempList.sort((a, b) => a['day'].compareTo(b['day']));
     return tempList;
+  }
+
+  static List<ChatMessage> refactorChatList(
+      List<ChatMessage> oldList, List<ChatMessage> snapList, String uid) {
+    if (oldList.isEmpty || snapList.isEmpty) {
+      return snapList;
+    } else {
+      for (var element in snapList) {
+        int tempIndex = oldList.indexWhere(
+          (e) => e.idFrom == uid && e.timestamp == element.timestamp,
+        );
+        if (tempIndex > -1) {
+          oldList[tempIndex] = oldList[tempIndex].copyBaseWith(
+            content: element.content,
+            isLoading: false,
+            isLocal: false,
+          );
+        } else {
+          oldList.add(element);
+        }
+      }
+      return oldList;
+    }
   }
 
   //Check notifications permission

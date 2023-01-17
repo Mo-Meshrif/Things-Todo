@@ -1,28 +1,29 @@
+import 'package:advance_image_picker/advance_image_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../../app/utils/assets_manager.dart';
+import '../../../../../app/helper/enums.dart';
 import '../../../../../app/utils/color_manager.dart';
 import '../../../../../app/utils/strings_manager.dart';
-import '../../../../../app/utils/values_manager.dart';
 import '../../../domain/entities/chat_message.dart';
 import 'custom_bubble_widget.dart';
-import 'cutomAudioButton/record_button.dart';
+import 'record_button.dart';
 
 class MessageWidget extends StatelessWidget {
   final String uid;
   final List<ChatMessage> messages;
-  final Future<void> Function(String message) sendMessage;
-
-  final Function(String? recordPath) sendRecord;
+  final bool loading;
+  final Future<void> Function(
+    String? message,
+    MessageType messageType,
+  ) sendMessage;
   final Function(ChatMessage message) updateMessage;
   const MessageWidget({
     Key? key,
     required this.messages,
     required this.sendMessage,
-    required this.sendRecord,
     required this.uid,
     required this.updateMessage,
+    required this.loading,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -35,41 +36,37 @@ class MessageWidget extends StatelessWidget {
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ListTile(
-              onTap: () => Navigator.pop(context),
-              leading: SvgPicture.asset(
-                IconAssets.appTitle,
-                color: ColorManager.primary,
-                width: AppSize.s120,
-              ),
-              trailing: const Icon(Icons.arrow_downward),
-            ),
-            const Divider(
-              height: 0,
-            ),
             Expanded(
-              child: ListView.builder(
-                reverse: true,
-                itemCount: messages.length,
-                padding: const EdgeInsets.only(bottom: 10, top: 5),
-                itemBuilder: (context, index) {
-                  bool user = uid == messages[index].idFrom;
-                  return MessageBubble(
-                    fromUser: user,
-                    chatMessage: messages[index],
-                    onPayVoice: () {
-                      innerState(
-                        () => messages[index] = messages[index].copyBaseWith(
-                          isMark: false,
-                        ),
-                      );
-                      updateMessage(messages[index]);
-                    },
-                  );
-                },
-              ),
+              child: loading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: ColorManager.primary,
+                      ),
+                    )
+                  : ListView.builder(
+                      reverse: true,
+                      itemCount: messages.length,
+                      padding: const EdgeInsets.only(bottom: 10, top: 5),
+                      itemBuilder: (context, index) {
+                        bool user = uid == messages[index].idFrom;
+                        return MessageBubble(
+                          fromUser: user,
+                          chatMessage: messages[index],
+                          onPlayVoice: () {
+                            if (messages[index].isMark) {
+                              innerState(
+                                () => messages[index] =
+                                    messages[index].copyBaseWith(
+                                  isMark: false,
+                                ),
+                              );
+                              updateMessage(messages[index]);
+                            }
+                          },
+                        );
+                      },
+                    ),
             ),
             Card(
               elevation: 20,
@@ -96,29 +93,87 @@ class MessageWidget extends StatelessWidget {
                               hintText: AppStrings.typeMessage.tr(),
                               hintStyle: const TextStyle(color: Colors.black),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                  color: Colors.grey,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              suffixIcon: Visibility(
+                                visible: message.isEmpty,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    final configs = ImagePickerConfigs();
+                                    configs.translateFunc = (name, value) {
+                                      if (name == 'app_title') {
+                                        return AppStrings.appName;
+                                      } else {
+                                        return name.tr();
+                                      }
+                                    };
+                                    final List<ImageObject>? objects =
+                                        await Navigator.of(context).push(
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation, __) =>
+                                            ImagePicker(
+                                          maxCount: 5,
+                                          configs: configs,
+                                        ),
+                                      ),
+                                    );
+                                    if (objects != null) {
+                                      if (objects.isNotEmpty) {
+                                        var imgPathList = objects
+                                            .map((e) => e.modifiedPath)
+                                            .toList();
+                                        sendMessage(
+                                          imgPathList.join(','),
+                                          MessageType.pic,
+                                        );
+                                      }
+                                    }
+                                  },
+                                  child: Icon(
+                                    Icons.attach_file,
+                                    color: ColorManager.kGrey,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                       message.isNotEmpty
-                          ? IconButton(
-                              onPressed: () => sendMessage(message).then(
+                          ? InkWell(
+                              onTap: () =>
+                                  sendMessage(message, MessageType.text).then(
                                 (_) => textEditingController.clear(),
                               ),
-                              icon: const Icon(
-                                Icons.send,
-                                color: Colors.blue,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                height: 45,
+                                width: 45,
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorManager.primary,
+                                ),
+                                child: Icon(
+                                  Icons.send,
+                                  color: ColorManager.kWhite,
+                                ),
                               ),
                             )
                           : RecordButton(
-                              sendRecord: (recordPath) => sendRecord(recordPath),
+                              sendRecord: (recordPath) =>
+                                  sendMessage(recordPath, MessageType.voice),
                               getTapStatus: (tapStatus) => innerState(
                                 () => hideChatBox = tapStatus,
                               ),

@@ -11,6 +11,8 @@ class ChatMessage extends Equatable {
   final String content;
   final MessageType type;
   final bool isMark;
+  final bool isLoading;
+  final bool isLocal;
 
   const ChatMessage({
     this.msgId,
@@ -21,6 +23,8 @@ class ChatMessage extends Equatable {
     required this.content,
     required this.type,
     required this.isMark,
+    this.isLoading = false,
+    this.isLocal = false,
   });
 
   ChatMessage copyBaseWith({
@@ -31,6 +35,8 @@ class ChatMessage extends Equatable {
     String? content,
     MessageType? type,
     bool? isMark,
+    bool? isLoading,
+    bool? isLocal,
   }) =>
       ChatMessageModel(
         msgId: msgId,
@@ -41,6 +47,8 @@ class ChatMessage extends Equatable {
         content: content ?? this.content,
         type: type ?? this.type,
         isMark: isMark ?? this.isMark,
+        isLoading: isLoading ?? this.isLoading,
+        isLocal: isLocal ?? this.isLocal,
       );
 
   @override
@@ -53,5 +61,7 @@ class ChatMessage extends Equatable {
         content,
         type,
         isMark,
+        isLoading,
+        isLocal,
       ];
 }

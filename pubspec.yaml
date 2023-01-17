@@ -33,12 +33,13 @@ dependencies:
   sqflite: ^2.0.2
   arabic_numbers: ^1.0.0
   flutter_sound: ^9.2.13
-  permission_handler: ^8.1.6
   path_provider: ^2.0.5
-  record: ^3.0.0
   flutter_vibrate: ^1.1.0
   launch_review: ^3.0.1
+  audio_waveforms: ^1.0.1
   voice_message_package: ^0.0.74
+  advance_image_picker: ^0.1.7+1
+  cached_network_image: ^3.2.3
   http: ^0.13.5
   flutter_scroll_to_top: ^2.0.0
   table_calendar: ^3.0.8

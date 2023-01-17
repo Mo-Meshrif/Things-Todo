@@ -153,20 +153,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   }
 
   @override
-  Future<Either<ServerFailure, Stream<List<ChatMessage>>>> getChatList(
-      String uid) async {
-    if (await networkServices.isConnected()) {
-      try {
-        Stream<List<ChatMessageModel>> val =
-            await baseHomeRemoteDataSource.getChatList(uid);
-        return Right(val);
-      } on ServerExecption catch (failure) {
-        return Left(ServerFailure(msg: failure.msg));
-      }
-    } else {
-      return const Left(ServerFailure(msg: AppConstants.noConnection));
-    }
-  }
+  Stream<List<ChatMessage>> getChatList(String uid) => baseHomeRemoteDataSource.getChatList(uid);
 
   @override
   Future<Either<ServerFailure, void>> updateMessage(ChatMessage message) async {

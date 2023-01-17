@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 abstract class BaseUseCase<T, Parameters> {
-  Future<T> call(Parameters parameters);
+  dynamic call(Parameters parameters);
 }
 
 class NoParameters extends Equatable {

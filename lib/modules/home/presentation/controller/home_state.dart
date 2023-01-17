@@ -167,27 +167,6 @@ class MessageFailure extends HomeState {
   List<Object> get props => [msg];
 }
 
-class ChatLoading extends HomeState {
-  @override
-  List<Object> get props => [];
-}
-
-class ChatLoaded extends HomeState {
-  final List<ChatMessage> messages;
-
-  const ChatLoaded({required this.messages});
-  @override
-  List<Object> get props => [messages];
-}
-
-class ChatFailure extends HomeState {
-  final String msg;
-
-  const ChatFailure({required this.msg});
-  @override
-  List<Object> get props => [msg];
-}
-
 class ProblemLoading extends HomeState {
   @override
   List<Object> get props => [];

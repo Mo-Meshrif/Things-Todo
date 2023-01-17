@@ -13,6 +13,8 @@ class ChatMessageModel extends ChatMessage {
     required String content,
     required MessageType type,
     required bool isMark,
+    bool isLoading = false,
+    bool isLocal = false,
   }) : super(
           msgId: msgId,
           uid: uid,
@@ -22,6 +24,8 @@ class ChatMessageModel extends ChatMessage {
           content: content,
           type: type,
           isMark: isMark,
+          isLoading: isLoading,
+          isLocal: isLocal,
         );
   factory ChatMessageModel.fromJson(Map<String, dynamic> map) =>
       ChatMessageModel(

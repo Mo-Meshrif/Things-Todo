@@ -65,15 +65,6 @@ class SendMessageEvent extends HomeEvent {
   const SendMessageEvent(this.chatMessage);
 }
 
-class GetChatListEvent extends HomeEvent {
-  const GetChatListEvent();
-}
-
-class LoadChatListEvent extends HomeEvent {
-  final List<ChatMessage> messages;
-  const LoadChatListEvent(this.messages);
-}
-
 class UpdateMessageEvent extends HomeEvent {
   final ChatMessage chatMessage;
   const UpdateMessageEvent(this.chatMessage);

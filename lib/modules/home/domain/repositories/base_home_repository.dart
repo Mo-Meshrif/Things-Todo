@@ -13,8 +13,6 @@ abstract class BaseHomeRespository {
   Future<Either<LocalFailure, int>> deleteTask(int taskId);
   Future<Either<ServerFailure, bool>> sendMessage(ChatMessage message);
   Future<Either<ServerFailure, void>> updateMessage(ChatMessage message);
-  Future<Either<ServerFailure, Stream<List<ChatMessage>>>> getChatList(
-    String uid,
-  );
+  Stream<List<ChatMessage>> getChatList(String uid);
   Future<Either<ServerFailure, bool>> sendProblem(ProblemInput problemInput);
 }
