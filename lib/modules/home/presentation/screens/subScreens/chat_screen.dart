@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../app/helper/helper_functions.dart';
 import '../../../../../app/utils/assets_manager.dart';
 import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/constants_manager.dart';
 import '../../../../../app/utils/values_manager.dart';
 import '../../../data/models/chat_message_model.dart';
 import '../../../domain/entities/chat_message.dart';
@@ -27,10 +28,10 @@ class _ChatScreenState extends State<ChatScreen> {
     var homeBloc = BlocProvider.of<HomeBloc>(context);
     return Scaffold(
       appBar: AppBar(
-        elevation: 2,
+        elevation: AppSize.s2,
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppPadding.p20),
             child: SvgPicture.asset(
               IconAssets.appTitle,
               color: ColorManager.kWhite,
@@ -62,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     var chatMessage = ChatMessageModel(
                       uid: uid,
                       idFrom: uid,
-                      idTo: 'admin',
+                      idTo: AppConstants.toAdmin,
                       timestamp: Timestamp.now().toString(),
                       content: message,
                       type: type,

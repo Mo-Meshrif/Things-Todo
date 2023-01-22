@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
 
 class RecordButton extends StatefulWidget {
   final Function(bool tapStatus) getTapStatus;
@@ -75,7 +76,7 @@ class _RecordButtonState extends State<RecordButton> {
           ),
           Expanded(
             child: AudioWaveforms(
-              size: Size(MediaQuery.of(context).size.width, 50),
+              size: Size(MediaQuery.of(context).size.width, AppSize.s50),
               recorderController: recorderController,
               waveStyle: WaveStyle(
                 waveColor: ColorManager.kWhite,
@@ -83,11 +84,11 @@ class _RecordButtonState extends State<RecordButton> {
                 showMiddleLine: false,
               ),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(AppSize.s12),
                 color: ColorManager.kBlack,
               ),
-              padding: const EdgeInsets.only(left: 18),
-              margin: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.only(left: AppPadding.p18),
+              margin: const EdgeInsets.symmetric(horizontal: AppPadding.p15),
             ),
           ),
           InkWell(
@@ -101,10 +102,10 @@ class _RecordButtonState extends State<RecordButton> {
             },
             child: Container(
               margin: const EdgeInsets.symmetric(
-                horizontal: 10,
+                horizontal: AppPadding.p10,
               ),
-              height: 45,
-              width: 45,
+              height: AppSize.s45,
+              width: AppSize.s45,
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -128,9 +129,11 @@ class _RecordButtonState extends State<RecordButton> {
           Icons.mic,
           color: ColorManager.kWhite,
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        height: 45,
-        width: 45,
+        margin: const EdgeInsets.symmetric(
+          horizontal: AppPadding.p10,
+        ),
+        height: AppSize.s45,
+        width: AppSize.s45,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           shape: BoxShape.circle,

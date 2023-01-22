@@ -3,7 +3,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../../app/helper/enums.dart';
 import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/constants_manager.dart';
 import '../../../../../app/utils/strings_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
 import '../../../domain/entities/chat_message.dart';
 import 'custom_bubble_widget.dart';
 import 'record_button.dart';
@@ -27,7 +29,7 @@ class MessageWidget extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    String message = '';
+    String message = AppConstants.emptyVal;
     bool hideChatBox = false;
     TextEditingController textEditingController = TextEditingController();
     return StatefulBuilder(
@@ -47,7 +49,10 @@ class MessageWidget extends StatelessWidget {
                   : ListView.builder(
                       reverse: true,
                       itemCount: messages.length,
-                      padding: const EdgeInsets.only(bottom: 10, top: 5),
+                      padding: const EdgeInsets.only(
+                        bottom: AppPadding.p10,
+                        top: AppPadding.p5,
+                      ),
                       itemBuilder: (context, index) {
                         bool user = uid == messages[index].idFrom;
                         return MessageBubble(
@@ -69,15 +74,15 @@ class MessageWidget extends StatelessWidget {
                     ),
             ),
             Card(
-              elevation: 20,
+              elevation: AppSize.s20,
               margin: EdgeInsets.zero,
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: AppPadding.p10),
                   child: Row(
                     children: [
-                      const SizedBox(width: 10),
+                      const SizedBox(width: AppSize.s10),
                       Visibility(
                         visible: !hideChatBox,
                         child: Expanded(
@@ -91,17 +96,19 @@ class MessageWidget extends StatelessWidget {
                               filled: true,
                               fillColor: Colors.grey[200],
                               hintText: AppStrings.typeMessage.tr(),
-                              hintStyle: const TextStyle(color: Colors.black),
+                              hintStyle: TextStyle(color: ColorManager.kBlack),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Colors.grey,
+                                borderRadius:
+                                    BorderRadius.circular(AppSize.s20),
+                                borderSide: BorderSide(
+                                  color: ColorManager.kGrey,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Colors.grey,
+                                borderRadius:
+                                    BorderRadius.circular(AppSize.s20),
+                                borderSide: BorderSide(
+                                  color: ColorManager.kGrey,
                                 ),
                               ),
                               suffixIcon: Visibility(
@@ -121,7 +128,7 @@ class MessageWidget extends StatelessWidget {
                                       PageRouteBuilder(
                                         pageBuilder: (context, animation, __) =>
                                             ImagePicker(
-                                          maxCount: 5,
+                                          maxCount: AppSize.s5.toInt(),
                                           configs: configs,
                                         ),
                                       ),
@@ -156,10 +163,10 @@ class MessageWidget extends StatelessWidget {
                               ),
                               child: Container(
                                 margin: const EdgeInsets.symmetric(
-                                  horizontal: 10,
+                                  horizontal: AppPadding.p10,
                                 ),
-                                height: 45,
-                                width: 45,
+                                height: AppSize.s45,
+                                width:  AppSize.s45,
                                 clipBehavior: Clip.hardEdge,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,

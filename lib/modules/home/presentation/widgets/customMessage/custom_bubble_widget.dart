@@ -7,6 +7,7 @@ import 'package:voice_message_package/voice_message_package.dart';
 import '../../../../../app/helper/enums.dart';
 import '../../../../../app/utils/assets_manager.dart';
 import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
 import '../../../domain/entities/chat_message.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -24,7 +25,10 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppPadding.p12,
+        vertical: AppPadding.p5,
+      ),
       child: Column(
         crossAxisAlignment:
             fromUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -32,27 +36,29 @@ class MessageBubble extends StatelessWidget {
           chatMessage.type == MessageType.text
               ? Material(
                   borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(50),
+                    topLeft: const Radius.circular(AppSize.s50),
                     bottomLeft: fromUser
-                        ? const Radius.circular(50)
-                        : const Radius.circular(0),
+                        ? const Radius.circular(AppSize.s50)
+                        : const Radius.circular(AppSize.s0),
                     bottomRight: fromUser
-                        ? const Radius.circular(0)
-                        : const Radius.circular(50),
-                    topRight: const Radius.circular(50),
+                        ? const Radius.circular(AppSize.s0)
+                        : const Radius.circular(AppSize.s50),
+                    topRight: const Radius.circular(AppSize.s50),
                   ),
                   color:
                       fromUser ? ColorManager.primary : ColorManager.background,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
+                      vertical: AppPadding.p10,
+                      horizontal: AppPadding.p20,
+                    ),
                     child: Text(
                       chatMessage.content,
                       style: TextStyle(
                         color: fromUser
                             ? ColorManager.kWhite
                             : ColorManager.kBlack,
-                        fontSize: 15,
+                        fontSize: AppSize.s15,
                       ),
                     ),
                   ),
@@ -71,19 +77,20 @@ class MessageBubble extends StatelessWidget {
                             ),
                     )
                   : SizedBox(
-                      width: ScreenUtil().screenWidth * 0.7,
+                      width: ScreenUtil().screenWidth * AppSize.s07,
                       child: Wrap(
                         alignment:
                             fromUser ? WrapAlignment.end : WrapAlignment.start,
-                        spacing: 2,
-                        runSpacing: 2,
+                        spacing: AppSize.s2,
+                        runSpacing: AppSize.s2,
                         children: chatMessage.content
                             .split(',')
                             .map(
                               (imgUrl) => Container(
-                                padding: const EdgeInsets.all(2),
+                                padding: const EdgeInsets.all(AppPadding.p2),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius:
+                                      BorderRadius.circular(AppSize.s10),
                                   color: fromUser
                                       ? ColorManager.primary
                                       : ColorManager.background,
@@ -91,28 +98,32 @@ class MessageBubble extends StatelessWidget {
                                 child: chatMessage.isLoading
                                     ? BackdropFilter(
                                         filter: ImageFilter.blur(
-                                            sigmaX: 2.0, sigmaY: 2.0),
+                                          sigmaX: AppSize.s2,
+                                          sigmaY: AppSize.s2,
+                                        ),
                                         child: Container(
-                                          height: 100,
-                                          width: 100,
+                                          height: AppSize.s100,
+                                          width: AppSize.s100,
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              AppSize.s10,
+                                            ),
                                             color: ColorManager.kBlack
-                                                .withOpacity(0.3),
+                                                .withOpacity(AppSize.s03),
                                           ),
                                         ),
                                       )
                                     : CachedNetworkImage(
                                         imageUrl: imgUrl,
-                                        height: 100,
-                                        width: 100,
+                                        height: AppSize.s100,
+                                        width: AppSize.s100,
                                         imageBuilder:
                                             (context, imageProvider) =>
                                                 Container(
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              AppSize.s10,
+                                            ),
                                             image: DecorationImage(
                                               image: imageProvider,
                                               fit: BoxFit.cover,
