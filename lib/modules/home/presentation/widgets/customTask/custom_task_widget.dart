@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:todo/app/utils/constants_manager.dart';
 import '../../../../../app/helper/helper_functions.dart';
 import '../../../../../app/utils/color_manager.dart';
 import '../../../../../app/utils/routes_manager.dart';
@@ -43,7 +44,12 @@ class TaskWidget extends StatelessWidget {
                     date.toClock(),
                   ),
                 ),
-                Text(date.toHourMark().tr()),
+                Text(
+                  date.toHourMark().tr(),
+                  style: TextStyle(
+                    height: context.locale == AppConstants.arabic ? 0.7 : 1,
+                  ),
+                ),
               ],
             ),
             const SizedBox(width: AppSize.s10),

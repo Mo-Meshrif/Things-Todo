@@ -28,11 +28,23 @@ import '../utils/color_manager.dart';
 import '../utils/constants_manager.dart';
 
 class HelperFunctions {
-  // isEmailValid
+//checkArabic
+  static bool checkArabic(String val) {
+    if (val.isNotEmpty) {
+      if (!val.contains(RegExp(r'[a-zA-Z]{1,}'))) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+  //isEmailValid
   static bool isEmailValid(String email) => RegExp(
           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
       .hasMatch(email);
-// showSnackBar
+  //showSnackBar
   static showSnackBar(BuildContext context, String msg) =>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -43,8 +55,7 @@ class HelperFunctions {
           ),
         ),
       );
-
-// showAlert
+  //showAlert
   static showAlert(
       {required BuildContext context,
       String? title,
@@ -95,7 +106,6 @@ class HelperFunctions {
             ),
           );
   }
-
   //show popUp loading
   static showPopUpLoading(BuildContext context) => showAlert(
         context: context,
@@ -108,7 +118,6 @@ class HelperFunctions {
           ),
         ),
       );
-
   //Rotate value
   static double rotateVal(BuildContext context, {bool rotate = true}) {
     if (rotate && context.locale == AppConstants.arabic) {
@@ -117,7 +126,6 @@ class HelperFunctions {
       return math.pi * 2;
     }
   }
-
   //getSavedUser
   static AuthUser getSavedUser() {
     var savedData = sl<AppShared>().getVal(AppConstants.userKey);
@@ -131,7 +139,6 @@ class HelperFunctions {
           )
         : savedData;
   }
-
   //loadUserPic
   static Future<File?> loadUserPic(AuthUser user) async {
     AppShared _appShared = sl<AppShared>();
@@ -169,13 +176,11 @@ class HelperFunctions {
       return null;
     }
   }
-
   //getLastUserName
   static String lastUserName() {
     AuthUser user = getSavedUser();
     return user.name.split(' ').last;
   }
-
   //get welcome string
   static String welcome() {
     String mark = DateTime.now().toHourMark();
@@ -183,7 +188,6 @@ class HelperFunctions {
         ? AppStrings.goodMorning
         : AppStrings.goodNight;
   }
-
   //getTasksOnTab
   static getTasksOnTab(BuildContext ctx, int index) {
     switch (index) {
@@ -207,13 +211,11 @@ class HelperFunctions {
       default:
     }
   }
-
   // getDoneTaskLength
   static String doneTasksLength(BuildContext context, List<TaskTodo> tasks) {
     var temp = tasks.where((task) => task.done).toList();
     return getlocaleNumber(context, temp.length);
   }
-
   // toClock
   static String getlocaleNumber(BuildContext context, number) {
     if (context.locale == AppConstants.arabic) {
@@ -222,14 +224,12 @@ class HelperFunctions {
       return number.toString();
     }
   }
-
   //isExpired
   static bool isExpired(String date) {
     DateTime dateTime = DateTime.parse(date).zeroTime();
     DateTime now = DateTime.now().zeroTime();
     return dateTime.isBefore(now);
   }
-
   //datePicker
   static showDataPicker(
       {required BuildContext context,
@@ -284,7 +284,6 @@ class HelperFunctions {
       (_) => onclose == null ? () {} : onclose(),
     );
   }
-
   //change language
   static toggleLanguage(BuildContext context) {
     if (context.locale == AppConstants.arabic) {
@@ -293,19 +292,16 @@ class HelperFunctions {
       context.setLocale(AppConstants.arabic);
     }
   }
-
   //convert ringTone to Uint8List
   static Future<Uint8List> getAssetRingToneData(String path) async {
     var asset = await rootBundle.load(path);
     return asset.buffer.asUint8List();
   }
-
   //getNumberOfDayByIndex
   static DateTime getDateByIndex(int index) {
     DateTime now = DateTime.now();
     return now.add(Duration(days: index + 1 - now.weekday));
   }
-
   //get month
   static String getMonth(int monthAsInt) {
     late String month;
@@ -349,7 +345,6 @@ class HelperFunctions {
     }
     return month;
   }
-
   //refactor taskList
   static List<Map<String, dynamic>> refactorTaskList(List<TaskTodo> taskList) {
     List<Map<String, dynamic>> tempList = [];
@@ -372,7 +367,7 @@ class HelperFunctions {
     tempList.sort((a, b) => a['day'].compareTo(b['day']));
     return tempList;
   }
-
+  //refactor chatList
   static List<ChatMessage> refactorChatList(
       List<ChatMessage> oldList, List<ChatMessage> snapList, String uid) {
     if (oldList.isEmpty || snapList.isEmpty) {
@@ -395,7 +390,6 @@ class HelperFunctions {
       return oldList;
     }
   }
-
   //Check notifications permission
   static checkNotificationsPermission(BuildContext context) {
     sl<AwesomeNotifications>().isNotificationAllowed().then((isAllowed) {
@@ -424,7 +418,6 @@ class HelperFunctions {
       }
     });
   }
-
   //notification action
   static handleNotificationAction(
     BuildContext context,
