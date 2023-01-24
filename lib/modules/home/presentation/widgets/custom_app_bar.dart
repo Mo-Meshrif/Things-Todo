@@ -90,10 +90,13 @@ class CustomAppBar extends AppBar {
                           ? const Padding(padding: EdgeInsets.zero)
                           : Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: AppPadding.p10),
+                                horizontal: AppPadding.p10,
+                              ),
                               child: Badge(
-                                position:
-                                    BadgePosition.topEnd(top: 12, end: 15),
+                                position: BadgePosition.topEnd(
+                                  top: AppSize.s12,
+                                  end: AppSize.s15,
+                                ),
                                 showBadge: notOpenedList.isNotEmpty,
                                 child: GestureDetector(
                                   onTap: () => NavigationHelper.pushNamed(

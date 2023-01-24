@@ -45,7 +45,9 @@ class TaskDetailsScreen extends StatelessWidget {
             Card(
               elevation: AppConstants.twoVal,
               margin: EdgeInsets.symmetric(
-                  vertical: AppPadding.p230.h, horizontal: AppPadding.p15),
+                vertical: AppPadding.p230.h,
+                horizontal: AppPadding.p15,
+              ),
               child: ClipRRect(
                 child:
                     HelperFunctions.isExpired(tempTask.date) && !tempTask.done

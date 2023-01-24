@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
 import '../../../domain/entities/task_to_do.dart';
 import 'custom_task_list.dart';
 
@@ -21,11 +22,11 @@ class CustomTaskListTile extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            fontSize: 40.sp,
+            fontSize: AppSize.s40.sp,
             color: ColorManager.primary,
           ),
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: AppSize.s5),
         CustomTaskList(
           taskList: taskList,
         ),

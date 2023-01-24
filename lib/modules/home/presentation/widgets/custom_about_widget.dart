@@ -13,9 +13,13 @@ class CustomAboutWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: AppPadding.p10, vertical: AppPadding.p20),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppPadding.p10,
+        vertical: AppPadding.p20,
+      ),
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSize.s15.r)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSize.s15.r)),
         child: Padding(
           padding: const EdgeInsets.all(AppPadding.p10),
           child: Column(

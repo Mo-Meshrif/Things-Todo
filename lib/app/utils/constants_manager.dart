@@ -28,11 +28,16 @@ class AppConstants {
   static const String authPassKey = 'authPassKey';
   static const String toUser = 'User';
   static const String toAdmin = 'Admin';
+  static const String dmyyyy = 'd-M-yyyy';
+  static const String dmyyyyhma = 'd-M-yyyy | h:mm a';
+  static const int negativeOne = -1;
   static const int durationInSec = 3;
   static const int homeTabLength = 3;
+  static const int settingAxisCount = 2;
   static const double oneVal = 1.0;
   static const double zeroVal = 0.0;
   static const double twoVal = 2.0;
+  static const int maxLines = 8;
   static const String ringToneKey = 'ringToneKey';
   static const String androidAppId = 'aaaaaaaaaa';
   static const String iOSAppId = 'aaaaaaaaaa';

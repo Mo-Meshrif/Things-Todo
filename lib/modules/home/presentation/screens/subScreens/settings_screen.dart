@@ -104,11 +104,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: AppStrings.settings,
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppPadding.p10,
+          vertical: AppPadding.p15,
+        ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: AppConstants.settingAxisCount,
           mainAxisExtent: AppSize.s185,
-          mainAxisSpacing: 1,
+          mainAxisSpacing: AppSize.s1,
         ),
         itemCount: settings.length,
         itemBuilder: (context, i) {

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as format;
+import '../../../../../app/utils/constants_manager.dart';
 import '../../../../../app/utils/strings_manager.dart';
 import '../../../../../app/utils/values_manager.dart';
 import '../../../domain/entities/task_to_do.dart';
@@ -58,7 +59,7 @@ class TaskDetailsWidget extends StatelessWidget {
             ),
           ),
           child: Text(format.DateFormat(
-            'd-M-yyyy | h:mm a',
+            AppConstants.dmyyyyhma,
             context.locale.languageCode,
           ).format(
             DateTime.parse(task.date),

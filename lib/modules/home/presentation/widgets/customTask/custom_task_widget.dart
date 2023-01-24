@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:todo/app/utils/constants_manager.dart';
 import '../../../../../app/helper/helper_functions.dart';
 import '../../../../../app/helper/navigation_helper.dart';
 import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/constants_manager.dart';
 import '../../../../../app/utils/routes_manager.dart';
 import '../../controller/home_bloc.dart';
 import '/app/helper/extentions.dart';
@@ -49,7 +49,9 @@ class TaskWidget extends StatelessWidget {
                 Text(
                   date.toHourMark().tr(),
                   style: TextStyle(
-                    height: context.locale == AppConstants.arabic ? 0.7 : 1,
+                    height: context.locale == AppConstants.arabic
+                        ? AppSize.s07
+                        : AppSize.s1,
                   ),
                 ),
               ],

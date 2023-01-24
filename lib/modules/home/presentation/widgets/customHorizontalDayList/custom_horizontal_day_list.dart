@@ -74,6 +74,7 @@ class CustomHorizontalDayList extends StatelessWidget {
                           clipper: ClipPathClass(),
                           child: Container(
                             height: AppSize.s205.h,
+                            padding: EdgeInsets.only(bottom: AppSize.s28.h),
                             color: Colors.white,
                             child: CustomWeekDayItem(
                               weekday: weekList[index],

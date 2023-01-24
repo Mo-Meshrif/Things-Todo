@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../app/common/models/notifiy_model.dart';
 import '../../../../../app/utils/assets_manager.dart';
+import '../../../../../app/utils/constants_manager.dart';
+import '../../../../../app/utils/strings_manager.dart';
+import '../../../../../app/utils/values_manager.dart';
 import '../../widgets/custom_app_bar.dart';
 
 class TempNotifyScreen extends StatelessWidget {
@@ -13,28 +16,30 @@ class TempNotifyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Notification',
+        title: AppStrings.notification,
         hideNotifyIcon: true,
       ),
-      body: receivedNotifyModel.id == -1
+      body: receivedNotifyModel.id == AppConstants.negativeOne
           ? Center(child: Lottie.asset(JsonAssets.empty))
           : CustomScrollView(
               slivers: [
                 SliverFillRemaining(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 20),
+                      horizontal: AppPadding.p10,
+                      vertical: AppPadding.p20,
+                    ),
                     child: Column(
                       children: [
                         Text(receivedNotifyModel.title!),
                         const SizedBox(
-                          height: 20,
+                          height: AppSize.s20,
                         ),
                         const Divider(
-                          height: 2,
+                          height: AppSize.s2,
                         ),
                         Expanded(
-                          child:Center(
+                          child: Center(
                             child: Text(receivedNotifyModel.body!),
                           ),
                         )

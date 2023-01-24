@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:todo/app/utils/color_manager.dart';
 import '../../../../../app/utils/values_manager.dart';
 
 class CustomWeekDayItem extends StatelessWidget {
@@ -24,13 +24,16 @@ class CustomWeekDayItem extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.translucent,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppPadding.p8, horizontal: AppPadding.p10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppPadding.p10,
+        ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               weekday,
               style: TextStyle(
-                fontSize: AppSize.s36.sp,
+                fontSize: AppSize.s38.sp,
                 color: isMark ? Colors.grey[800] : Colors.grey[400],
               ),
             ).tr(),
@@ -40,7 +43,7 @@ class CustomWeekDayItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: AppSize.s40.sp,
                 fontWeight: FontWeight.bold,
-                color: isMark ? Colors.black : Colors.white,
+                color: isMark ? ColorManager.kBlack : ColorManager.kWhite,
               ),
             ),
           ],

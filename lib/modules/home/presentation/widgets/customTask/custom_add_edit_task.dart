@@ -34,7 +34,7 @@ class AddEditTaskWidget extends StatelessWidget {
     TextEditingController dateController = TextEditingController(
       text: editTask == null
           ? null
-          : format.DateFormat('d-M-yyyy | h:mm a').format(
+          : format.DateFormat(AppConstants.dmyyyyhma).format(
               DateTime.parse(editTask!.date),
             ),
     );
@@ -64,7 +64,7 @@ class AddEditTaskWidget extends StatelessWidget {
                         },
                       );
                       dateController.text = format.DateFormat(
-                        'd-M-yyyy | h:mm a',
+                        AppConstants.dmyyyyhma,
                         context.locale.languageCode,
                       ).format(dateTime!);
                       NavigationHelper.pop(context);
@@ -216,15 +216,16 @@ class AddEditTaskWidget extends StatelessWidget {
                       Card(
                         margin: EdgeInsets.zero,
                         child: TextFormField(
-                          maxLines: 8,
+                          maxLines: AppConstants.maxLines,
                           controller: descriptionController,
                           textInputAction: TextInputAction.done,
                           focusNode: descpFocusNode,
                           decoration: InputDecoration(
                             hintText: AppStrings.taskDescription.tr(),
-                            contentPadding:
-                                const EdgeInsets.all(AppPadding.p10),
-                            hintStyle: const TextStyle(color: Colors.black),
+                            contentPadding: const EdgeInsets.all(
+                              AppPadding.p10,
+                            ),
+                            hintStyle: TextStyle(color: ColorManager.kBlack),
                             border: const OutlineInputBorder(),
                           ),
                         ),

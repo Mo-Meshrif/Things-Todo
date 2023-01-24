@@ -100,7 +100,7 @@ class CustomDrawer extends StatelessWidget {
     ];
     return Container(
       color: Colors.white,
-      width: ScreenUtil().screenWidth * 0.7,
+      width: ScreenUtil().screenWidth * AppSize.s07,
       height: ScreenUtil().screenHeight,
       child: Column(
         children: [

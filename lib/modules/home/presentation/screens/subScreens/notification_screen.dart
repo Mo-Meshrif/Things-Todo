@@ -11,6 +11,7 @@ import '../../../../../app/services/notification_services.dart';
 import '../../../../../app/services/services_locator.dart';
 import '../../../../../app/utils/assets_manager.dart';
 import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/constants_manager.dart';
 import '../../../../../app/utils/strings_manager.dart';
 import '../../widgets/custom_app_bar.dart';
 
@@ -26,23 +27,23 @@ class NotificationScreen extends StatelessWidget {
             hideNotifyIcon: true,
             clearNotify: IconButton(
               onPressed: () => HelperFunctions.showAlert(
-                  context: context,
-                  content: const Text(AppStrings.deleteAllNotifications).tr(),
-                  actions: [
-                    AlertActionModel(
-                      title: AppStrings.cancel.tr(),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    AlertActionModel(
-                      title: AppStrings.delete.tr(),
-                      onPressed: () {
-                        innerState(() => items.clear());
-                        sl<NotificationServices>().deleteAllNotificationData();
-                        NavigationHelper.pop(context);
-                      },
-                    ),
-                  ],
-                ),
+                context: context,
+                content: const Text(AppStrings.deleteAllNotifications).tr(),
+                actions: [
+                  AlertActionModel(
+                    title: AppStrings.cancel.tr(),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  AlertActionModel(
+                    title: AppStrings.delete.tr(),
+                    onPressed: () {
+                      innerState(() => items.clear());
+                      sl<NotificationServices>().deleteAllNotificationData();
+                      NavigationHelper.pop(context);
+                    },
+                  ),
+                ],
+              ),
               icon: const Icon(Icons.delete),
             ),
           ),
@@ -81,9 +82,10 @@ class NotificationScreen extends StatelessWidget {
                         Text(items[index].body!.isEmpty
                             ? AppStrings.noDescp.tr()
                             : items[index].body!),
-                        Text(DateFormat('d-M-yyyy | h:mm a',
-                                context.locale.languageCode)
-                            .format(items[index].date!)),
+                        Text(DateFormat(
+                          AppConstants.dmyyyyhma,
+                          context.locale.languageCode,
+                        ).format(items[index].date!)),
                       ],
                     ),
                     trailing: Column(
@@ -100,7 +102,8 @@ class NotificationScreen extends StatelessWidget {
                               actions: [
                                 AlertActionModel(
                                   title: AppStrings.cancel.tr(),
-                                  onPressed: () => NavigationHelper.pop(context),
+                                  onPressed: () =>
+                                      NavigationHelper.pop(context),
                                 ),
                                 AlertActionModel(
                                   title: AppStrings.delete.tr(),

@@ -87,6 +87,7 @@ class AppStrings {
   static const saturaday = 'SAT';
   static const sunday = 'SUN';
   static const notifications = 'Notifications';
+  static const notification = 'Notification';
   static const deleteNotify = 'deleteNotify';
   static const deleteAllNotifications = 'deleteAllNotifications';
   static const problemScussfully = 'problemScussfully';
