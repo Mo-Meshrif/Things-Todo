@@ -81,6 +81,10 @@ extension StringConversion on String {
       return MessageType.text;
     } else if (this == 'voice') {
       return MessageType.voice;
+    } else if (this == 'task') {
+      return MessageType.task;
+    } else if (this == 'problem') {
+      return MessageType.problem;
     } else {
       return MessageType.pic;
     }
@@ -96,6 +100,10 @@ extension MessageTypeConversion on MessageType {
         return 'voice';
       case MessageType.pic:
         return 'pic';
+      case MessageType.task:
+        return 'task';
+      case MessageType.problem:
+        return 'problem';
     }
   }
 }

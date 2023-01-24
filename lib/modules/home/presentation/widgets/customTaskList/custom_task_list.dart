@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../app/helper/enums.dart';
 import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/helper/navigation_helper.dart';
 import '../../../../../app/utils/assets_manager.dart';
 import '../../../../../app/utils/color_manager.dart';
 import '../../../../../app/utils/constants_manager.dart';
@@ -111,7 +112,7 @@ class CustomTaskList extends StatelessWidget {
                                   HelperFunctions.showDataPicker(
                                       context: context,
                                       onSave: () {
-                                        Navigator.pop(context);
+                                        NavigationHelper.pop(context);
                                         BlocProvider.of<HomeBloc>(context).add(
                                           EditTaskEvent(
                                             taskTodo: task.copyWith(

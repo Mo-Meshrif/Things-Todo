@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../app/helper/navigation_helper.dart';
 import '../../../../app/services/notification_services.dart';
 import '../components/auth_inputs.dart';
 import '../components/forget_password.dart';
@@ -43,12 +44,13 @@ class AuthScreen extends StatelessWidget {
             sl<AppShared>().setVal(AppConstants.authPassKey, true);
             sl<AppShared>().setVal(AppConstants.userKey, state.user);
             sl<FirebaseMessaging>().subscribeToTopic(AppConstants.toUser);
-            sl<NotificationServices>().scheduledNotificationsAgain(state.user.id);
-            Navigator.of(ctx).pushReplacementNamed(Routes.homeRoute);
+            sl<NotificationServices>()
+                .scheduledNotificationsAgain(state.user.id);
+            NavigationHelper.pushReplacementNamed(context, Routes.homeRoute);
             _emailController.clear();
             _passwordController.clear();
           } else if (state is AuthRestSuccess) {
-            Navigator.of(ctx).pop();
+            NavigationHelper.pop(context);
             _forgetPassController.clear();
             HelperFunctions.showSnackBar(
               context,
@@ -56,7 +58,7 @@ class AuthScreen extends StatelessWidget {
             );
           } else if (state is AuthFailure) {
             if (state.isPopup) {
-              Navigator.of(ctx).pop();
+              NavigationHelper.pop(context);
             }
             if (state.msg.isNotEmpty) {
               HelperFunctions.showSnackBar(context, state.msg.tr());

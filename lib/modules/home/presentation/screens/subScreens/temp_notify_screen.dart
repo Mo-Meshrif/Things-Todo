@@ -34,7 +34,7 @@ class TempNotifyScreen extends StatelessWidget {
                           height: 2,
                         ),
                         Expanded(
-                          child: Center(
+                          child:Center(
                             child: Text(receivedNotifyModel.body!),
                           ),
                         )

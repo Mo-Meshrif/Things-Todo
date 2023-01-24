@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as format;
 import '../../../../../app/helper/enums.dart';
 import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/helper/navigation_helper.dart';
 import '../../../../../app/utils/color_manager.dart';
 import '../../../../../app/utils/constants_manager.dart';
 import '../../../../../app/utils/strings_manager.dart';
@@ -66,7 +67,7 @@ class AddEditTaskWidget extends StatelessWidget {
                         'd-M-yyyy | h:mm a',
                         context.locale.languageCode,
                       ).format(dateTime!);
-                      Navigator.pop(context);
+                      NavigationHelper.pop(context);
                     },
                     onTimeChanged: (value) =>
                         innerState(() => tempTime = value),
@@ -241,7 +242,7 @@ class AddEditTaskWidget extends StatelessWidget {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-                Navigator.of(context).pop();
+                NavigationHelper.pop(context);
                 if (editTask == null) {
                   addFun!(
                     TaskTodo(

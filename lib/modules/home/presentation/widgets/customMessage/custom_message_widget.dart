@@ -2,6 +2,7 @@ import 'package:advance_image_picker/advance_image_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../../app/helper/enums.dart';
+import '../../../../../app/helper/navigation_helper.dart';
 import '../../../../../app/utils/color_manager.dart';
 import '../../../../../app/utils/constants_manager.dart';
 import '../../../../../app/utils/strings_manager.dart';
@@ -124,7 +125,8 @@ class MessageWidget extends StatelessWidget {
                                       }
                                     };
                                     final List<ImageObject>? objects =
-                                        await Navigator.of(context).push(
+                                        await NavigationHelper.push(
+                                      context,
                                       PageRouteBuilder(
                                         pageBuilder: (context, animation, __) =>
                                             ImagePicker(
@@ -166,7 +168,7 @@ class MessageWidget extends StatelessWidget {
                                   horizontal: AppPadding.p10,
                                 ),
                                 height: AppSize.s45,
-                                width:  AppSize.s45,
+                                width: AppSize.s45,
                                 clipBehavior: Clip.hardEdge,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,

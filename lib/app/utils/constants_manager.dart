@@ -44,4 +44,5 @@ class AppConstants {
       'AAAA8XfpR7U:APA91bHIv_6G4LBkcZuHTXQVxJfHegJujUd8sqsjNPn_fExzN78hUbuYvhzxPytwujrWy4WWG8swcxtw75Zulf63Jh9oEZYCcSqvlR5NK504o17Ia2iGFVGMzjZYy2lkvlMWus9HBPxS';
   static const String notificaionKey = 'notificaionKey';
   static const String scheduledNotKey = 'scheduledNotifications';
+  static const String chatKey = 'chatKey';
 }

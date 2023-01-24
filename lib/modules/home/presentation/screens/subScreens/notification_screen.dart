@@ -2,9 +2,11 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import '../../../../../app/helper/enums.dart';
 import '../../../../../app/common/models/alert_action_model.dart';
 import '../../../../../app/common/models/notifiy_model.dart';
 import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/helper/navigation_helper.dart';
 import '../../../../../app/services/notification_services.dart';
 import '../../../../../app/services/services_locator.dart';
 import '../../../../../app/utils/assets_manager.dart';
@@ -36,7 +38,7 @@ class NotificationScreen extends StatelessWidget {
                       onPressed: () {
                         innerState(() => items.clear());
                         sl<NotificationServices>().deleteAllNotificationData();
-                        Navigator.of(context).pop();
+                        NavigationHelper.pop(context);
                       },
                     ),
                   ],
@@ -68,7 +70,7 @@ class NotificationScreen extends StatelessWidget {
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 10),
                     leading: Image.asset(
-                      items[index].type == 'Task'
+                      items[index].type == MessageType.task
                           ? IconAssets.task
                           : IconAssets.notify,
                     ),
@@ -98,7 +100,7 @@ class NotificationScreen extends StatelessWidget {
                               actions: [
                                 AlertActionModel(
                                   title: AppStrings.cancel.tr(),
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onPressed: () => NavigationHelper.pop(context),
                                 ),
                                 AlertActionModel(
                                   title: AppStrings.delete.tr(),
@@ -121,7 +123,7 @@ class NotificationScreen extends StatelessWidget {
                                       );
                                     }
                                     innerState(() => items.removeAt(index));
-                                    Navigator.of(context).pop();
+                                    NavigationHelper.pop(context);
                                   },
                                 ),
                               ],

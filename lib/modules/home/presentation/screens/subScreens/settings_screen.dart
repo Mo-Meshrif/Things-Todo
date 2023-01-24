@@ -6,6 +6,7 @@ import '../../../../../app/common/models/ring_tone_model.dart';
 import '../../../../../app/common/models/setting_item_model.dart';
 import '../../../../../app/helper/enums.dart';
 import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/helper/navigation_helper.dart';
 import '../../../../../app/helper/shared_helper.dart';
 import '../../../../../app/services/services_locator.dart';
 import '../../../../../app/utils/constants_manager.dart';
@@ -128,7 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   builder: (context) => RingToneWidget(ringtones: ringtones),
                 );
               } else if (type == SettingType.help) {
-                Navigator.of(context).pushNamed(Routes.helpRoute);
+                NavigationHelper.pushNamed(context, Routes.helpRoute);
               } else if (type == SettingType.rate) {
                 LaunchReview.launch(
                   androidAppId: AppConstants.androidAppId,

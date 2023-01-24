@@ -15,12 +15,10 @@ class SendProblemUseCase
 }
 
 class ProblemInput {
-  final int id;
   final String from;
   final String problem;
-  ProblemInput({required this.id, required this.from, required this.problem});
+  ProblemInput({required this.from, required this.problem});
   toJson() => {
-        'id': id,
         'fromId': from,
         'problem': problem,
       };

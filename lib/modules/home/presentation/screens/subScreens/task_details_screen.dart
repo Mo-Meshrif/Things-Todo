@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../../app/common/models/alert_action_model.dart';
 import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/helper/navigation_helper.dart';
 import '../../../../../app/utils/assets_manager.dart';
 import '../../../../../app/utils/color_manager.dart';
 import '../../../../../app/utils/constants_manager.dart';
@@ -29,7 +30,7 @@ class TaskDetailsScreen extends StatelessWidget {
           if (state is EditTaskLoaded) {
             tempTask = state.task!;
           } else if (state is DeleteTaskLLoaded) {
-            Navigator.of(context).pop();
+            NavigationHelper.pop(context);
           }
         },
         builder: (context, state) => Stack(
@@ -94,7 +95,7 @@ class TaskDetailsScreen extends StatelessWidget {
                             actions: [
                               AlertActionModel(
                                 title: AppStrings.cancel.tr(),
-                                onPressed: () => Navigator.of(context).pop(),
+                                onPressed: () => NavigationHelper.pop(context),
                               ),
                               AlertActionModel(
                                 title: AppStrings.delete.tr(),
@@ -102,7 +103,7 @@ class TaskDetailsScreen extends StatelessWidget {
                                   BlocProvider.of<HomeBloc>(context).add(
                                     DeleteTaskEvent(taskId: tempTask.id!),
                                   );
-                                  Navigator.of(context).pop();
+                                  NavigationHelper.pop(context);
                                 },
                               ),
                             ],
@@ -165,7 +166,7 @@ class TaskDetailsScreen extends StatelessWidget {
                                 HelperFunctions.showDataPicker(
                                     context: context,
                                     onSave: () {
-                                      Navigator.pop(context);
+                                      NavigationHelper.pop(context);
                                       BlocProvider.of<HomeBloc>(context).add(
                                         EditTaskEvent(
                                           taskTodo: tempTask.copyWith(

@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:todo/app/common/models/notifiy_model.dart';
+import '../../../../app/helper/extentions.dart';
+import '../../../../app/common/models/notifiy_model.dart';
 import '../../../../app/errors/exception.dart';
 import '../../../../app/helper/enums.dart';
 import '../../../../app/services/notification_services.dart';
@@ -60,12 +62,26 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
     DocumentReference<Map<String, dynamic>> val = await firebaseFirestore
         .collection(AppConstants.chatCollection)
         .add(messageModel.toJson());
-    return val.id.isNotEmpty;
+    if (val.id.isNotEmpty) {
+      return await sl<NotificationServices>().sendNotification(
+        NotifyActionModel(
+          toToken: "topic/${AppConstants.toAdmin}",
+          toId: AppConstants.toAdmin,
+          fromId: messageModel.idFrom,
+          title: 'Message from user'.tr(),
+          body: 'Click to check it !'.tr(),
+          type: messageModel.type,
+        ),
+      );
+    } else {
+      return false;
+    }
   }
 
   Future<String> _uploadToFireStorage(String filePath, MessageType type) async {
-    Reference reference =
-        firebaseStorage.ref(type == MessageType.pic ? 'images' : 'voices');
+    Reference reference = firebaseStorage.ref(
+      type.toStringVal(),
+    );
     TaskSnapshot task = await reference
         .child(filePath.substring(filePath.lastIndexOf('/'), filePath.length))
         .putFile(File(filePath));
@@ -93,13 +109,16 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
           .collection(AppConstants.complaintsCollection)
           .add(problemInput.toJson());
       if (val.id.isNotEmpty) {
-        return await sl<NotificationServices>()
-            .sendNotification(NotifyActionModel(
-          id: problemInput.id,
-          to: "topic/${AppConstants.toAdmin}",
-          title: 'Problem from user',
-          body: problemInput.problem,
-        ));
+        return await sl<NotificationServices>().sendNotification(
+          NotifyActionModel(
+            toToken: "topic/${AppConstants.toAdmin}",
+            toId: AppConstants.toAdmin,
+            fromId: problemInput.from,
+            title: 'Problem from user'.tr(),
+            body: problemInput.problem,
+            type: MessageType.problem,
+          ),
+        );
       } else {
         return false;
       }

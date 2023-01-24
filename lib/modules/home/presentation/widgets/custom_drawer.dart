@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../app/common/models/custom_task_args_model.dart';
 import '../../../../app/common/models/drawer_item_model.dart';
 import '../../../../app/helper/helper_functions.dart';
+import '../../../../app/helper/navigation_helper.dart';
 import '../../../../app/utils/assets_manager.dart';
 import '../../../../app/utils/color_manager.dart';
 import '../../../../app/utils/routes_manager.dart';
@@ -32,7 +33,8 @@ class CustomDrawer extends StatelessWidget {
           BlocProvider.of<HomeBloc>(context).add(
             const GetCustomTasksEvent('important'),
           );
-          Navigator.of(context).pushNamed(
+          NavigationHelper.pushNamed(
+            context,
             Routes.customRoute,
             arguments: CustomTaskArgsModel(
               appTitle: 'Important Tasks',
@@ -50,7 +52,8 @@ class CustomDrawer extends StatelessWidget {
           BlocProvider.of<HomeBloc>(context).add(
             const GetCustomTasksEvent('done'),
           );
-          Navigator.of(context).pushNamed(
+          NavigationHelper.pushNamed(
+            context,
             Routes.customRoute,
             arguments: CustomTaskArgsModel(
               appTitle: 'Done Tasks',
@@ -68,7 +71,8 @@ class CustomDrawer extends StatelessWidget {
           BlocProvider.of<HomeBloc>(context).add(
             const GetCustomTasksEvent('later'),
           );
-          Navigator.of(context).pushNamed(
+          NavigationHelper.pushNamed(
+            context,
             Routes.customRoute,
             arguments: CustomTaskArgsModel(
               appTitle: 'Later Tasks',
@@ -82,7 +86,7 @@ class CustomDrawer extends StatelessWidget {
         icon: IconAssets.settings,
         size: AppSize.s25,
         rotate: false,
-        onTap: () => Navigator.of(context).pushNamed(Routes.settingsRoute),
+        onTap: () => NavigationHelper.pushNamed(context, Routes.settingsRoute),
       ),
       DrawerItemModel(
         title: AppStrings.logout,
@@ -124,8 +128,7 @@ class CustomDrawer extends StatelessWidget {
                                 backgroundColor: ColorManager.primary,
                                 radius: AppSize.s100.r,
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.all(AppPadding.p10),
+                                  padding: const EdgeInsets.all(AppPadding.p10),
                                   child: CircularProgressIndicator(
                                     color: ColorManager.primary,
                                   ),
@@ -136,8 +139,7 @@ class CustomDrawer extends StatelessWidget {
                                 radius: AppSize.s100.r,
                                 backgroundImage: pic != null
                                     ? FileImage(pic)
-                                    : const AssetImage(
-                                            ImageAssets.placeHolder)
+                                    : const AssetImage(ImageAssets.placeHolder)
                                         as ImageProvider,
                               ),
                       ),
@@ -162,7 +164,7 @@ class CustomDrawer extends StatelessWidget {
                 DrawerItemModel item = pageList[index];
                 return ListTile(
                   onTap: () {
-                    Navigator.pop(context);
+                    NavigationHelper.pop(context);
                     item.onTap();
                   },
                   leading: Transform(

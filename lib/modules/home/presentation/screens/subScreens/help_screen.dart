@@ -2,8 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/helper/navigation_helper.dart';
+import '../../../../../app/helper/shared_helper.dart';
+import '../../../../../app/services/services_locator.dart';
 import '../../../../../app/utils/assets_manager.dart';
 import '../../../../../app/utils/color_manager.dart';
+import '../../../../../app/utils/constants_manager.dart';
 import '../../../../../app/utils/routes_manager.dart';
 import '../../../../../app/utils/strings_manager.dart';
 import '../../../../../app/utils/values_manager.dart';
@@ -103,7 +107,6 @@ class _HelpScreenState extends State<HelpScreen> {
                                     BlocProvider.of<HomeBloc>(context).add(
                                   SendProblemEvent(
                                     ProblemInput(
-                                      id: UniqueKey().hashCode,
                                       from: uid,
                                       problem: problemController.text,
                                     ),
@@ -128,7 +131,11 @@ class _HelpScreenState extends State<HelpScreen> {
               child: CustomOrDivider(),
             ),
             ListTile(
-              onTap: () => Navigator.of(context).pushNamed(Routes.chatRoute),
+              onTap: () {
+                String routeName = Routes.chatRoute;
+                NavigationHelper.pushNamed(context, routeName);
+                sl<AppShared>().setVal(AppConstants.chatKey, routeName);
+              },
               tileColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSize.s5),

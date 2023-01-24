@@ -1,11 +1,18 @@
+import '../../../app/helper/extentions.dart';
+import '../../helper/enums.dart';
+
 class NotifyActionModel {
-  final int id;
-  final String to, title, body;
+  final String toToken, toId, fromId, title;
+  final MessageType type;
+  final String? body;
+
   NotifyActionModel({
-    required this.id,
-    required this.to,
+    required this.toToken,
+    required this.toId,
+    required this.fromId,
     required this.title,
-    required this.body,
+    this.body,
+    required this.type,
   });
 }
 
@@ -13,7 +20,7 @@ class ReceivedNotifyModel {
   final int id;
   final String? title;
   final String? body;
-  final String? type;
+  final MessageType? type;
   final DateTime? date;
   final String? buttonKeyPressed;
   final bool isOpened;
@@ -31,18 +38,19 @@ class ReceivedNotifyModel {
     this.isOpened = false,
   });
 
-  factory ReceivedNotifyModel.fromJson(Map<String, dynamic> map) =>
-      ReceivedNotifyModel(
-        from: map['from'] ?? '',
-        to: map['to'] ?? '',
-        id: map['id'] ?? -1,
-        title: map['title'] ?? '',
-        body: map['body'] ?? '',
-        type: map['summary'] ?? '',
-        date: map['date'] ?? DateTime.now(),
-        isOpened: map['isOpened'] ?? false,
-        buttonKeyPressed: map['buttonKeyPressed'] ?? '',
-      );
+  factory ReceivedNotifyModel.fromJson(Map<String, dynamic> map) => ReceivedNotifyModel(
+      from: map['from'] ?? '',
+      to: map['to'] ?? '',
+      id: map['id'] ?? -1,
+      title: map['title'] ?? '',
+      body: map['body'] ?? '',
+      type: map['summary'] == null
+          ? MessageType.problem
+          : (map['summary'] as String).toMessageType(),
+      date: map['date'] ?? DateTime.now(),
+      isOpened: map['isOpened'] ?? false,
+      buttonKeyPressed: map['buttonKeyPressed'] ?? '',
+    );
   ReceivedNotifyModel copyWith(bool? isOpened) => ReceivedNotifyModel(
         id: id,
         title: title,
@@ -58,6 +66,6 @@ class ReceivedNotifyModel {
         'id': id,
         'title': title,
         'body': body,
-        'summary': type,
+        'summary': type?.toStringVal(),
       };
 }

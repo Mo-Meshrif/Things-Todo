@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../app/common/models/notifiy_model.dart';
 import '../../../../app/helper/helper_functions.dart';
+import '../../../../app/helper/navigation_helper.dart';
 import '../../../../app/helper/shared_helper.dart';
 import '../../../../app/services/services_locator.dart';
 import '../../../../app/utils/assets_manager.dart';
@@ -38,7 +39,8 @@ class CustomAppBar extends AppBar {
                       sl<FirebaseMessaging>().unsubscribeFromTopic(
                         AppConstants.toUser,
                       );
-                      Navigator.of(context).pushNamedAndRemoveUntil(
+                      NavigationHelper.pushNamedAndRemoveUntil(
+                        context,
                         Routes.authRoute,
                         (route) => false,
                       );
@@ -94,7 +96,8 @@ class CustomAppBar extends AppBar {
                                     BadgePosition.topEnd(top: 12, end: 15),
                                 showBadge: notOpenedList.isNotEmpty,
                                 child: GestureDetector(
-                                  onTap: () => Navigator.of(context).pushNamed(
+                                  onTap: () => NavigationHelper.pushNamed(
+                                    context,
                                     Routes.notificationRoute,
                                     arguments: items,
                                   ),

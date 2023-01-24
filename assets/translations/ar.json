@@ -133,5 +133,8 @@
     "image_picker_request_camera_permission": "",
     "image_picker_exposure_title": "",
     "image_picker_exposure_auto_title": "",
-    "image_picker_exposure_locked_title": ""
+    "image_picker_exposure_locked_title": "",
+    "Problem from user": "مشكلة من عميل",
+    "Message from user": "رسالة من عميل",
+    "Click to check it !": "انقر للتحقق من ذلك"
 }

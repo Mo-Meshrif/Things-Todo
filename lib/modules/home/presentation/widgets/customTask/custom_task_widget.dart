@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todo/app/utils/constants_manager.dart';
 import '../../../../../app/helper/helper_functions.dart';
+import '../../../../../app/helper/navigation_helper.dart';
 import '../../../../../app/utils/color_manager.dart';
 import '../../../../../app/utils/routes_manager.dart';
 import '../../controller/home_bloc.dart';
@@ -27,7 +28,8 @@ class TaskWidget extends StatelessWidget {
     return ListTile(
       title: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: () => Navigator.of(context).pushNamed(
+        onTap: () => NavigationHelper.pushNamed(
+          context,
           Routes.taskDetailsRoute,
           arguments: {
             'task': taskTodo,

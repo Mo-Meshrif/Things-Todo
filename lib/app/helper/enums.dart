@@ -4,4 +4,4 @@ enum TaskCategory { all, done, later }
 
 enum SettingType { lang, sound, help, rate, about }
 
-enum MessageType { text, voice, pic }
+enum MessageType { task, problem, text, voice, pic }

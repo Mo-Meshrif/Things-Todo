@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../app/common/models/alert_action_model.dart';
 import '../../../../app/helper/helper_functions.dart';
+import '../../../../app/helper/navigation_helper.dart';
 import '../../../../app/utils/assets_manager.dart';
 import '../../../../app/utils/color_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
@@ -55,14 +56,14 @@ class ForgetPassword extends StatelessWidget {
           actions: [
             AlertActionModel(
               title: AppStrings.cancel,
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => NavigationHelper.pop(context),
             ),
             AlertActionModel(
                 title: AppStrings.rest,
                 onPressed: () {
                   if (_forgetKey.currentState!.validate()) {
                     _forgetKey.currentState!.save();
-                    Navigator.of(context).pop();
+                    NavigationHelper.pop(context);
                     restFun();
                   }
                 }),

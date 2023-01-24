@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
+import '../../../app/helper/extentions.dart';
 import '../../modules/home/domain/entities/task_to_do.dart';
 import '../common/models/notifiy_model.dart';
 import '../helper/helper_functions.dart';
@@ -55,14 +57,25 @@ class NotificationServicesImpl implements NotificationServices {
       Uri.parse(AppConstants.fcmLink),
       body: jsonEncode(
         {
-          "to": notifyActionModel.to,
+          "to": notifyActionModel.toToken,
           "priority": "high",
           "data": {
             "content": {
-              'id': notifyActionModel.id,
+              'id': UniqueKey().hashCode,
               "channelKey": "basic_channel",
               'title': notifyActionModel.title,
               'body': notifyActionModel.body,
+              'fullScreenIntent': true,
+              'wakeUpScreen': true,
+              'criticalAlert': true,
+              'showWhen': true,
+              'autoDismissible': true,
+              'summary': notifyActionModel.type.toStringVal(),
+              'from': notifyActionModel.fromId,
+              'to': notifyActionModel.toId,
+              'date': null,
+              'isOpened': false,
+              'buttonKeyPressed': null,
             }
           }
         },
@@ -96,7 +109,7 @@ class NotificationServicesImpl implements NotificationServices {
         wakeUpScreen: true,
         criticalAlert: true,
         showWhen: true,
-        summary: 'Task',
+        summary: 'task',
       ),
       actionButtons: [
         NotificationActionButton(

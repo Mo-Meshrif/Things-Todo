@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/common/models/notifiy_model.dart';
 import '../../../../app/helper/helper_functions.dart';
+import '../../../../app/helper/navigation_helper.dart';
 import '../../../../app/services/services_locator.dart';
 import '../../../../app/utils/color_manager.dart';
 import '../../../../app/utils/constants_manager.dart';
@@ -20,7 +21,10 @@ import '../widgets/custom_drawer.dart';
 import '../widgets/custom_text_search.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {
-  AwesomeNotifications().createNotificationFromJsonData(event.data);
+  Map<String, dynamic> map = event.data;
+  if (HelperFunctions.checkNotificationDisplay(map)) {
+    AwesomeNotifications().createNotificationFromJsonData(map);
+  }
 }
 
 class HomeScreen extends StatefulWidget {
@@ -36,8 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     HelperFunctions.checkNotificationsPermission(context);
     //Handle Firebase Notifications
-    FirebaseMessaging.onMessage.listen((event) =>
-        sl<NotificationServices>().createBasicNotification(event.data));
+    FirebaseMessaging.onMessage.listen((event) {
+      Map<String, dynamic> map = event.data;
+      if (HelperFunctions.checkNotificationDisplay(map)) {
+        sl<NotificationServices>().createBasicNotification(map);
+      }
+    });
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     //Get Daily Tasks on Start
     BlocProvider.of<HomeBloc>(context).add(GetDailyTasksEvent());
@@ -66,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is GetTaskByIdLoaded) {
             if (state.task != null) {
               if (state.withNav) {
-                Navigator.of(context).pushNamed(
+                NavigationHelper.pushNamed(
+                  context,
                   Routes.taskDetailsRoute,
                   arguments: {
                     'task': state.task,
@@ -84,7 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
             } else {
-              Navigator.of(context).pushNamed(
+              NavigationHelper.pushNamed(
+                context,
                 Routes.tempNotifyScreenRoute,
                 arguments: ReceivedNotifyModel(id: -1),
               );
@@ -97,7 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 CustomTextSearch(
-                  onTap: () => Navigator.of(context).pushNamed(
+                  onTap: () => NavigationHelper.pushNamed(
+                    context,
                     Routes.searchRoute,
                   ),
                 ),
