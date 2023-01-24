@@ -4,7 +4,7 @@ import '../../data/models/chat_message_model.dart';
 
 class ChatMessage extends Equatable {
   final String? msgId;
-  final String uid;
+  final String? groupId;
   final String idFrom;
   final String idTo;
   final String timestamp;
@@ -16,7 +16,7 @@ class ChatMessage extends Equatable {
 
   const ChatMessage({
     this.msgId,
-    required this.uid,
+    this.groupId,
     required this.idFrom,
     required this.idTo,
     required this.timestamp,
@@ -28,6 +28,7 @@ class ChatMessage extends Equatable {
   });
 
   ChatMessage copyBaseWith({
+    String? groupId,
     String? uid,
     String? idFrom,
     String? idTo,
@@ -40,7 +41,7 @@ class ChatMessage extends Equatable {
   }) =>
       ChatMessageModel(
         msgId: msgId,
-        uid: uid ?? this.uid,
+        groupId: groupId ?? this.groupId,
         idFrom: idFrom ?? this.idFrom,
         idTo: idTo ?? this.idTo,
         timestamp: timestamp ?? this.timestamp,
@@ -54,7 +55,7 @@ class ChatMessage extends Equatable {
   @override
   List<Object?> get props => [
         msgId,
-        uid,
+        groupId,
         idFrom,
         idTo,
         timestamp,

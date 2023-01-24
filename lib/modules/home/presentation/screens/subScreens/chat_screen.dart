@@ -28,6 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     var homeBloc = BlocProvider.of<HomeBloc>(context);
+    String groupId = HelperFunctions.getChatGroupId(AppConstants.toAdmin);
     return WillPopScope(
       onWillPop: () {
         sl<AppShared>().removeVal(AppConstants.chatKey);
@@ -48,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
         body: StreamBuilder<List<ChatMessage>>(
-          stream: homeBloc.getChatList(),
+          stream: homeBloc.getChatList(groupId),
           builder: (context, snapshot) {
             List<ChatMessage> data = snapshot.hasData ? snapshot.data! : [];
             return StatefulBuilder(
@@ -68,8 +69,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   sendMessage: (message, type) async {
                     if (message != null) {
                       var chatMessage = ChatMessageModel(
-                        uid: uid,
                         idFrom: uid,
+                        groupId: groupId,
                         idTo: AppConstants.toAdmin,
                         timestamp: Timestamp.now().toString(),
                         content: message,
@@ -87,7 +88,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     }
                   },
                   updateMessage: (message) => homeBloc.add(
-                    UpdateMessageEvent(message),
+                    UpdateMessageEvent(
+                      message.copyBaseWith(groupId: groupId),
+                    ),
                   ),
                 );
               },

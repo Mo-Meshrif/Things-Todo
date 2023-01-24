@@ -136,7 +136,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
     if (await networkServices.isConnected()) {
       try {
         final val = await baseHomeRemoteDataSource.sendMessage(ChatMessageModel(
-            uid: message.uid,
+            groupId: message.groupId,
             idFrom: message.idFrom,
             idTo: message.idTo,
             timestamp: message.timestamp,
@@ -153,7 +153,8 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   }
 
   @override
-  Stream<List<ChatMessage>> getChatList(String uid) => baseHomeRemoteDataSource.getChatList(uid);
+  Stream<List<ChatMessage>> getChatList(String chatGroupId) =>
+      baseHomeRemoteDataSource.getChatList(chatGroupId);
 
   @override
   Future<Either<ServerFailure, void>> updateMessage(ChatMessage message) async {
@@ -162,7 +163,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
         var val = await baseHomeRemoteDataSource.updateMessage(
           ChatMessageModel(
             msgId: message.msgId,
-            uid: message.uid,
+            groupId: message.groupId,
             idFrom: message.idFrom,
             idTo: message.idTo,
             timestamp: message.timestamp,

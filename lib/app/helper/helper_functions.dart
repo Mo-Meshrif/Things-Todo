@@ -391,6 +391,16 @@ class HelperFunctions {
     return tempList;
   }
 
+  //get chatGroupId
+  static String getChatGroupId(String peerId) {
+    String uid = getSavedUser().id;
+    if (uid.compareTo(peerId) > 0) {
+      return '$uid - $peerId';
+    } else {
+      return '$peerId - $uid';
+    }
+  }
+
   //refactor chatList
   static List<ChatMessage> refactorChatList(
       List<ChatMessage> oldList, List<ChatMessage> snapList, String uid) {

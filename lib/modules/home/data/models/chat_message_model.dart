@@ -6,7 +6,7 @@ import '../../domain/entities/chat_message.dart';
 class ChatMessageModel extends ChatMessage {
   const ChatMessageModel({
     String? msgId,
-    required String uid,
+    String? groupId,
     required String idFrom,
     required String idTo,
     required String timestamp,
@@ -17,7 +17,7 @@ class ChatMessageModel extends ChatMessage {
     bool isLocal = false,
   }) : super(
           msgId: msgId,
-          uid: uid,
+          groupId: groupId,
           idFrom: idFrom,
           idTo: idTo,
           timestamp: timestamp,
@@ -30,7 +30,6 @@ class ChatMessageModel extends ChatMessage {
   factory ChatMessageModel.fromJson(Map<String, dynamic> map) =>
       ChatMessageModel(
         msgId: map['msgId'],
-        uid: map['uid'],
         idFrom: map['idFrom'],
         idTo: map['idTo'],
         timestamp: map['timestamp'],
@@ -42,7 +41,6 @@ class ChatMessageModel extends ChatMessage {
   factory ChatMessageModel.fromSnapshot(DocumentSnapshot snapshot) =>
       ChatMessageModel(
         msgId: snapshot.id,
-        uid: snapshot.get('uid'),
         idFrom: snapshot.get('idFrom'),
         idTo: snapshot.get('idTo'),
         timestamp: snapshot.get('timestamp'),
@@ -52,7 +50,6 @@ class ChatMessageModel extends ChatMessage {
       );
 
   ChatMessageModel copySubWith({
-    String? uid,
     String? idFrom,
     String? idTo,
     String? timestamp,
@@ -62,7 +59,7 @@ class ChatMessageModel extends ChatMessage {
   }) =>
       ChatMessageModel(
         msgId: msgId,
-        uid: uid ?? this.uid,
+        groupId: groupId,
         idFrom: idFrom ?? this.idFrom,
         idTo: idTo ?? this.idTo,
         timestamp: timestamp ?? this.timestamp,
@@ -72,7 +69,6 @@ class ChatMessageModel extends ChatMessage {
       );
 
   toJson() => {
-        'uid': uid,
         'idFrom': idFrom,
         'idTo': idTo,
         'timestamp': timestamp,

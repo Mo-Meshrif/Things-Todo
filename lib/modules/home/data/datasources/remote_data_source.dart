@@ -14,7 +14,7 @@ import '../models/chat_message_model.dart';
 
 abstract class BaseHomeRemoteDataSource {
   Future<bool> sendMessage(ChatMessageModel messageModel);
-  Stream<List<ChatMessageModel>> getChatList(String uid);
+  Stream<List<ChatMessageModel>> getChatList(String chatGroupId);
   Future<void> updateMessage(ChatMessageModel messageModel);
   Future<bool> sendProblem(ProblemInput problemInput);
 }
@@ -24,10 +24,11 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
   final FirebaseStorage firebaseStorage;
   HomeRemoteDataSource(this.firebaseFirestore, this.firebaseStorage);
   @override
-  Stream<List<ChatMessageModel>> getChatList(String uid) {
+  Stream<List<ChatMessageModel>> getChatList(String chatGroupId) {
     Stream<QuerySnapshot<Map<String, dynamic>>> val = firebaseFirestore
         .collection(AppConstants.chatCollection)
-        .where('uid', isEqualTo: uid)
+        .doc(chatGroupId)
+        .collection(chatGroupId)
         .orderBy('timestamp', descending: true)
         .snapshots();
     return val.map((querySnap) => querySnap.docs
@@ -61,6 +62,8 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
   Future<bool> _uploadToFireStore(ChatMessageModel messageModel) async {
     DocumentReference<Map<String, dynamic>> val = await firebaseFirestore
         .collection(AppConstants.chatCollection)
+        .doc(messageModel.groupId)
+        .collection(messageModel.groupId!)
         .add(messageModel.toJson());
     if (val.id.isNotEmpty) {
       return await sl<NotificationServices>().sendNotification(
@@ -95,6 +98,8 @@ class HomeRemoteDataSource implements BaseHomeRemoteDataSource {
     try {
       await firebaseFirestore
           .collection(AppConstants.chatCollection)
+          .doc(messageModel.groupId)
+          .collection(messageModel.groupId!)
           .doc(messageModel.msgId)
           .update(messageModel.toJson());
     } catch (e) {

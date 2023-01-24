@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import '../../domain/usecases/get_task_by_id_use_case.dart';
 import '/app/helper/extentions.dart';
 import '../../../../app/errors/failure.dart';
-import '../../../../app/helper/helper_functions.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/entities/task_to_do.dart';
 import '../../domain/usecases/add_task_use_case.dart';
@@ -190,9 +189,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     );
   }
 
-  Stream<List<ChatMessage>> getChatList() => getChatListUseCase(
-        HelperFunctions.getSavedUser().id,
-      );
+  Stream<List<ChatMessage>> getChatList(String chatGroupId) =>
+      getChatListUseCase(chatGroupId);
 
   FutureOr<void> _updateMessage(
       UpdateMessageEvent event, Emitter<HomeState> emit) async {

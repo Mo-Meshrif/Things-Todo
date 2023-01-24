@@ -22,6 +22,7 @@ class AppConstants {
   static const String emailUsed = 'email-already-in-use';
   static const String opNotAllowed = 'operation-not-allowed';
   static const String noConnection = 'NO_INTERNET_CONNECTION';
+  static const int errorMaxLines = 3;
   static const String emptyVal = '';
   static const String nullError = 'null';
   static const String userKey = 'userKey';
