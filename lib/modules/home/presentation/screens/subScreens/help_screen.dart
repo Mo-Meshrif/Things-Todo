@@ -85,12 +85,21 @@ class _HelpScreenState extends State<HelpScreen> {
                         maxLines: 8,
                         enabled: textFieldEnable,
                         controller: problemController,
-                        textInputAction: TextInputAction.done,
+                        textInputAction: TextInputAction.send,
                         decoration: InputDecoration(
                           hintText: AppStrings.problemDetails.tr(),
                           contentPadding: const EdgeInsets.all(AppPadding.p10),
                           hintStyle: const TextStyle(color: Colors.black),
                           border: const OutlineInputBorder(),
+                        ),
+                        onFieldSubmitted: (value) =>
+                            BlocProvider.of<HomeBloc>(context).add(
+                          SendProblemEvent(
+                            ProblemInput(
+                              from: uid,
+                              problem: value,
+                            ),
+                          ),
                         ),
                       ),
                     ),
