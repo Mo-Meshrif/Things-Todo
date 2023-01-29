@@ -112,6 +112,19 @@ class DeleteTaskLLoaded extends HomeState {
   List<Object?> get props => [taskId];
 }
 
+class DeleteAllTasksLoading extends HomeState {
+  @override
+  List<Object?> get props => [];
+}
+
+class DeleteAllTasksLoaded extends HomeState {
+  final bool isDeletedAll;
+
+  const DeleteAllTasksLoaded({required this.isDeletedAll});
+  @override
+  List<Object?> get props => [];
+}
+
 class SearchedTaskLoading extends HomeState {
   @override
   List<Object?> get props => [];

@@ -124,8 +124,19 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   Future<Either<LocalFailure, int>> deleteTask(int taskId) async {
     try {
       final id = await baseHomeLocalDataSource.deleteTask(taskId);
-      _cancelScheduledNotifications(id);
+      _cancelScheduledNotificationById(id);
       return Right(id);
+    } on LocalExecption catch (failure) {
+      return Left(LocalFailure(msg: failure.msg));
+    }
+  }
+
+  @override
+  Future<Either<LocalFailure, bool>> deleteAllTasks() async {
+    try {
+      final val = await baseHomeLocalDataSource.deleteAllTasks();
+      notificationServices.cancelAllScheduledNotifications();
+      return Right(val);
     } on LocalExecption catch (failure) {
       return Left(LocalFailure(msg: failure.msg));
     }
@@ -199,7 +210,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
   _createTaskReminder(TaskTodo taskTodo, {bool isEdit = false}) async {
     if (taskTodo.id != 0) {
       if (isEdit) {
-        _cancelScheduledNotifications(taskTodo.id!);
+        _cancelScheduledNotificationById(taskTodo.id!);
       }
       await notificationServices.createTaskReminderNotification(
         taskTodo,
@@ -207,7 +218,7 @@ class HomeRepositoryImpl implements BaseHomeRespository {
     }
   }
 
-  _cancelScheduledNotifications(int id) async {
-    await notificationServices.cancelScheduledNotifications(id);
+  _cancelScheduledNotificationById(int id) async {
+    await notificationServices.cancelScheduledNotificationById(id);
   }
 }

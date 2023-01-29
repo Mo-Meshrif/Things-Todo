@@ -11,6 +11,7 @@ abstract class BaseHomeLocalDataSource {
   Future<TaskModel?> getTaskById(int taskId);
   Future<TaskModel?> editTask(TaskModel taskModel);
   Future<int> deleteTask(int taskId);
+  Future<bool> deleteAllTasks();
 }
 
 class HomeLocalDataSource implements BaseHomeLocalDataSource {
@@ -116,6 +117,17 @@ class HomeLocalDataSource implements BaseHomeLocalDataSource {
         whereArgs: [taskId],
       );
       return val == 1 ? taskId : -1;
+    } on DatabaseException catch (e) {
+      throw LocalExecption(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> deleteAllTasks() async {
+    try {
+      var dbClient = await database;
+      int val = await dbClient!.delete('tasks');
+      return val==1;
     } on DatabaseException catch (e) {
       throw LocalExecption(e.toString());
     }

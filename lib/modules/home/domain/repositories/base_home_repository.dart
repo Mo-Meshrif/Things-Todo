@@ -11,6 +11,7 @@ abstract class BaseHomeRespository {
   Future<Either<LocalFailure, TaskTodo?>> getTaskById(int taskId);
   Future<Either<LocalFailure, TaskTodo?>> editTask(TaskTodo taskTodo);
   Future<Either<LocalFailure, int>> deleteTask(int taskId);
+  Future<Either<LocalFailure, bool>> deleteAllTasks();
   Future<Either<ServerFailure, bool>> sendMessage(ChatMessage message);
   Future<Either<ServerFailure, void>> updateMessage(ChatMessage message);
   Stream<List<ChatMessage>> getChatList(String chatGroupId);

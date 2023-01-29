@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import '../../../../app/common/usecase/base_use_case.dart';
+import '../../domain/usecases/delete_all_tasks_use_case.dart';
 import '../../domain/usecases/get_task_by_id_use_case.dart';
 import '/app/helper/extentions.dart';
 import '../../../../app/errors/failure.dart';
@@ -24,6 +26,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetTaskByIdUseCae getTaskByIdUseCase;
   final EditTaskUseCase editTaskUseCase;
   final DeleteTaskUseCase deleteTaskUseCase;
+  final DeleteAllTasksUseCase deleteAllTasksUseCase;
   final SendMessageUseCase sendMessageUseCase;
   final GetChatListUseCae getChatListUseCase;
   final UpdateMessageUseCase updateMessageUseCase;
@@ -34,6 +37,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     required this.getTaskByIdUseCase,
     required this.editTaskUseCase,
     required this.deleteTaskUseCase,
+    required this.deleteAllTasksUseCase,
     required this.sendMessageUseCase,
     required this.getChatListUseCase,
     required this.updateMessageUseCase,
@@ -46,6 +50,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<GetTaskByIdEvent>(_getTaskById);
     on<EditTaskEvent>(_editTask);
     on<DeleteTaskEvent>(_deleteTask);
+    on<DeleteAllTasksEvent>(_deleteAllTasks);
     on<GetSearchedTasksEvent>(_getSearchedTasks);
     on<GetCustomTasksEvent>(_getCustomTasks);
     on<ClearSearchListEvent>((_, emit) => emit(HomeTranstion()));
@@ -144,6 +149,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     result.fold(
       (failure) => emit(HomeFailure(msg: failure.msg)),
       (taskId) => emit(DeleteTaskLLoaded(taskId: taskId)),
+    );
+  }
+
+  FutureOr<void> _deleteAllTasks(
+      DeleteAllTasksEvent event, Emitter<HomeState> emit) async {
+    emit(DeleteAllTasksLoading());
+    final result = await deleteAllTasksUseCase(const NoParameters());
+    result.fold(
+      (failure) => emit(HomeFailure(msg: failure.msg)),
+      (val) => emit(DeleteAllTasksLoaded(isDeletedAll: val)),
     );
   }
 

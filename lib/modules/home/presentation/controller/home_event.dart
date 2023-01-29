@@ -47,6 +47,8 @@ class DeleteTaskEvent extends HomeEvent {
   const DeleteTaskEvent({required this.taskId});
 }
 
+class DeleteAllTasksEvent extends HomeEvent {}
+
 class GetSearchedTasksEvent extends HomeEvent {
   final String searchedVal;
 

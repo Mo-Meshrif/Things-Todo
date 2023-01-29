@@ -16,7 +16,8 @@ abstract class NotificationServices {
   Future<bool> sendNotification(NotifyActionModel notifyActionModel);
   Future<void> createBasicNotification(Map<String, dynamic> map);
   Future<void> createTaskReminderNotification(TaskTodo taskTodo);
-  Future<void> cancelScheduledNotifications(int id);
+  Future<void> cancelScheduledNotificationById(int id);
+  Future<void> cancelAllScheduledNotifications();
   Future<void> saveNotificationData(
     Map<String, dynamic> notiMap,
     bool opened, {
@@ -32,7 +33,7 @@ abstract class NotificationServices {
 class NotificationServicesImpl implements NotificationServices {
   final AwesomeNotifications awesomeNotifications;
   NotificationServicesImpl(this.awesomeNotifications);
-  
+
   @override
   Future<bool> init() => awesomeNotifications.initialize(
         'resource://drawable/app_icon',
@@ -132,8 +133,12 @@ class NotificationServicesImpl implements NotificationServices {
   }
 
   @override
-  Future<void> cancelScheduledNotifications(int id) =>
+  Future<void> cancelScheduledNotificationById(int id) =>
       awesomeNotifications.cancel(id);
+
+  @override
+  Future<void> cancelAllScheduledNotifications() =>
+      awesomeNotifications.cancelAllSchedules();
 
   @override
   Future<void> saveNotificationData(
