@@ -51,6 +51,7 @@ dependencies:
   store_version_checker: ^0.0.3
   url_launcher: ^6.1.8
   need_resume: ^1.0.7+1
+  dbcrypt: ^2.0.0
 
 dev_dependencies:
   flutter_native_splash: ^2.1.6

@@ -98,4 +98,6 @@ class AppStrings {
   static const updateButtonLabel = 'Upgrade';
   static const closeButtonLabel = 'Exit-app';
   static const ignoreButtonLabel = 'update-Later';
+  static const deleteAccount = 'delete-account-message';
+  static const deleteWrongPass='Wrong password';
 }

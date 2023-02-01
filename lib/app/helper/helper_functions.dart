@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:arabic_numbers/arabic_numbers.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dbcrypt/dbcrypt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -147,11 +148,16 @@ class HelperFunctions {
             id: savedData['id'],
             name: savedData['name'],
             email: savedData['email'],
+            password: savedData['password'],
             pic: savedData['pic'],
             deviceToken: savedData['deviceToken'],
           )
         : savedData;
   }
+
+  //getSignType
+  static SignType getSignType(AuthUser authUser) =>
+      authUser.password != null ? SignType.email : SignType.social;
 
   //loadUserPic
   static Future<File?> loadUserPic(AuthUser user) async {
@@ -570,4 +576,13 @@ class HelperFunctions {
       }
     }
   }
+
+  //encrptPassword
+  static String encrptPassword(String password) => DBCrypt().hashpw(
+        password,
+        DBCrypt().gensalt(),
+      );
+
+  static bool checkPassword(String plaintext, String hashed) =>
+      DBCrypt().checkpw(plaintext, hashed);
 }

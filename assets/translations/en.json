@@ -75,6 +75,7 @@
     "Sound": "Sounds",
     "Help": "Help",
     "Rate": "Rate",
+    "Delete Account": "Delete Account",
     "About": "About",
     "problemDetails": "Write your problem here !",
     "sendProblem": "Send your problem",
@@ -148,10 +149,12 @@
     "Mark later": "Mark later",
     "Edit task": "Edit task",
     "Delete task": "Delete task",
-    "update":"Update",
+    "update": "Update",
     "required update to the latest version": "You must update to the latest version so you can not use this app until it is updated.",
-    "recommeded update to the latest version":"There is a newer version of the app available, please update it now",
+    "recommeded update to the latest version": "There is a newer version of the app available, please update it now",
     "Upgrade": "Upgrade",
-    "update-Later":"Later",
-    "Exit-app": "Exit App"
+    "update-Later": "Later",
+    "Exit-app": "Exit App",
+    "delete-account-message": "You're about to delete your account permanently. If you're ready to delete, enter your password and tap Delete. Once you submit your account for deletion, you aren't able to recover your tasks.",
+    "Wrong password":"Wrong password"
 }

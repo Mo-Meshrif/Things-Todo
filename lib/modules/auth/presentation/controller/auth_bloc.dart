@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../app/common/usecase/base_use_case.dart';
 import '../../../../app/utils/constants_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
+import '../../domain/usecases/delete_use_case.dart';
 import '../../domain/usecases/logout_use_case.dart';
 import '/modules/auth/domain/usecases/sign_in_with_credential.dart';
 import '/modules/auth/domain/entities/user.dart';
@@ -28,6 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final TwitterUseCase twitterUseCase;
   final GoogleUseCase googleUseCase;
   final LogoutUseCase logoutUseCase;
+  final DeleteUseCase deleteUseCase;
   AuthBloc({
     required this.loginUseCase,
     required this.signUpUseCase,
@@ -37,6 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.twitterUseCase,
     required this.googleUseCase,
     required this.logoutUseCase,
+    required this.deleteUseCase,
   }) : super(AuthInitial()) {
     on<AuthToggleEvent>(_toggle);
     on<LoginEvent>(_login);
@@ -47,6 +50,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<TwitterLoginEvent>(_twitterLogin);
     on<GoogleLoginEvent>(_googleLogin);
     on<LogoutEvent>(_logout);
+    on<DeleteEvent>(_delete);
   }
 
   FutureOr<void> _toggle(AuthToggleEvent event, Emitter<AuthState> emit) {
@@ -141,11 +145,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _logout(LogoutEvent event, Emitter<AuthState> emit) async {
     emit(AuthPopUpLoading());
-    final Either<Failure, dynamic> result =
-        await logoutUseCase(event.uid);
+    final Either<Failure, dynamic> result = await logoutUseCase(event.uid);
     result.fold(
       (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (_) => emit(const AuthLogoutSuccess()),
+    );
+  }
+
+  FutureOr<void> _delete(DeleteEvent event, Emitter<AuthState> emit) async {
+    emit(AuthPopUpLoading());
+    final Either<Failure, dynamic> result = await deleteUseCase(event.uid);
+    result.fold(
+      (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
+      (_) => emit(const AuthDeleteSuccess()),
     );
   }
 

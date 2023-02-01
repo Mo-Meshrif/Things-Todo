@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../../../app/helper/helper_functions.dart';
 import '/app/errors/exception.dart';
 import '/app/utils/constants_manager.dart';
 import 'package:twitter_login/entity/auth_result.dart';
@@ -20,6 +21,7 @@ abstract class BaseAuthRemoteDataSource {
   Future<AuthCredential> twitter();
   Future<AuthCredential> google();
   Future<void> logout(String uid);
+  Future<void> delete(String uid);
 }
 
 class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
@@ -49,6 +51,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         id: userCredential.user!.uid,
         name: userCredential.user!.displayName ?? AppConstants.emptyVal,
         email: userInputs.email,
+        password: HelperFunctions.encrptPassword(userInputs.password),
         pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
         deviceToken: await getDeviceToken(),
       );
@@ -68,6 +71,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         id: userCredential.user!.uid,
         name: userInputs.name,
         email: userInputs.email,
+        password: HelperFunctions.encrptPassword(userInputs.password),
         pic: userCredential.user!.photoURL ?? AppConstants.emptyVal,
         deviceToken: await getDeviceToken(),
       );
@@ -148,6 +152,24 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
             .update(map);
       }
       return await firebaseAuth.signOut();
+    } catch (e) {
+      throw ServerExecption(e.toString());
+    }
+  }
+
+  @override
+  Future<void> delete(String uid) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _getUserDataFromFireStore(uid);
+      if (querySnapshot.docs.isNotEmpty) {
+        var doc = querySnapshot.docs.first;
+        firebaseFirestore
+            .collection(AppConstants.usersCollection)
+            .doc(doc.id)
+            .delete();
+      }
+      return await firebaseAuth.currentUser!.delete();
     } catch (e) {
       throw ServerExecption(e.toString());
     }

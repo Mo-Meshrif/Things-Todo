@@ -48,3 +48,7 @@ class AuthSocialPass extends AuthState {
 class AuthLogoutSuccess extends AuthState {
   const AuthLogoutSuccess();
 }
+
+class AuthDeleteSuccess extends AuthState {
+  const AuthDeleteSuccess();
+}

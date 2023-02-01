@@ -117,6 +117,19 @@ class AuthRepositoryImpl implements BaseAuthRepository {
   }
 
   @override
+  Future<Either<Failure, void>> delete(String uid)async {
+    if (await networkServices.isConnected()) {
+      try {
+        return Right(await baseAuthRemoteDataSource.delete(uid));
+      } on ServerExecption catch (failure) {
+        return Left(ServerFailure(msg: failure.msg));
+      }
+    } else {
+      return const Left(ServerFailure(msg: AppConstants.noConnection));
+    }
+  }
+
+  @override
   Future<Either<Failure, AuthUser>> signInWithCredential(
       AuthCredential authCredential) async {
     try {

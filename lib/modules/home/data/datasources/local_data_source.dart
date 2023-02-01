@@ -126,8 +126,12 @@ class HomeLocalDataSource implements BaseHomeLocalDataSource {
   Future<bool> deleteAllTasks() async {
     try {
       var dbClient = await database;
-      int val = await dbClient!.delete('tasks');
-      return val==1;
+      int val = await dbClient!.delete(
+        'tasks',
+        where: 'uid=?',
+        whereArgs: [HelperFunctions.getSavedUser().id],
+      );
+      return val == 1;
     } on DatabaseException catch (e) {
       throw LocalExecption(e.toString());
     }

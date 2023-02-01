@@ -75,6 +75,7 @@
     "Sound": "الأصوات",
     "Help": "مساعدة",
     "Rate": "تقييم",
+    "Delete Account": "حذف الحساب",
     "About": "حول",
     "problemDetails": "قم بكتابة مشكلتك هنا !",
     "sendProblem": "أرسل مشكلتك",
@@ -148,10 +149,12 @@
     "Mark later": "اجعله مؤجل",
     "Edit task": "تعديل المهمة",
     "Delete task": "حذف المهمة",
-    "update":"تحديث",
+    "update": "تحديث",
     "required update to the latest version": "يتطلب منك التحديث إلى أحدث إصدار لا يمكنك استخدام هذا التطبيق حتى يتم تحديثه",
-    "recommeded update to the latest version":"يتوفر إصدار أحدث من التطبيق يرجى تحديثه الآن",
+    "recommeded update to the latest version": "يتوفر إصدار أحدث من التطبيق يرجى تحديثه الآن",
     "Upgrade": "تحديث",
-    "update-Later":"في وقت لاحق",
-    "Exit-app": "اغلاق التطبيق"
+    "update-Later": "في وقت لاحق",
+    "Exit-app": "اغلاق التطبيق",
+    "delete-account-message": "أنت على وشك حذف حسابك نهائيًا إذا كنت جاهزًا للحذف فأدخل كلمة مرورك وانقر على حذف بمجرد إرسال حسابك للحذف لن تتمكن من استعادة مهامك",
+    "Wrong password":"كلمة المرور خاطئة"
 }

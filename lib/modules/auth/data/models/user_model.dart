@@ -5,18 +5,21 @@ class UserModel extends AuthUser {
     required String id,
     required String name,
     required String email,
+    String? password,
     required String deviceToken,
     String? pic,
   }) : super(
             id: id,
             name: name,
             email: email,
+            password: password,
             pic: pic,
             deviceToken: deviceToken);
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json['id'],
         name: json['name'],
         email: json['email'],
+        password: json['password'],
         pic: json['pic'],
         deviceToken: json['deviceToken'],
       );
@@ -24,6 +27,7 @@ class UserModel extends AuthUser {
     String? id,
     String? name,
     String? email,
+    String? password,
     String? deviceToken,
     String? pic,
   }) {
@@ -31,6 +35,7 @@ class UserModel extends AuthUser {
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
+      password: password ?? this.password,
       deviceToken: deviceToken ?? this.deviceToken,
       pic: pic ?? this.pic,
     );
@@ -40,6 +45,7 @@ class UserModel extends AuthUser {
         'id': id,
         'name': name,
         'email': email,
+        'password': password,
         'pic': pic,
         'deviceToken': deviceToken,
       };

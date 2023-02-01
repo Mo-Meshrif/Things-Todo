@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
+import '../../modules/auth/domain/usecases/delete_use_case.dart';
 import '../../modules/auth/domain/usecases/logout_use_case.dart';
 import '../../modules/home/data/datasources/local_data_source.dart';
 import '../../modules/home/domain/usecases/delete_all_tasks_use_case.dart';
@@ -113,6 +114,7 @@ class ServicesLocator {
     sl.registerLazySingleton(() => TwitterUseCase(sl()));
     sl.registerLazySingleton(() => GoogleUseCase(sl()));
     sl.registerLazySingleton(() => LogoutUseCase(sl()));
+    sl.registerLazySingleton(() => DeleteUseCase(sl()));
     sl.registerLazySingleton(() => AddTaskUseCase(sl()));
     sl.registerLazySingleton(() => GetTasksUseCase(sl()));
     sl.registerLazySingleton(() => GetTaskByIdUseCae(sl()));
@@ -134,6 +136,7 @@ class ServicesLocator {
         twitterUseCase: sl(),
         googleUseCase: sl(),
         logoutUseCase: sl(),
+        deleteUseCase: sl(),
       ),
     );
     sl.registerLazySingleton(
