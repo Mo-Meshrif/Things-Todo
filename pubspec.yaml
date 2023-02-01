@@ -47,6 +47,10 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   badges: ^2.0.3
+  tutorial_coach_mark: ^1.2.4
+  store_version_checker: ^0.0.3
+  url_launcher: ^6.1.8
+  need_resume: ^1.0.7+1
 
 dev_dependencies:
   flutter_native_splash: ^2.1.6
@@ -76,6 +80,7 @@ flutter:
     - assets/icons/
     - assets/json/
     - assets/sound/
+    - assets/coach-mark/
 
   # fonts:
   #   - family: Schyler

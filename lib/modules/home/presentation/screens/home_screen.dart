@@ -3,9 +3,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:need_resume/need_resume.dart';
 import '../../../../app/common/models/notifiy_model.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/helper/navigation_helper.dart';
+import '../../../../app/helper/shared_helper.dart';
+import '../../../../app/helper/tutorial_coach_helper.dart';
 import '../../../../app/services/services_locator.dart';
 import '../../../../app/utils/color_manager.dart';
 import '../../../../app/utils/constants_manager.dart';
@@ -34,11 +37,11 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ResumableState<HomeScreen> {
   int index = 0;
   @override
   void initState() {
-    HelperFunctions.checkNotificationsPermission(context);
+    HelperFunctions.checkNotificationsPermission(context, _applyAfterCheck);
     //Handle Firebase Notifications
     FirebaseMessaging.onMessage.listen((event) {
       Map<String, dynamic> map = event.data;
@@ -47,9 +50,23 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    //Get Daily Tasks on Start
-    BlocProvider.of<HomeBloc>(context).add(GetDailyTasksEvent());
     super.initState();
+  }
+
+  _applyAfterCheck() {
+    if (sl<AppShared>().getVal(AppConstants.tutorialCoachmarkKey) == null) {
+      //TutorialCoachmark
+      TutorialCoachHelper.homeTutorialCoachMark(context);
+    } else {
+      //Get Daily Tasks on Start
+      BlocProvider.of<HomeBloc>(context).add(GetDailyTasksEvent());
+    }
+  }
+
+  @override
+  void onResume() {
+    //check version update after every resume
+    HelperFunctions.checkUpdate(context);
   }
 
   @override

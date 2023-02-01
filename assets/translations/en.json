@@ -136,5 +136,22 @@
     "image_picker_exposure_locked_title": "",
     "Problem from user": "Problem from user",
     "Message from user": "Message from user",
-    "Click to check it !": "Click to check it !"
+    "Click to check it !": "Click to check it !",
+    "Skip": "Skip",
+    "Next": "Next",
+    "Finish": "Finish",
+    "Use it to add a new task": "Use it to add a new task",
+    "Done-coach": "Swipe to right to mark task as done",
+    "later-coach": "Swipe to left to mark task as later",
+    "double-tap-for-more": "Double tap in the middle to get more tools",
+    "Mark done": "Mark done",
+    "Mark later": "Mark later",
+    "Edit task": "Edit task",
+    "Delete task": "Delete task",
+    "update":"Update",
+    "required update to the latest version": "You must update to the latest version so you can not use this app until it is updated.",
+    "recommeded update to the latest version":"There is a newer version of the app available, please update it now",
+    "Upgrade": "Upgrade",
+    "update-Later":"Later",
+    "Exit-app": "Exit App"
 }

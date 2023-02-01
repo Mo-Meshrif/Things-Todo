@@ -2,12 +2,13 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'common/config/config_bloc.dart';
 import 'common/models/notifiy_model.dart';
 import 'helper/helper_functions.dart';
 import 'services/notification_services.dart';
 import 'services/services_locator.dart';
+import 'utils/constants_manager.dart';
 import 'utils/routes_manager.dart';
-import 'utils/strings_manager.dart';
 import '/app/utils/theme_manager.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -24,6 +25,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    sl<ConfigBloc>().add(GetConfigData());
     sl<AwesomeNotifications>().displayedStream.listen(
           (event) => sl<NotificationServices>().saveNotificationData(
             event.toMap(),
@@ -53,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         splitScreenMode: true,
         builder: (context, _) => MaterialApp(
           navigatorKey: navigatorKey,
-          title: AppStrings.appName,
+          title: AppConstants.appName,
           theme: ThemeManager.lightTheme(),
           onGenerateRoute: RouteGenerator.getRoute,
           localizationsDelegates: context.localizationDelegates,

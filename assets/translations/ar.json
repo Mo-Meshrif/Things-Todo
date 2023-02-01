@@ -136,5 +136,22 @@
     "image_picker_exposure_locked_title": "",
     "Problem from user": "مشكلة من عميل",
     "Message from user": "رسالة من عميل",
-    "Click to check it !": "انقر للتحقق من ذلك"
+    "Click to check it !": "انقر للتحقق من ذلك",
+    "Skip": "تخطي",
+    "Next": "التالي",
+    "Finish": "انهاء",
+    "Use it to add a new task": "استخدمه لإضافة مهمة جديدة",
+    "Done-coach": "قم بالتمرير الى اليسار لجعل المهمة منجزة",
+    "later-coach": "قم بالتمرير الى اليمين لتأجيل المهمة",
+    "double-tap-for-more": "اضغظ مرتين في المنتصف للحصول على المزيد من الأدوات",
+    "Mark done": "اجعله منجز",
+    "Mark later": "اجعله مؤجل",
+    "Edit task": "تعديل المهمة",
+    "Delete task": "حذف المهمة",
+    "update":"تحديث",
+    "required update to the latest version": "يتطلب منك التحديث إلى أحدث إصدار لا يمكنك استخدام هذا التطبيق حتى يتم تحديثه",
+    "recommeded update to the latest version":"يتوفر إصدار أحدث من التطبيق يرجى تحديثه الآن",
+    "Upgrade": "تحديث",
+    "update-Later":"في وقت لاحق",
+    "Exit-app": "اغلاق التطبيق"
 }

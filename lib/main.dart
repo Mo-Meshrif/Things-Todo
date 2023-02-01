@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'app/app.dart';
+import 'app/common/config/config_bloc.dart';
 import 'app/services/bloc_observer.dart';
 import 'app/services/notification_services.dart';
 import 'app/services/services_locator.dart';
@@ -41,6 +42,7 @@ void main() async {
       useOnlyLangCode: true,
       child: MultiBlocProvider(
         providers: [
+          BlocProvider<ConfigBloc>(create: (context) => sl()),
           BlocProvider<AuthBloc>(create: (context) => sl()),
           BlocProvider<HomeBloc>(create: (context) => sl()),
         ],

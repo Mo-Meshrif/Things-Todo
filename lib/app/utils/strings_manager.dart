@@ -1,5 +1,4 @@
 class AppStrings {
-  static const appName = "Things-Todo";
   static const userName = 'Username';
   static const email = 'Email';
   static const password = 'Password';
@@ -91,4 +90,12 @@ class AppStrings {
   static const deleteNotify = 'deleteNotify';
   static const deleteAllNotifications = 'deleteAllNotifications';
   static const problemScussfully = 'problemScussfully';
+  static const updateTitle = 'update';
+  static const requiredUpdateDescription =
+      'required update to the latest version';
+  static const recommededUpdateDescription =
+      'recommeded update to the latest version';
+  static const updateButtonLabel = 'Upgrade';
+  static const closeButtonLabel = 'Exit-app';
+  static const ignoreButtonLabel = 'update-Later';
 }

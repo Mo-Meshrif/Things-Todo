@@ -11,6 +11,7 @@ import 'package:twitter_login/twitter_login.dart';
 import '../../modules/auth/domain/usecases/logout_use_case.dart';
 import '../../modules/home/data/datasources/local_data_source.dart';
 import '../../modules/home/domain/usecases/delete_all_tasks_use_case.dart';
+import '../common/config/config_bloc.dart';
 import 'notification_services.dart';
 import '../../modules/home/data/datasources/remote_data_source.dart';
 import '../../modules/home/data/repositories/home_repository_impl.dart';
@@ -39,6 +40,7 @@ import '../../modules/auth/data/repositories/auth_repository_impl.dart';
 import '../../modules/auth/domain/repositories/base_auth_repository.dart';
 import '../../modules/auth/domain/usecases/facebook_use_case.dart';
 import '../helper/shared_helper.dart';
+import 'service_settings.dart';
 
 final sl = GetIt.instance;
 
@@ -48,8 +50,6 @@ class ServicesLocator {
     final storage = GetStorage();
     sl.registerLazySingleton<GetStorage>(() => storage);
     sl.registerLazySingleton<AppShared>(() => AppStorage(sl()));
-    //Network services
-    sl.registerLazySingleton<NetworkServices>(() => InternetCheckerLookup());
     //Firebase messaging
     final firebaseMessaging = FirebaseMessaging.instance;
     sl.registerLazySingleton<FirebaseMessaging>(() => firebaseMessaging);
@@ -78,6 +78,17 @@ class ServicesLocator {
     //AwesomeNotifications
     final awesomeNotifications = AwesomeNotifications();
     sl.registerLazySingleton<AwesomeNotifications>(() => awesomeNotifications);
+    //services
+    sl.registerLazySingleton<NetworkServices>(() => InternetCheckerLookup());
+    sl.registerLazySingleton<ServiceSettings>(
+      () => ServiceSettingsImpl(
+        sl(),
+        sl(),
+      ),
+    );
+    sl.registerLazySingleton<NotificationServices>(
+      () => NotificationServicesImpl(sl()),
+    );
     //DataSources
     sl.registerLazySingleton<BaseAuthRemoteDataSource>(
       () => AuthRemoteDataSource(sl(), sl(), sl(), sl(), sl(), sl()),
@@ -87,9 +98,6 @@ class ServicesLocator {
     );
     sl.registerLazySingleton<BaseHomeRemoteDataSource>(
       () => HomeRemoteDataSource(sl(), sl()),
-    );
-    sl.registerLazySingleton<NotificationServices>(
-      () => NotificationServicesImpl(sl()),
     );
     //Repositories
     sl.registerLazySingleton<BaseAuthRepository>(
@@ -140,6 +148,11 @@ class ServicesLocator {
         getChatListUseCase: sl(),
         updateMessageUseCase: sl(),
         sendProblemUseCase: sl(),
+      ),
+    );
+    sl.registerLazySingleton(
+      () => ConfigBloc(
+        serviceSettings: sl(),
       ),
     );
   }

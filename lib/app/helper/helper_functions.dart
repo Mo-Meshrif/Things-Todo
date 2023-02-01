@@ -16,9 +16,11 @@ import '../../modules/auth/domain/entities/user.dart';
 import '../../modules/home/domain/entities/chat_message.dart';
 import '../../modules/home/presentation/controller/home_bloc.dart';
 import '../app.dart';
+import '../common/config/config_bloc.dart';
 import '../common/models/alert_action_model.dart';
 import '../common/models/notifiy_model.dart';
 import '../services/notification_services.dart';
+import '../services/service_settings.dart';
 import '../utils/routes_manager.dart';
 import '../utils/strings_manager.dart';
 import '/app/helper/extentions.dart';
@@ -28,6 +30,7 @@ import '../services/services_locator.dart';
 import '/app/utils/values_manager.dart';
 import '../utils/color_manager.dart';
 import '../utils/constants_manager.dart';
+import 'update_checker.dart';
 
 class HelperFunctions {
 //checkArabic
@@ -426,11 +429,14 @@ class HelperFunctions {
   }
 
   //Check notifications permission
-  static checkNotificationsPermission(BuildContext context) {
+  static checkNotificationsPermission(
+      BuildContext context, Function applyAfter) {
     sl<AwesomeNotifications>().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         if (Platform.isIOS) {
-          sl<AwesomeNotifications>().requestPermissionToSendNotifications();
+          sl<AwesomeNotifications>()
+              .requestPermissionToSendNotifications()
+              .then((_) => applyAfter());
         } else {
           showAlert(
             context: context,
@@ -441,15 +447,23 @@ class HelperFunctions {
                 title: 'Allow',
                 onPressed: () => sl<AwesomeNotifications>()
                     .requestPermissionToSendNotifications()
-                    .then((_) => Navigator.pop(context)),
+                    .then((_) {
+                  Navigator.pop(context);
+                  applyAfter();
+                }),
               ),
               AlertActionModel(
                 title: 'Don\'t Allow',
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  applyAfter();
+                },
               ),
             ],
           );
         }
+      } else {
+        applyAfter();
       }
     });
   }
@@ -522,6 +536,38 @@ class HelperFunctions {
       }
     } else {
       return true;
+    }
+  }
+
+  //update app
+  static checkUpdate(BuildContext context) {
+    if (sl<AppShared>().getVal(AppConstants.tutorialCoachmarkKey) != null) {
+      if (sl<AppShared>().getVal(AppConstants.updateAlertkKey) == null) {
+        sl<AppShared>().setVal(AppConstants.updateAlertkKey, true);
+        sl<ServiceSettings>().getServiceSettings().then((config) {
+          if (config != null) {
+            sl<ConfigBloc>().add(UpdateConfigData(config: config));
+            bool forceUpdate = config.version.forceUpdate;
+            String? remoteDescription =
+                config.version.description[context.locale.languageCode];
+            String localDescription = forceUpdate
+                ? AppStrings.requiredUpdateDescription.tr()
+                : AppStrings.recommededUpdateDescription.tr();
+            UpdateChecker.displayUpdateAlert(
+              context,
+              forceUpdate: forceUpdate,
+              title: AppStrings.updateTitle.tr(),
+              description: remoteDescription ?? localDescription,
+              updateButtonLabel: AppStrings.updateButtonLabel.tr(),
+              closeButtonLabel: AppStrings.closeButtonLabel.tr(),
+              ignoreButtonLabel: AppStrings.ignoreButtonLabel.tr(),
+              onExitAlert: () => sl<AppShared>().removeVal(
+                AppConstants.updateAlertkKey,
+              ),
+            );
+          }
+        });
+      }
     }
   }
 }

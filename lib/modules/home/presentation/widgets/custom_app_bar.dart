@@ -10,6 +10,7 @@ import '../../../../app/common/models/notifiy_model.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/helper/navigation_helper.dart';
 import '../../../../app/helper/shared_helper.dart';
+import '../../../../app/helper/tutorial_coach_helper.dart';
 import '../../../../app/services/services_locator.dart';
 import '../../../../app/utils/assets_manager.dart';
 import '../../../../app/utils/constants_manager.dart';
@@ -117,32 +118,34 @@ class CustomAppBar extends AppBar {
             Visibility(
               visible: title == null,
               child: Builder(
-                  builder: (context) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppPadding.p10),
-                        child: GestureDetector(
-                          onTap: () => showBottomSheet(
-                            context: context,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(AppSize.s30.r),
-                                topRight: Radius.circular(AppSize.s30.r),
+                builder: (context) => Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppPadding.p10),
+                  child: GestureDetector(
+                    onTap: () => showBottomSheet(
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppSize.s30.r),
+                          topRight: Radius.circular(AppSize.s30.r),
+                        ),
+                      ),
+                      builder: (context) => AddEditTaskWidget(
+                        addFun: (task) => context.read<HomeBloc>().add(
+                              AddTaskEvent(
+                                taskTodo: task,
                               ),
                             ),
-                            builder: (context) => AddEditTaskWidget(
-                              addFun: (task) => context.read<HomeBloc>().add(
-                                    AddTaskEvent(
-                                      taskTodo: task,
-                                    ),
-                                  ),
-                            ),
-                          ),
-                          child: SvgPicture.asset(
-                            IconAssets.add,
-                            width: AppSize.s25,
-                          ),
-                        ),
-                      )),
+                      ),
+                    ),
+                    child: SvgPicture.asset(
+                      IconAssets.add,
+                      key: TutorialCoachHelper.addKey,
+                      width: AppSize.s25,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         );

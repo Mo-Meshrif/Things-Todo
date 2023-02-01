@@ -119,7 +119,7 @@ class MessageWidget extends StatelessWidget {
                                     final configs = ImagePickerConfigs();
                                     configs.translateFunc = (name, value) {
                                       if (name == 'app_title') {
-                                        return AppStrings.appName;
+                                        return AppConstants.appName;
                                       } else {
                                         return name.tr();
                                       }

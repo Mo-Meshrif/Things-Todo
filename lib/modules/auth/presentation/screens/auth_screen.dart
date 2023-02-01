@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../app/common/config/config_bloc.dart';
 import '../../../../app/helper/navigation_helper.dart';
 import '../../../../app/services/notification_services.dart';
 import '../components/auth_inputs.dart';
@@ -131,17 +132,31 @@ class AuthScreen extends StatelessWidget {
                           ),
                         ),
                   ),
-                  SizedBox(height: AppSize.s48.h),
-                  const CustomOrDivider(),
-                  Text(AppStrings.loginUsingSm.tr()),
-                  SizedBox(height: AppSize.s48.h),
-                  SocialLogin(
-                    facebookFun: () =>
-                        context.read<AuthBloc>().add(FacebookLoginEvent()),
-                    twitterFun: () =>
-                        context.read<AuthBloc>().add(TwitterLoginEvent()),
-                    googleFun: () =>
-                        context.read<AuthBloc>().add(GoogleLoginEvent()),
+                  BlocBuilder<ConfigBloc, ConfigState>(
+                    builder: (context, state) => state is ConfigLoaded
+                        ? Visibility(
+                            visible: state.configModel.showSocial,
+                            child: Column(
+                              children: [
+                                SizedBox(height: AppSize.s48.h),
+                                const CustomOrDivider(),
+                                Text(AppStrings.loginUsingSm.tr()),
+                                SizedBox(height: AppSize.s48.h),
+                                SocialLogin(
+                                  facebookFun: () => context
+                                      .read<AuthBloc>()
+                                      .add(FacebookLoginEvent()),
+                                  twitterFun: () => context
+                                      .read<AuthBloc>()
+                                      .add(TwitterLoginEvent()),
+                                  googleFun: () => context
+                                      .read<AuthBloc>()
+                                      .add(GoogleLoginEvent()),
+                                ),
+                              ],
+                            ),
+                          )
+                        : const Padding(padding: EdgeInsets.zero),
                   ),
                   SizedBox(height: AppSize.s48.h),
                   ToggleAuth(

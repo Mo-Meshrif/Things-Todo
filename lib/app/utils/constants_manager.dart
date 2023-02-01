@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppConstants {
+  static const String appName = "Things-Todo";
   static const Locale arabic = Locale('ar');
   static const Locale english = Locale('en');
   static const String langPath = 'assets/translations';
@@ -51,4 +52,7 @@ class AppConstants {
   static const String notificaionKey = 'notificaionKey';
   static const String scheduledNotKey = 'scheduledNotifications';
   static const String chatKey = 'chatKey';
+  static const String tutorialCoachmarkKey = 'tutorialCoachmarkKey';
+  static const String settingsCollection = 'Settings';
+  static const String updateAlertkKey='Update-Alert';
 }
