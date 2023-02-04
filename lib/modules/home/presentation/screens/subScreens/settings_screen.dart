@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +17,6 @@ import '../../../../../app/utils/strings_manager.dart';
 import '../../../../../app/utils/values_manager.dart';
 import '../../../../auth/domain/entities/user.dart';
 import '../../../../auth/presentation/controller/auth_bloc.dart';
-import '../../controller/home_bloc.dart';
 import '../../widgets/custom_about_widget.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_ringtone_widget.dart';
@@ -121,65 +119,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: CustomAppBar(
         title: AppStrings.settings,
       ),
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthPopUpLoading) {
-            HelperFunctions.showPopUpLoading(context);
-          } else if (state is AuthDeleteSuccess) {
-            sl<HomeBloc>().add(DeleteAllTasksEvent());
-            sl<AppShared>().removeVal(AppConstants.authPassKey);
-            sl<AppShared>().setVal(AppConstants.authPassKey, false);
-            sl<FirebaseMessaging>().unsubscribeFromTopic(
-              AppConstants.toUser,
-            );
-            NavigationHelper.pushNamedAndRemoveUntil(
-              context,
-              Routes.authRoute,
-              (route) => false,
-            );
-          }
-        },
-        builder: (context, state) => GridView.builder(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppPadding.p10,
-            vertical: AppPadding.p15,
-          ),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: AppConstants.settingAxisCount,
-            mainAxisExtent: AppSize.s185,
-            mainAxisSpacing: AppSize.s1,
-          ),
-          itemCount: tempSettings.length,
-          itemBuilder: (context, i) {
-            SettingType type = tempSettings[i].settingType;
-            return GestureDetector(
-              onTap: () {
-                if (type == SettingType.lang) {
-                  setState(() => HelperFunctions.toggleLanguage(context));
-                } else if (type == SettingType.sound) {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppSize.s30.r),
-                        topRight: Radius.circular(AppSize.s30.r),
-                      ),
+      body: GridView.builder(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppPadding.p10,
+          vertical: AppPadding.p15,
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: AppConstants.settingAxisCount,
+          mainAxisExtent: AppSize.s185,
+          mainAxisSpacing: AppSize.s1,
+        ),
+        itemCount: tempSettings.length,
+        itemBuilder: (context, i) {
+          SettingType type = tempSettings[i].settingType;
+          return GestureDetector(
+            onTap: () {
+              if (type == SettingType.lang) {
+                setState(() => HelperFunctions.toggleLanguage(context));
+              } else if (type == SettingType.sound) {
+                showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(AppSize.s30.r),
+                      topRight: Radius.circular(AppSize.s30.r),
                     ),
-                    builder: (context) => RingToneWidget(ringtones: ringtones),
-                  );
-                } else if (type == SettingType.help) {
-                  NavigationHelper.pushNamed(context, Routes.helpRoute);
-                } else if (type == SettingType.rate) {
-                  LaunchReview.launch(
-                    androidAppId: AppConstants.androidAppId,
-                    iOSAppId: AppConstants.iOSAppId,
-                  );
-                } else if (type == SettingType.detete) {
-                  String passVal = AppConstants.emptyVal;
-                  HelperFunctions.showAlert(
-                    context: context,
-                    title: tempSettings[i].title.tr(),
-                    content: Column(
+                  ),
+                  builder: (context) => RingToneWidget(ringtones: ringtones),
+                );
+              } else if (type == SettingType.help) {
+                NavigationHelper.pushNamed(context, Routes.helpRoute);
+              } else if (type == SettingType.rate) {
+                LaunchReview.launch(
+                  androidAppId: AppConstants.androidAppId,
+                  iOSAppId: AppConstants.iOSAppId,
+                );
+              } else if (type == SettingType.detete) {
+                String passVal = AppConstants.emptyVal;
+                HelperFunctions.showAlert(
+                  context: context,
+                  title: tempSettings[i].title.tr(),
+                  content: SingleChildScrollView(
+                    child: Column(
                       children: [
                         const Text(AppStrings.deleteAccount).tr(),
                         const SizedBox(height: 5),
@@ -195,69 +176,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         )
                       ],
                     ),
-                    actions: [
-                      AlertActionModel(
-                        title: AppStrings.cancel.tr(),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                      AlertActionModel(
-                        title: AppStrings.delete.tr(),
-                        onPressed: () {
-                          if (passVal.isEmpty) {
+                  ),
+                  actions: [
+                    AlertActionModel(
+                      title: AppStrings.cancel.tr(),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    AlertActionModel(
+                      title: AppStrings.delete.tr(),
+                      onPressed: () {
+                        if (passVal.isEmpty) {
+                          HelperFunctions.showSnackBar(
+                            context,
+                            AppStrings.enterPassword.tr(),
+                          );
+                        } else {
+                          if (HelperFunctions.checkPassword(
+                            passVal,
+                            auhtUser.password!,
+                          )) {
+                            BlocProvider.of<AuthBloc>(context)
+                                .add(DeleteEvent(uid: auhtUser.id));
+                            NavigationHelper.pop(context);
+                          } else {
                             HelperFunctions.showSnackBar(
                               context,
-                              AppStrings.enterPassword.tr(),
+                              AppStrings.deleteWrongPass.tr(),
                             );
-                          } else {
-                            if (HelperFunctions.checkPassword(
-                              passVal,
-                              auhtUser.password!,
-                            )) {
-                              BlocProvider.of<AuthBloc>(context)
-                                  .add(DeleteEvent(uid: auhtUser.id));
-                              NavigationHelper.pop(context);
-                            } else {
-                              HelperFunctions.showSnackBar(
-                                context,
-                                AppStrings.deleteWrongPass.tr(),
-                              );
-                            }
                           }
-                        },
-                      ),
-                    ],
-                  );
-                } else {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppSize.s30.r),
-                        topRight: Radius.circular(AppSize.s30.r),
-                      ),
+                        }
+                      },
                     ),
-                    builder: (context) => const CustomAboutWidget(),
-                  );
-                }
-              },
-              child: Card(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      tempSettings[i].icon,
-                      height: AppSize.s48,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      tempSettings[i].title,
-                    ).tr(),
                   ],
-                ),
+                );
+              } else {
+                showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(AppSize.s30.r),
+                      topRight: Radius.circular(AppSize.s30.r),
+                    ),
+                  ),
+                  builder: (context) => const CustomAboutWidget(),
+                );
+              }
+            },
+            child: Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    tempSettings[i].icon,
+                    height: AppSize.s48,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    tempSettings[i].title,
+                  ).tr(),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
