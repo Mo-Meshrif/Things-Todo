@@ -36,8 +36,6 @@ dependencies:
   path_provider: ^2.0.5
   flutter_vibrate: ^1.1.0
   launch_review: ^3.0.1
-  audio_waveforms: ^1.0.1
-  voice_message_package: ^0.0.74
   advance_image_picker: ^0.1.7+1
   cached_network_image: ^3.2.3
   http: ^0.13.5

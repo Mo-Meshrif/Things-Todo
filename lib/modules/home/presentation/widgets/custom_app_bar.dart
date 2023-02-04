@@ -34,7 +34,22 @@ class CustomAppBar extends AppBar {
                   listener: (context, state) {
                     if (state is AuthPopUpLoading) {
                       HelperFunctions.showPopUpLoading(context);
+                    } else if (state is AuthFailure) {
+                      NavigationHelper.pop(context);
+                      HelperFunctions.showSnackBar(context, state.msg.tr());
                     } else if (state is AuthLogoutSuccess) {
+                      sl<AppShared>().removeVal(AppConstants.authPassKey);
+                      sl<AppShared>().setVal(AppConstants.authPassKey, false);
+                      sl<FirebaseMessaging>().unsubscribeFromTopic(
+                        AppConstants.toUser,
+                      );
+                      NavigationHelper.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.authRoute,
+                        (route) => false,
+                      );
+                    } else if (state is AuthDeleteSuccess) {
+                      sl<HomeBloc>().add(DeleteAllTasksEvent());
                       sl<AppShared>().removeVal(AppConstants.authPassKey);
                       sl<AppShared>().setVal(AppConstants.authPassKey, false);
                       sl<FirebaseMessaging>().unsubscribeFromTopic(

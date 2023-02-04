@@ -9,7 +9,6 @@ import '../../../../../app/utils/strings_manager.dart';
 import '../../../../../app/utils/values_manager.dart';
 import '../../../domain/entities/chat_message.dart';
 import 'custom_bubble_widget.dart';
-import 'record_button.dart';
 
 class MessageWidget extends StatelessWidget {
   final String uid;
@@ -57,19 +56,8 @@ class MessageWidget extends StatelessWidget {
                       itemBuilder: (context, index) {
                         bool user = uid == messages[index].idFrom;
                         return MessageBubble(
-                          fromUser: user,
+                          isMe: user,
                           chatMessage: messages[index],
-                          onPlayVoice: () {
-                            if (messages[index].isMark) {
-                              innerState(
-                                () => messages[index] =
-                                    messages[index].copyBaseWith(
-                                  isMark: false,
-                                ),
-                              );
-                              updateMessage(messages[index]);
-                            }
-                          },
                         );
                       },
                     ),
@@ -157,36 +145,28 @@ class MessageWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      message.isNotEmpty
-                          ? InkWell(
-                              onTap: () =>
-                                  sendMessage(message, MessageType.text).then(
-                                (_) => textEditingController.clear(),
-                              ),
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: AppPadding.p10,
-                                ),
-                                height: AppSize.s45,
-                                width: AppSize.s45,
-                                clipBehavior: Clip.hardEdge,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: ColorManager.primary,
-                                ),
-                                child: Icon(
-                                  Icons.send,
-                                  color: ColorManager.kWhite,
-                                ),
-                              ),
-                            )
-                          : RecordButton(
-                              sendRecord: (recordPath) =>
-                                  sendMessage(recordPath, MessageType.voice),
-                              getTapStatus: (tapStatus) => innerState(
-                                () => hideChatBox = tapStatus,
-                              ),
-                            )
+                      InkWell(
+                        onTap: () =>
+                            sendMessage(message, MessageType.text).then(
+                          (_) => textEditingController.clear(),
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: AppPadding.p10,
+                          ),
+                          height: AppSize.s45,
+                          width: AppSize.s45,
+                          clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: ColorManager.primary,
+                          ),
+                          child: Icon(
+                            Icons.send,
+                            color: ColorManager.kWhite,
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),

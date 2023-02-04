@@ -79,8 +79,6 @@ extension StringConversion on String {
   MessageType toMessageType() {
     if (this == 'text') {
       return MessageType.text;
-    } else if (this == 'voice') {
-      return MessageType.voice;
     } else if (this == 'task') {
       return MessageType.task;
     } else if (this == 'problem') {
@@ -96,8 +94,6 @@ extension MessageTypeConversion on MessageType {
     switch (this) {
       case MessageType.text:
         return 'text';
-      case MessageType.voice:
-        return 'voice';
       case MessageType.pic:
         return 'pic';
       case MessageType.task:
