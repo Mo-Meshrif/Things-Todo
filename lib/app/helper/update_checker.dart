@@ -14,10 +14,14 @@ class UpdateChecker {
     String closeButtonLabel = 'Exit',
     String ignoreButtonLabel = 'Later',
     String title = 'Update',
+    Function? onOpenAlert,
     Function? onExitAlert,
   }) async {
     StoreCheckerResult result = await StoreVersionChecker().checkUpdate();
     if (result.canUpdate) {
+      if (onOpenAlert != null) {
+        onOpenAlert();
+      }
       /// Show the alert based on current platform
       if (Platform.isIOS) {
         _showCupertinoAlertDialog(

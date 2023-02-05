@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:todo/app/common/models/config_model.dart';
+import '../../../../../app/common/config/config_bloc.dart';
 import '../../../../../app/common/models/alert_action_model.dart';
 import '../../../../../app/common/models/ring_tone_model.dart';
 import '../../../../../app/common/models/setting_item_model.dart';
@@ -109,8 +111,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ConfigModel config = context.read<ConfigBloc>().config;
     bool isEmail = HelperFunctions.getSignType(auhtUser) == SignType.email;
-    List<SettingItemModel> tempSettings = isEmail
+    List<SettingItemModel> tempSettings = isEmail && config.showDeletion
         ? settings
         : settings
             .where((element) => element.settingType != SettingType.detete)

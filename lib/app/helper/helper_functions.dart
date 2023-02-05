@@ -549,7 +549,6 @@ class HelperFunctions {
   static checkUpdate(BuildContext context) {
     if (sl<AppShared>().getVal(AppConstants.tutorialCoachmarkKey) != null) {
       if (sl<AppShared>().getVal(AppConstants.updateAlertkKey) == null) {
-        sl<AppShared>().setVal(AppConstants.updateAlertkKey, true);
         sl<ServiceSettings>().getServiceSettings().then((config) {
           if (config != null) {
             sl<ConfigBloc>().add(UpdateConfigData(config: config));
@@ -567,6 +566,10 @@ class HelperFunctions {
               updateButtonLabel: AppStrings.updateButtonLabel.tr(),
               closeButtonLabel: AppStrings.closeButtonLabel.tr(),
               ignoreButtonLabel: AppStrings.ignoreButtonLabel.tr(),
+              onOpenAlert: () => sl<AppShared>().setVal(
+                AppConstants.updateAlertkKey,
+                true,
+              ),
               onExitAlert: () => sl<AppShared>().removeVal(
                 AppConstants.updateAlertkKey,
               ),
