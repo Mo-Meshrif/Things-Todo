@@ -14,6 +14,21 @@ class AuthUser extends Equatable {
     this.pic,
     required this.deviceToken,
   });
+
+  AuthUser copyWith({
+    String? name,
+    String? password,
+    String? pic,
+  }) =>
+      AuthUser(
+        id: id,
+        name: name ?? this.name,
+        email: email,
+        password: password ?? this.password,
+        pic: pic ?? this.pic,
+        deviceToken: deviceToken,
+      );
+
   @override
   List<Object?> get props => [
         id,

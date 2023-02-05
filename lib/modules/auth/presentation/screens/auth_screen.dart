@@ -65,8 +65,11 @@ class AuthScreen extends StatelessWidget {
               HelperFunctions.showSnackBar(context, state.msg.tr());
             }
           } else if (state is AuthSocialPass) {
-            ctx.read<AuthBloc>().add(SignInWithCredentialEvent(
-                authCredential: state.authCredential));
+            ctx.read<AuthBloc>().add(
+                  SignInWithCredentialEvent(
+                    authCredential: state.authCredential,
+                  ),
+                );
           } else if (state is AuthChanged) {
             isLogin = state.currentState;
           }
@@ -114,6 +117,26 @@ class AuthScreen extends StatelessWidget {
                     isLoading: state is AuthLoading,
                     isLogin: isLogin,
                     authKey: _formKey,
+                    inputsCheck: () {
+                      if (HelperFunctions.isEmailValid(
+                          _emailController.text)) {
+                        if (_passwordController.text.length >= 8) {
+                          return true;
+                        } else {
+                          HelperFunctions.showSnackBar(
+                            context,
+                            AppStrings.notVaildPassword.tr(),
+                          );
+                          return false;
+                        }
+                      } else {
+                        HelperFunctions.showSnackBar(
+                          context,
+                          AppStrings.notVaildEmail.tr(),
+                        );
+                        return false;
+                      }
+                    },
                     loginFun: () => context.read<AuthBloc>().add(
                           LoginEvent(
                             loginInputs: LoginInputs(

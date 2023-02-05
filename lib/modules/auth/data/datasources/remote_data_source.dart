@@ -21,7 +21,7 @@ abstract class BaseAuthRemoteDataSource {
   Future<AuthCredential> twitter();
   Future<AuthCredential> google();
   Future<void> logout(String uid);
-  Future<void> delete(String uid);
+  Future<void> delete(UserModel userModel);
 }
 
 class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
@@ -44,9 +44,10 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
   @override
   Future<UserModel> signIn(LoginInputs userInputs) async {
     try {
-      final UserCredential userCredential =
-          await firebaseAuth.signInWithEmailAndPassword(
-              email: userInputs.email, password: userInputs.password);
+      final UserCredential userCredential = await _signInWithEmailAndPassword(
+        email: userInputs.email,
+        password: userInputs.password,
+      );
       final UserModel userModel = UserModel(
         id: userCredential.user!.uid,
         name: userCredential.user!.displayName ?? AppConstants.emptyVal,
@@ -66,7 +67,9 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
     try {
       final UserCredential userCredential =
           await firebaseAuth.createUserWithEmailAndPassword(
-              email: userInputs.email, password: userInputs.password);
+        email: userInputs.email,
+        password: userInputs.password,
+      );
       final UserModel userModel = UserModel(
         id: userCredential.user!.uid,
         name: userInputs.name,
@@ -158,10 +161,10 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
   }
 
   @override
-  Future<void> delete(String uid) async {
+  Future<void> delete(UserModel userModel) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _getUserDataFromFireStore(uid);
+          await _getUserDataFromFireStore(userModel.id);
       if (querySnapshot.docs.isNotEmpty) {
         var doc = querySnapshot.docs.first;
         firebaseFirestore
@@ -169,7 +172,11 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
             .doc(doc.id)
             .delete();
       }
-      return await firebaseAuth.currentUser!.delete();
+      final UserCredential userCredential = await _signInWithEmailAndPassword(
+        email: userModel.email,
+        password: userModel.password!,
+      );
+      return await userCredential.user!.delete();
     } catch (e) {
       throw ServerExecption(e.toString());
     }
@@ -203,6 +210,13 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
       }
     }
   }
+
+  Future<UserCredential> _signInWithEmailAndPassword(
+          {required String email, required String password}) =>
+      firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
   Future<QuerySnapshot<Map<String, dynamic>>> _getUserDataFromFireStore(
           String uid) =>

@@ -198,8 +198,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             passVal,
                             auhtUser.password!,
                           )) {
-                            BlocProvider.of<AuthBloc>(context)
-                                .add(DeleteEvent(uid: auhtUser.id));
+                            BlocProvider.of<AuthBloc>(context).add(
+                              DeleteEvent(
+                                user: auhtUser.copyWith(password: passVal),
+                              ),
+                            );
                             NavigationHelper.pop(context);
                           } else {
                             HelperFunctions.showSnackBar(

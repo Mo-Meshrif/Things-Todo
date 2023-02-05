@@ -15,6 +15,7 @@ class UserModel extends AuthUser {
             password: password,
             pic: pic,
             deviceToken: deviceToken);
+
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json['id'],
         name: json['name'],
@@ -23,6 +24,8 @@ class UserModel extends AuthUser {
         pic: json['pic'],
         deviceToken: json['deviceToken'],
       );
+
+  @override
   UserModel copyWith({
     String? id,
     String? name,

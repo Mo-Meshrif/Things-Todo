@@ -44,6 +44,6 @@ class LogoutEvent extends AuthEvent {
 }
 
 class DeleteEvent extends AuthEvent {
-  final String uid;
-  const DeleteEvent({required this.uid});
+  final AuthUser user;
+  const DeleteEvent({required this.user});
 }

@@ -9,6 +9,7 @@ class AuthButton extends StatelessWidget {
   final bool isLoading;
   final bool isLogin;
   final GlobalKey<FormState> authKey;
+  final bool Function() inputsCheck;
   final void Function() loginFun;
   final void Function() signUpFun;
 
@@ -17,6 +18,7 @@ class AuthButton extends StatelessWidget {
     required this.isLoading,
     required this.isLogin,
     required this.authKey,
+    required this.inputsCheck,
     required this.loginFun,
     required this.signUpFun,
   }) : super(key: key);
@@ -32,10 +34,12 @@ class AuthButton extends StatelessWidget {
               onPressed: () {
                 if (authKey.currentState!.validate()) {
                   authKey.currentState!.save();
-                  if (isLogin) {
-                    loginFun();
-                  } else {
-                    signUpFun();
+                  if (inputsCheck()) {
+                    if (isLogin) {
+                      loginFun();
+                    } else {
+                      signUpFun();
+                    }
                   }
                 }
               },

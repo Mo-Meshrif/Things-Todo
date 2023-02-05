@@ -154,7 +154,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _delete(DeleteEvent event, Emitter<AuthState> emit) async {
     emit(AuthPopUpLoading());
-    final Either<Failure, dynamic> result = await deleteUseCase(event.uid);
+    final Either<Failure, dynamic> result = await deleteUseCase(event.user);
     result.fold(
       (failure) => emit(AuthFailure(msg: _handleAuthExceptions(failure.msg))),
       (_) => emit(const AuthDeleteSuccess()),

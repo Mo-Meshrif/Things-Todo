@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/utils/assets_manager.dart';
 import '../../../../app/utils/color_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
@@ -61,8 +60,6 @@ class AuthInputs extends StatelessWidget {
             validator: (val) {
               if (val!.isEmpty) {
                 return AppStrings.enterEmail.tr();
-              } else if (!HelperFunctions.isEmailValid(val.toString())) {
-                return AppStrings.notVaildEmail.tr();
               } else {
                 return null;
               }
@@ -78,8 +75,6 @@ class AuthInputs extends StatelessWidget {
             validator: (val) {
               if (val!.isEmpty) {
                 return AppStrings.enterPassword.tr();
-              } else if (val.length < 8) {
-                return AppStrings.notVaildPassword.tr();
               } else {
                 return null;
               }

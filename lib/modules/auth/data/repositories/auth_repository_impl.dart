@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../app/utils/constants_manager.dart';
+import '../models/user_model.dart';
 import '/app/services/network_services.dart';
 import '../../../../app/errors/exception.dart';
 import '../../../../app/errors/failure.dart';
@@ -117,10 +118,20 @@ class AuthRepositoryImpl implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> delete(String uid)async {
+  Future<Either<Failure, void>> delete(AuthUser user) async {
     if (await networkServices.isConnected()) {
       try {
-        return Right(await baseAuthRemoteDataSource.delete(uid));
+        return Right(
+          await baseAuthRemoteDataSource.delete(
+            UserModel(
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              password: user.password,
+              deviceToken: user.deviceToken,
+            ),
+          ),
+        );
       } on ServerExecption catch (failure) {
         return Left(ServerFailure(msg: failure.msg));
       }
