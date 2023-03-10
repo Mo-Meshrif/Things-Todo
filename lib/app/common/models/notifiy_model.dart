@@ -25,6 +25,7 @@ class ReceivedNotifyModel {
   final String? buttonKeyPressed;
   final bool isOpened;
   final String? from, to;
+  final Map<String, dynamic>? payload;
 
   ReceivedNotifyModel({
     this.from,
@@ -36,21 +37,24 @@ class ReceivedNotifyModel {
     this.date,
     this.buttonKeyPressed,
     this.isOpened = false,
+    this.payload,
   });
 
-  factory ReceivedNotifyModel.fromJson(Map<String, dynamic> map) => ReceivedNotifyModel(
-      from: map['from'] ?? '',
-      to: map['to'] ?? '',
-      id: map['id'] ?? -1,
-      title: map['title'] ?? '',
-      body: map['body'] ?? '',
-      type: map['summary'] == null
-          ? MessageType.problem
-          : (map['summary'] as String).toMessageType(),
-      date: map['date'] ?? DateTime.now(),
-      isOpened: map['isOpened'] ?? false,
-      buttonKeyPressed: map['buttonKeyPressed'] ?? '',
-    );
+  factory ReceivedNotifyModel.fromJson(Map<String, dynamic> map) =>
+      ReceivedNotifyModel(
+        from: map['from'] ?? '',
+        to: map['to'] ?? '',
+        id: map['id'] ?? -1,
+        title: map['title'] ?? '',
+        body: map['body'] ?? '',
+        type: map['summary'] == null
+            ? MessageType.problem
+            : (map['summary'] as String).toMessageType(),
+        date: map['date'] ?? DateTime.now(),
+        isOpened: map['isOpened'] ?? false,
+        buttonKeyPressed: map['buttonKeyPressed'] ?? '',
+        payload: map.containsKey('payload') ? Map.from(map['payload']) : null,
+      );
   ReceivedNotifyModel copyWith(bool? isOpened) => ReceivedNotifyModel(
         id: id,
         title: title,
@@ -61,11 +65,14 @@ class ReceivedNotifyModel {
         isOpened: isOpened ?? this.isOpened,
         type: type,
         buttonKeyPressed: buttonKeyPressed,
+        payload: payload,
       );
   toJson() => {
         'id': id,
         'title': title,
         'body': body,
         'summary': type?.toStringVal(),
+        'date': date,
+        'payload': payload,
       };
 }

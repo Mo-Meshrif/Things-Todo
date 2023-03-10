@@ -1,22 +1,25 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '/app/errors/failure.dart';
+import '/modules/auth/domain/entities/user.dart';
+import '/modules/auth/domain/usecases/facebook_use_case.dart';
+import '/modules/auth/domain/usecases/forget_passwod_use_case.dart';
+import '/modules/auth/domain/usecases/google_use_case.dart';
+import '/modules/auth/domain/usecases/sign_in_with_credential.dart';
+import '/modules/auth/domain/usecases/twitter_use_case.dart';
 import '../../../../app/common/usecase/base_use_case.dart';
 import '../../../../app/utils/constants_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
 import '../../domain/usecases/delete_use_case.dart';
-import '../../domain/usecases/logout_use_case.dart';
-import '/modules/auth/domain/usecases/sign_in_with_credential.dart';
-import '/modules/auth/domain/entities/user.dart';
-import '/app/errors/failure.dart';
-import '/modules/auth/domain/usecases/facebook_use_case.dart';
-import '/modules/auth/domain/usecases/forget_passwod_use_case.dart';
-import '/modules/auth/domain/usecases/google_use_case.dart';
-import '/modules/auth/domain/usecases/twitter_use_case.dart';
 import '../../domain/usecases/login_use_case.dart';
+import '../../domain/usecases/logout_use_case.dart';
 import '../../domain/usecases/signup_use_case.dart';
+
 part 'auth_event.dart';
 part 'auth_state.dart';
 

@@ -4,26 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '/app/services/services_locator.dart';
+import '/app/utils/assets_manager.dart';
+import '/app/utils/constants_manager.dart';
+import '/modules/auth/domain/usecases/login_use_case.dart';
+import '/modules/auth/domain/usecases/signup_use_case.dart';
+import '/modules/auth/presentation/controller/auth_bloc.dart';
 import '../../../../app/common/config/config_bloc.dart';
+import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/helper/navigation_helper.dart';
+import '../../../../app/helper/shared_helper.dart';
 import '../../../../app/services/notification_services.dart';
+import '../../../../app/utils/routes_manager.dart';
+import '../../../../app/utils/strings_manager.dart';
+import '../../../../app/utils/values_manager.dart';
 import '../components/auth_inputs.dart';
 import '../components/forget_password.dart';
 import '../components/login_button.dart';
 import '../components/social_login.dart';
 import '../components/toggle_auth.dart';
 import '../widgets/custom_or_divider.dart';
-import '/modules/auth/domain/usecases/signup_use_case.dart';
-import '../../../../app/helper/helper_functions.dart';
-import '/app/services/services_locator.dart';
-import '/app/utils/constants_manager.dart';
-import '/modules/auth/domain/usecases/login_use_case.dart';
-import '../../../../app/helper/shared_helper.dart';
-import '../../../../app/utils/routes_manager.dart';
-import '/modules/auth/presentation/controller/auth_bloc.dart';
-import '../../../../app/utils/strings_manager.dart';
-import '../../../../app/utils/values_manager.dart';
-import '/app/utils/assets_manager.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);

@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import '../../modules/home/domain/entities/task_to_do.dart';
-import '../../modules/home/presentation/controller/home_bloc.dart';
-import '../../modules/home/presentation/widgets/custom_coach_mark.dart';
+import '../../modules/task/domain/entities/task_to_do.dart';
+import '../../modules/task/presentation/controller/task_bloc.dart';
+import '../common/widgets/custom_coach_mark.dart';
 import '../services/services_locator.dart';
 import '../utils/constants_manager.dart';
 import 'enums.dart';
@@ -84,14 +84,14 @@ class TutorialCoachHelper {
         ),
       ];
 
-  static _onPass(BuildContext context, HomeBloc homeBloc) {
-    homeBloc.add(DeleteAllTasksEvent());
+  static _onPass(BuildContext context, TaskBloc taskBloc) {
+    taskBloc.add(DeleteAllTasksEvent());
     sl<AppShared>().setVal(AppConstants.tutorialCoachmarkKey, true);
   }
 
   static homeTutorialCoachMark(BuildContext context) {
-    HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
-    homeBloc.add(
+    TaskBloc taskBloc = BlocProvider.of<TaskBloc>(context);
+    taskBloc.add(
       AddTaskEvent(
         taskTodo: TaskTodo(
           name: 'Test',
@@ -100,6 +100,7 @@ class TutorialCoachHelper {
           date: DateTime.now().toString(),
           priority: TaskPriority.high,
           important: false,
+          speicalKey: UniqueKey().hashCode,
         ),
       ),
     );
@@ -107,8 +108,8 @@ class TutorialCoachHelper {
       targets: _initHomeTarget(),
       pulseEnable: false,
       hideSkip: true,
-      onSkip: () => _onPass(context, homeBloc),
-      onFinish: () => _onPass(context, homeBloc),
+      onSkip: () => _onPass(context, taskBloc),
+      onFinish: () => _onPass(context, taskBloc),
     );
     tutorialCoachMark.show(context: context);
   }

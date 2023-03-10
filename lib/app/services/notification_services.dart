@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import '../../../app/helper/extentions.dart';
-import '../../modules/home/domain/entities/task_to_do.dart';
+import '../../modules/task/domain/entities/task_to_do.dart';
 import '../common/models/notifiy_model.dart';
 import '../helper/helper_functions.dart';
 import '../utils/color_manager.dart';
@@ -18,15 +18,10 @@ abstract class NotificationServices {
   Future<void> createTaskReminderNotification(TaskTodo taskTodo);
   Future<void> cancelScheduledNotificationById(int id);
   Future<void> cancelAllScheduledNotifications();
-  Future<void> saveNotificationData(
-    Map<String, dynamic> notiMap,
-    bool opened, {
-    bool fromNotScreen = false,
-  });
-  Future<void> deleteNotificationData(key);
+  Future<void> saveNotificationData(Map<String, dynamic> map);
+  Future<void> deleteNotificationData(int id);
   Future<void> deleteAllNotificationData();
-  Future<void> saveScheduledNotifications(
-      List<NotificationModel> scheduledNotifications);
+  Future<void> saveScheduledNotifications();
   Future<void> scheduledNotificationsAgain(String uid);
 }
 
@@ -99,7 +94,7 @@ class NotificationServicesImpl implements NotificationServices {
     DateTime date = DateTime.parse(taskTodo.date);
     awesomeNotifications.createNotification(
       content: NotificationContent(
-        id: taskTodo.id!,
+        id: taskTodo.speicalKey,
         channelKey: 'basic_channel',
         title: taskTodo.name,
         body: taskTodo.description,
@@ -111,6 +106,9 @@ class NotificationServicesImpl implements NotificationServices {
         criticalAlert: true,
         showWhen: true,
         summary: 'task',
+        payload: {
+          'taskId': taskTodo.id.toString(),
+        },
       ),
       actionButtons: [
         NotificationActionButton(
@@ -142,34 +140,33 @@ class NotificationServicesImpl implements NotificationServices {
 
   @override
   Future<void> saveNotificationData(
-    Map<String, dynamic> notiMap,
-    bool opened, {
-    bool fromNotScreen = false,
-  }) async {
-    late Map<String, dynamic> map;
+    Map<String, dynamic> map,
+  ) async {
+    late Map<String, dynamic> tempMap;
     final list = Hive.box(AppConstants.notificaionKey);
-    bool isExists = list.containsKey(notiMap['id']);
+    List notList = list.values.toList();
+    int tempIndex = notList.indexWhere((element) => element['id'] == map['id']);
+    bool isExists = tempIndex > -1;
     if (isExists) {
-      map = Map.from(list.get(notiMap['id']));
-      map['isOpened'] = opened;
-      if (!fromNotScreen) {
-        map['date'] = DateTime.now();
-      }
+      tempMap = Map.from(notList[tempIndex]);
+      tempMap['isOpened'] = true;
     } else {
-      map = {
+      tempMap = {
+        'id': map['id'],
         'date': DateTime.now(),
-        'isOpened': opened,
+        'isOpened': false,
         'to': HelperFunctions.getSavedUser().id,
+        'payload': map['payload'] ?? {},
       };
     }
     await list.put(
-        notiMap['id'],
-        isExists ? map : map
-          ..addAll(notiMap));
+        tempMap['id'],
+        isExists ? tempMap : tempMap
+          ..addAll(map));
   }
 
   @override
-  Future<void> deleteNotificationData(id) async {
+  Future<void> deleteNotificationData(int id) async {
     final not = Hive.box(AppConstants.notificaionKey);
     await not.delete(id);
   }
@@ -182,8 +179,9 @@ class NotificationServicesImpl implements NotificationServices {
   }
 
   @override
-  Future<void> saveScheduledNotifications(
-      List<NotificationModel> scheduledNotifications) async {
+  Future<void> saveScheduledNotifications() async {
+    List<NotificationModel> scheduledNotifications =
+        await awesomeNotifications.listScheduledNotifications();
     final list = Hive.box(AppConstants.scheduledNotKey);
     List tempList = scheduledNotifications
         .map((element) => {
@@ -197,6 +195,7 @@ class NotificationServicesImpl implements NotificationServices {
       HelperFunctions.getSavedUser().id,
       tempList,
     );
+    cancelAllScheduledNotifications();
   }
 
   @override
@@ -214,7 +213,7 @@ class NotificationServicesImpl implements NotificationServices {
           schedule['minute'],
         );
         if (notifyDate.isBefore(DateTime.now())) {
-          saveNotificationData(element['content'], false);
+          saveNotificationData(element['content']);
           awesomeNotifications.incrementGlobalBadgeCounter();
         } else {
           awesomeNotifications.createNotificationFromJsonData(element);

@@ -14,8 +14,9 @@ import 'package:http/http.dart' as http;
 import '../../app/helper/enums.dart';
 import 'dart:math' as math;
 import '../../modules/auth/domain/entities/user.dart';
-import '../../modules/home/domain/entities/chat_message.dart';
-import '../../modules/home/presentation/controller/home_bloc.dart';
+import '../../modules/help/domain/entities/chat_message.dart';
+import '../../modules/task/domain/entities/task_to_do.dart';
+import '../../modules/task/presentation/controller/task_bloc.dart';
 import '../app.dart';
 import '../common/config/config_bloc.dart';
 import '../common/models/alert_action_model.dart';
@@ -26,7 +27,6 @@ import '../utils/routes_manager.dart';
 import '../utils/strings_manager.dart';
 import '/app/helper/extentions.dart';
 import '/app/helper/shared_helper.dart';
-import '../../modules/home/domain/entities/task_to_do.dart';
 import '../services/services_locator.dart';
 import '/app/utils/values_manager.dart';
 import '../utils/color_manager.dart';
@@ -215,17 +215,17 @@ class HelperFunctions {
   static getTasksOnTab(BuildContext ctx, int index) {
     switch (index) {
       case 0:
-        BlocProvider.of<HomeBloc>(ctx).add(
+        BlocProvider.of<TaskBloc>(ctx).add(
           GetDailyTasksEvent(),
         );
         break;
       case 1:
-        BlocProvider.of<HomeBloc>(ctx).add(
+        BlocProvider.of<TaskBloc>(ctx).add(
           GetWeeklyTasksEvent(),
         );
         break;
       case 2:
-        BlocProvider.of<HomeBloc>(ctx).add(
+        BlocProvider.of<TaskBloc>(ctx).add(
           GetMonthlyTasksEvent(
             date: DateTime.now(),
           ),
@@ -479,20 +479,22 @@ class HelperFunctions {
     BuildContext context,
     ReceivedNotifyModel event, {
     bool hideNotifyIcon = false,
-    bool fromNotScreen = false,
   }) {
     if (event.type == MessageType.task) {
       //Local Notifications
       debugPrint('Local Notifications action');
       if (event.buttonKeyPressed!.isNotEmpty && !event.isOpened) {
         debugPrint('Notification key pressed: ${event.buttonKeyPressed}');
-        BlocProvider.of<HomeBloc>(context).add(
-          GetTaskByIdEvent(taskId: event.id, withNav: false),
+        BlocProvider.of<TaskBloc>(context).add(
+          GetTaskByIdEvent(
+            taskId: int.parse(event.payload!['taskId']),
+            withNav: false,
+          ),
         );
       } else {
-        BlocProvider.of<HomeBloc>(context).add(
+        BlocProvider.of<TaskBloc>(context).add(
           GetTaskByIdEvent(
-            taskId: event.id,
+            taskId: int.parse(event.payload!['taskId']),
             withNav: true,
             hideNotifyIcon: hideNotifyIcon,
           ),
@@ -515,8 +517,6 @@ class HelperFunctions {
     if (!event.isOpened) {
       sl<NotificationServices>().saveNotificationData(
         event.toJson(),
-        true,
-        fromNotScreen: fromNotScreen,
       );
       sl<AwesomeNotifications>().getGlobalBadgeCounter().then(
         (value) {

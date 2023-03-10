@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../app/utils/color_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
 import '../../../../app/utils/values_manager.dart';

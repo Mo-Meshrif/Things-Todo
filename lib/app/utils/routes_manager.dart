@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import '../../modules/home/presentation/screens/subScreens/chat_screen.dart';
-import '../../modules/home/presentation/screens/subScreens/custom_tasks_screen.dart';
-import '../../modules/home/presentation/screens/subScreens/help_screen.dart';
-import '../../modules/home/presentation/screens/subScreens/temp_notify_screen.dart';
-import '../../modules/home/presentation/screens/subScreens/notification_screen.dart';
-import '../../modules/home/presentation/screens/subScreens/search_screen.dart';
-import '../../modules/home/presentation/screens/subScreens/settings_screen.dart';
-import '../../modules/home/presentation/screens/subScreens/task_details_screen.dart';
+
+import '../../modules/auth/presentation/screens/auth_screen.dart';
+import '../../modules/help/presentation/pages/chat_screen.dart';
+import '../../modules/help/presentation/pages/help_screen.dart';
+import '../../modules/task/presentation/pages/custom_tasks_screen.dart';
+import '../../modules/task/presentation/pages/task_details_screen.dart';
 import '../common/models/custom_task_args_model.dart';
 import '../common/models/notifiy_model.dart';
+import '../common/screens/main/home_screen.dart';
+import '../common/screens/sub/notification_screen.dart';
+import '../common/screens/sub/search_screen.dart';
+import '../common/screens/sub/settings_screen.dart';
+import '../common/screens/sub/temp_notify_screen.dart';
 import '../helper/shared_helper.dart';
 import '../services/services_locator.dart';
-import '/modules/home/presentation/screens/home_screen.dart';
-import '../../modules/auth/presentation/screens/auth_screen.dart';
 import 'constants_manager.dart';
 
 class Routes {

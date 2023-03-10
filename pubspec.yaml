@@ -27,7 +27,7 @@ dependencies:
   firebase_messaging: ^14.1.4
   firebase_storage: ^11.0.9
   flutter_facebook_auth: ^4.4.1
-  twitter_login: ^4.2.3
+  twitter_login: ^4.3.1
   google_sign_in: ^5.4.1
   lottie: ^1.4.2
   sqflite: ^2.0.2

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../../../app/common/usecase/base_use_case.dart';
 import '../../../../app/errors/failure.dart';
 import '../entities/user.dart';

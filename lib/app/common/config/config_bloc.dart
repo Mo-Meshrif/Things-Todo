@@ -1,8 +1,11 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../services/service_settings.dart';
 import '../models/config_model.dart';
+
 part 'config_event.dart';
 part 'config_state.dart';
 
