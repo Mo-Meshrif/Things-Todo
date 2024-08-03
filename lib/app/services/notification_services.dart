@@ -14,8 +14,8 @@ import '../utils/constants_manager.dart';
 abstract class NotificationServices {
   Future<bool> init();
   Future<bool> sendNotification(NotifyActionModel notifyActionModel);
-  Future<void> createBasicNotification(Map<String, dynamic> map);
-  Future<void> createTaskReminderNotification(TaskTodo taskTodo);
+  Future<bool> createBasicNotification(Map<String, dynamic> map);
+  Future<bool> createTaskReminderNotification(TaskTodo taskTodo);
   Future<void> cancelScheduledNotificationById(int id);
   Future<void> cancelAllScheduledNotifications();
   Future<void> saveNotificationData(Map<String, dynamic> map);
@@ -86,13 +86,13 @@ class NotificationServicesImpl implements NotificationServices {
   }
 
   @override
-  Future<void> createBasicNotification(Map<String, dynamic> map) =>
+  Future<bool> createBasicNotification(Map<String, dynamic> map) =>
       awesomeNotifications.createNotificationFromJsonData(map);
 
   @override
-  Future<void> createTaskReminderNotification(TaskTodo taskTodo) async {
+  Future<bool> createTaskReminderNotification(TaskTodo taskTodo) async {
     DateTime date = DateTime.parse(taskTodo.date);
-    awesomeNotifications.createNotification(
+    return awesomeNotifications.createNotification(
       content: NotificationContent(
         id: taskTodo.speicalKey,
         channelKey: 'basic_channel',

@@ -106,7 +106,8 @@ class TaskRepositoryImpl implements BaseTaskRespository {
   }
 
   @override
-  Future<Either<LocalFailure, int>> deleteTask(DeleteTaskParameters parameters) async {
+  Future<Either<LocalFailure, int>> deleteTask(
+      DeleteTaskParameters parameters) async {
     try {
       final id = await baseTaskLocalDataSource.deleteTask(parameters.taskId);
       _cancelScheduledNotificationById(parameters.speicalKey);

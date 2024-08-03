@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badge;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -110,8 +110,8 @@ class CustomAppBar extends AppBar {
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppPadding.p10,
                               ),
-                              child: Badge(
-                                position: BadgePosition.topEnd(
+                              child: badge.Badge(
+                                position: badge.BadgePosition.topEnd(
                                   top: AppSize.s12,
                                   end: AppSize.s15,
                                 ),
@@ -135,12 +135,15 @@ class CustomAppBar extends AppBar {
             Visibility(
               visible: title == null,
               child: Builder(
-                builder: (context) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppPadding.p10),
-                  child: GestureDetector(
-                    onTap: () => showBottomSheet(
+                builder: (context) {
+                  bool tutorialPass = sl<AppShared>().getVal(
+                        AppConstants.tutorialCoachmarkKey,
+                      ) ??
+                      false;
+                  return IconButton(
+                    onPressed: () => showModalBottomSheet(
                       context: context,
+                      isScrollControlled: true,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(AppSize.s30.r),
@@ -155,13 +158,13 @@ class CustomAppBar extends AppBar {
                             ),
                       ),
                     ),
-                    child: SvgPicture.asset(
+                    icon: SvgPicture.asset(
                       IconAssets.add,
-                      key: TutorialCoachHelper.addKey,
+                      key: tutorialPass ? null : TutorialCoachHelper.addKey,
                       width: AppSize.s25,
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ],

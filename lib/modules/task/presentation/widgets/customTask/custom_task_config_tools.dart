@@ -71,7 +71,7 @@ class TaskConfigTools extends StatelessWidget {
                     AppStrings.noEditDone.tr(),
                   );
                 } else {
-                  showBottomSheet(
+                  showModalBottomSheet(
                     context: context,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
@@ -79,6 +79,7 @@ class TaskConfigTools extends StatelessWidget {
                         topRight: Radius.circular(AppSize.s30.r),
                       ),
                     ),
+                    isScrollControlled: true,
                     builder: (context) => AddEditTaskWidget(
                       editTask: taskTodo,
                       editFun: (value) => context.read<TaskBloc>().add(

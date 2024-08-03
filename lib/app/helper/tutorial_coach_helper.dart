@@ -84,9 +84,17 @@ class TutorialCoachHelper {
         ),
       ];
 
-  static _onPass(BuildContext context, TaskBloc taskBloc) {
-    taskBloc.add(DeleteAllTasksEvent());
-    sl<AppShared>().setVal(AppConstants.tutorialCoachmarkKey, true);
+  static bool _onPass(BuildContext context, TaskBloc taskBloc) {
+    try {
+      taskBloc.add(DeleteAllTasksEvent());
+      sl<AppShared>().setVal(
+        AppConstants.tutorialCoachmarkKey,
+        true,
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   static homeTutorialCoachMark(BuildContext context) {
