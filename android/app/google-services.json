@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1037098895285-rhhb9sldqdu2p1765t011d1g2567r68p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thingsToDo.app",
+            "certificate_hash": "265902a9428791b7018f994f5f48deb17bbce8bf"
+          }
+        },
+        {
           "client_id": "1037098895285-tbb5tat20v3p8k8kqcb788q1nqv84p8e.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "1037098895285-tbb5tat20v3p8k8kqcb788q1nqv84p8e.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1037098895285-8mhtq7cpo4kpi2nqstnorhclrudjr8au.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.thingsToDo.app"
+              }
             }
           ]
         }
