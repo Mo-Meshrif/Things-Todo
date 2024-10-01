@@ -26,59 +26,23 @@ import '../components/social_login.dart';
 import '../components/toggle_auth.dart';
 import '../widgets/custom_or_divider.dart';
 
-class AuthScreen extends StatelessWidget {
+class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    bool isLogin = true;
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
-    AuthBloc authBloc = sl<AuthBloc>();
-    return Scaffold(
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (ctx, state) {
-          if (state is AuthPopUpLoading) {
-            HelperFunctions.showPopUpLoading(context);
-          } else if (state is AuthSuccess) {
-            sl<AppShared>().setVal(AppConstants.authPassKey, true);
-            sl<AppShared>().setVal(AppConstants.userKey, state.user);
-            sl<FirebaseMessaging>().subscribeToTopic(AppConstants.toUser);
-            sl<NotificationServices>().scheduledNotificationsAgain(
-              state.user.id,
-            );
-            NavigationHelper.pushReplacementNamed(
-              context,
-              Routes.mainTasksRoute,
-            );
-            _emailController.clear();
-            _passwordController.clear();
-          } else if (state is AuthRestSuccess) {
-            NavigationHelper.pop(context);
-            HelperFunctions.showSnackBar(
-              context,
-              AppStrings.checkEmail.tr(),
-            );
-          } else if (state is AuthFailure) {
-            if (state.isPopup) {
-              NavigationHelper.pop(context);
-            }
-            if (state.msg.isNotEmpty) {
-              HelperFunctions.showSnackBar(context, state.msg.tr());
-            }
-          } else if (state is AuthSocialPass) {
-            authBloc.add(
-              SignInWithCredentialEvent(
-                authCredential: state.authCredential,
-              ),
-            );
-          } else if (state is AuthChanged) {
-            isLogin = state.currentState;
-          }
-        },
-        builder: (context, state) => SafeArea(
+  State<AuthScreen> createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> {
+  bool isLogin = true;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  late AuthBloc authBloc = sl<AuthBloc>();
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: SafeArea(
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -112,34 +76,77 @@ class AuthScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: AppSize.s36.h),
-                  AuthButton(
-                    isLoading: state is AuthLoading,
-                    isLogin: isLogin,
-                    tapFun: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        if (isLogin) {
-                          authBloc.add(
-                            LoginEvent(
-                              loginInputs: LoginInputs(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                              ),
-                            ),
-                          );
-                        } else {
-                          authBloc.add(
-                            SignUpEvent(
-                              signUpInputs: SignUpInputs(
-                                name: _nameController.text,
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                              ),
-                            ),
-                          );
+                  BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthPopUpLoading) {
+                        HelperFunctions.showPopUpLoading(context);
+                      } else if (state is AuthSuccess) {
+                        sl<AppShared>().setVal(AppConstants.authPassKey, true);
+                        sl<AppShared>()
+                            .setVal(AppConstants.userKey, state.user);
+                        sl<FirebaseMessaging>()
+                            .subscribeToTopic(AppConstants.toUser);
+                        sl<NotificationServices>().scheduledNotificationsAgain(
+                          state.user.id,
+                        );
+                        NavigationHelper.pushReplacementNamed(
+                          context,
+                          Routes.mainTasksRoute,
+                        );
+                        _emailController.clear();
+                        _passwordController.clear();
+                      } else if (state is AuthRestSuccess) {
+                        NavigationHelper.pop(context);
+                        HelperFunctions.showSnackBar(
+                          context,
+                          AppStrings.checkEmail.tr(),
+                        );
+                      } else if (state is AuthFailure) {
+                        if (state.isPopup) {
+                          NavigationHelper.pop(context);
                         }
+                        if (state.msg.isNotEmpty) {
+                          HelperFunctions.showSnackBar(context, state.msg.tr());
+                        }
+                      } else if (state is AuthSocialPass) {
+                        authBloc.add(
+                          SignInWithCredentialEvent(
+                            authCredential: state.authCredential,
+                          ),
+                        );
+                      } else if (state is AuthChanged) {
+                        isLogin = state.currentState;
                       }
                     },
+                    builder: (context, state) => AuthButton(
+                        isLoading: state is AuthLoading,
+                        isLogin: isLogin,
+                        tapFun: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            if (isLogin) {
+                              authBloc.add(
+                                LoginEvent(
+                                  loginInputs: LoginInputs(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              authBloc.add(
+                                SignUpEvent(
+                                  signUpInputs: SignUpInputs(
+                                    name: _nameController.text,
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      ),
                   ),
                   BlocBuilder<ConfigBloc, ConfigState>(
                     builder: (context, state) => state is ConfigLoaded
@@ -177,7 +184,5 @@ class AuthScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

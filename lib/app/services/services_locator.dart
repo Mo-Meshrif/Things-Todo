@@ -134,7 +134,7 @@ class ServicesLocator {
     sl.registerLazySingleton(() => UpdateMessageUseCase(sl()));
     sl.registerLazySingleton(() => SendProblemUseCase(sl()));
     //blocs
-    sl.registerFactory(
+    sl.registerLazySingleton(
       () => AuthBloc(
         loginUseCase: sl(),
         signUpUseCase: sl(),
