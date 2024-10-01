@@ -17,7 +17,6 @@ import '../../../../app/utils/strings_manager.dart';
 import '../../../../app/utils/values_manager.dart';
 import '../../../modules/auth/domain/entities/user.dart';
 import '../../../modules/auth/presentation/controller/auth_bloc.dart';
-import '../../../modules/task/presentation/controller/task_bloc.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -31,64 +30,52 @@ class CustomDrawer extends StatelessWidget {
         icon: IconAssets.importantWhite,
         size: AppSize.s25,
         rotate: false,
-        onTap: () {
-          BlocProvider.of<TaskBloc>(context).add(
-            const GetCustomTasksEvent('important'),
-          );
-          NavigationHelper.pushNamed(
-            context,
-            Routes.customRoute,
-            arguments: CustomTaskArgsModel(
-              appTitle: 'Important Tasks',
-              type: 'important',
-            ),
-          );
-        },
+        onTap: () => NavigationHelper.pushNamed(
+          context,
+          Routes.customRoute,
+          arguments: CustomTaskArgsModel(
+            appTitle: 'Important Tasks',
+            type: 'important',
+          ),
+        ),
       ),
       DrawerItemModel(
         title: AppStrings.done,
         icon: IconAssets.done,
         size: AppSize.s25,
         rotate: false,
-        onTap: () {
-          BlocProvider.of<TaskBloc>(context).add(
-            const GetCustomTasksEvent('done'),
-          );
-          NavigationHelper.pushNamed(
-            context,
-            Routes.customRoute,
-            arguments: CustomTaskArgsModel(
-              appTitle: 'Done Tasks',
-              type: 'done',
-            ),
-          );
-        },
+        onTap: () => NavigationHelper.pushNamed(
+          context,
+          Routes.customRoute,
+          arguments: CustomTaskArgsModel(
+            appTitle: 'Done Tasks',
+            type: 'done',
+          ),
+        ),
       ),
       DrawerItemModel(
         title: AppStrings.later,
         icon: IconAssets.later,
         size: AppSize.s25,
         rotate: false,
-        onTap: () {
-          BlocProvider.of<TaskBloc>(context).add(
-            const GetCustomTasksEvent('later'),
-          );
-          NavigationHelper.pushNamed(
-            context,
-            Routes.customRoute,
-            arguments: CustomTaskArgsModel(
-              appTitle: 'Later Tasks',
-              type: 'later',
-            ),
-          );
-        },
+        onTap: () => NavigationHelper.pushNamed(
+          context,
+          Routes.customRoute,
+          arguments: CustomTaskArgsModel(
+            appTitle: 'Later Tasks',
+            type: 'later',
+          ),
+        ),
       ),
       DrawerItemModel(
         title: AppStrings.settings,
         icon: IconAssets.settings,
         size: AppSize.s25,
         rotate: false,
-        onTap: () => NavigationHelper.pushNamed(context, Routes.settingsRoute),
+        onTap: () => NavigationHelper.pushNamed(
+          context,
+          Routes.settingsRoute,
+        ),
       ),
       DrawerItemModel(
         title: AppStrings.logout,
