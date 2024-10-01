@@ -4,24 +4,24 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:need_resume/need_resume.dart';
-import '../../models/notifiy_model.dart';
-import '../../../helper/helper_functions.dart';
-import '../../../helper/navigation_helper.dart';
-import '../../../helper/shared_helper.dart';
-import '../../../helper/tutorial_coach_helper.dart';
-import '../../../services/services_locator.dart';
-import '../../../utils/color_manager.dart';
-import '../../../utils/constants_manager.dart';
-import '../../../utils/routes_manager.dart';
-import '../../../utils/strings_manager.dart';
-import '../../../services/notification_services.dart';
-import '../../../../modules/task/presentation/controller/task_bloc.dart';
-import '../../../../modules/task/presentation/components/daily_task.dart';
-import '../../../../modules/task/presentation/components/monthly_task.dart';
-import '../../../../modules/task/presentation/components/weekly_task.dart';
-import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_drawer.dart';
-import '../../widgets/custom_text_search.dart';
+import '../../../../app/common/models/notifiy_model.dart';
+import '../../../../app/helper/helper_functions.dart';
+import '../../../../app/helper/navigation_helper.dart';
+import '../../../../app/helper/shared_helper.dart';
+import '../../../../app/helper/tutorial_coach_helper.dart';
+import '../../../../app/services/services_locator.dart';
+import '../../../../app/utils/color_manager.dart';
+import '../../../../app/utils/constants_manager.dart';
+import '../../../../app/utils/routes_manager.dart';
+import '../../../../app/utils/strings_manager.dart';
+import '../../../../app/services/notification_services.dart';
+import '../controller/task_bloc.dart';
+import '../components/daily_task.dart';
+import '../components/monthly_task.dart';
+import '../components/weekly_task.dart';
+import '../../../../app/common/widgets/custom_app_bar.dart';
+import '../../../../app/common/widgets/custom_drawer.dart';
+import '../../../../app/common/widgets/custom_text_search.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {
   Map<String, dynamic> map = event.data;
@@ -30,14 +30,14 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class MainTasksScreen extends StatefulWidget {
+  const MainTasksScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainTasksScreen> createState() => _MainTasksScreenState();
 }
 
-class _HomeScreenState extends ResumableState<HomeScreen> {
+class _MainTasksScreenState extends ResumableState<MainTasksScreen> {
   int index = 0;
   @override
   void initState() {

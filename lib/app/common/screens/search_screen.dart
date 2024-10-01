@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import '../../../utils/assets_manager.dart';
-import '../../../utils/strings_manager.dart';
-import '../../widgets/custom_app_bar.dart';
-import '../../../../modules/task/domain/entities/task_to_do.dart';
-import '../../../../modules/task/presentation/controller/task_bloc.dart';
-import '../../../../modules/task/presentation/widgets/customTaskList/custom_task_list.dart';
-import '../../widgets/custom_scroll_to_top.dart';
-import '../../widgets/custom_text_search.dart';
+import '../../utils/assets_manager.dart';
+import '../../utils/strings_manager.dart';
+import '../widgets/custom_app_bar.dart';
+import '../../../modules/task/domain/entities/task_to_do.dart';
+import '../../../modules/task/presentation/controller/task_bloc.dart';
+import '../../../modules/task/presentation/widgets/customTaskList/custom_task_list.dart';
+import '../widgets/custom_scroll_to_top.dart';
+import '../widgets/custom_text_search.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({Key? key}) : super(key: key);

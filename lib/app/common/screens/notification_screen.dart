@@ -3,18 +3,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../helper/enums.dart';
-import '../../../helper/helper_functions.dart';
-import '../../../helper/navigation_helper.dart';
-import '../../../services/notification_services.dart';
-import '../../../services/services_locator.dart';
-import '../../../utils/assets_manager.dart';
-import '../../../utils/color_manager.dart';
-import '../../../utils/constants_manager.dart';
-import '../../../utils/strings_manager.dart';
-import '../../models/alert_action_model.dart';
-import '../../models/notifiy_model.dart';
-import '../../widgets/custom_app_bar.dart';
+import '../../helper/enums.dart';
+import '../../helper/helper_functions.dart';
+import '../../helper/navigation_helper.dart';
+import '../../services/notification_services.dart';
+import '../../services/services_locator.dart';
+import '../../utils/assets_manager.dart';
+import '../../utils/color_manager.dart';
+import '../../utils/constants_manager.dart';
+import '../../utils/strings_manager.dart';
+import '../models/alert_action_model.dart';
+import '../models/notifiy_model.dart';
+import '../widgets/custom_app_bar.dart';
 
 class NotificationScreen extends StatelessWidget {
   final List<ReceivedNotifyModel> items;

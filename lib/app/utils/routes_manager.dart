@@ -8,11 +8,11 @@ import '../../modules/task/presentation/pages/custom_tasks_screen.dart';
 import '../../modules/task/presentation/pages/task_details_screen.dart';
 import '../common/models/custom_task_args_model.dart';
 import '../common/models/notifiy_model.dart';
-import '../common/screens/main/home_screen.dart';
-import '../common/screens/sub/notification_screen.dart';
-import '../common/screens/sub/search_screen.dart';
-import '../common/screens/sub/settings_screen.dart';
-import '../common/screens/sub/temp_notify_screen.dart';
+import '../../modules/task/presentation/pages/main_tasks_screen.dart';
+import '../common/screens/notification_screen.dart';
+import '../common/screens/search_screen.dart';
+import '../common/screens/settings_screen.dart';
+import '../common/screens/temp_notify_screen.dart';
 import '../helper/shared_helper.dart';
 import '../services/services_locator.dart';
 import 'constants_manager.dart';
@@ -36,7 +36,7 @@ class RouteGenerator {
       case Routes.authRoute:
         return MaterialPageRoute(builder: (_) => const AuthScreen());
       case Routes.homeRoute:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(builder: (_) => const MainTasksScreen());
       case Routes.notificationRoute:
         return MaterialPageRoute(
           builder: (_) => NotificationScreen(
@@ -80,7 +80,7 @@ class RouteGenerator {
         FlutterNativeSplash.remove();
         AppShared appShared = sl<AppShared>();
         bool authPass = appShared.getVal(AppConstants.authPassKey) ?? false;
-        return authPass ? const HomeScreen() : const AuthScreen();
+        return authPass ? const MainTasksScreen() : const AuthScreen();
       },
     );
   }
