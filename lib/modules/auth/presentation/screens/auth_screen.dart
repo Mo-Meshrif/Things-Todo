@@ -36,7 +36,7 @@ class AuthScreen extends StatelessWidget {
     final TextEditingController _nameController = TextEditingController();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _passwordController = TextEditingController();
-    final TextEditingController _forgetPassController = TextEditingController();
+    AuthBloc authBloc = sl<AuthBloc>();
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (ctx, state) {
@@ -46,14 +46,14 @@ class AuthScreen extends StatelessWidget {
             sl<AppShared>().setVal(AppConstants.authPassKey, true);
             sl<AppShared>().setVal(AppConstants.userKey, state.user);
             sl<FirebaseMessaging>().subscribeToTopic(AppConstants.toUser);
-            sl<NotificationServices>()
-                .scheduledNotificationsAgain(state.user.id);
+            sl<NotificationServices>().scheduledNotificationsAgain(
+              state.user.id,
+            );
             NavigationHelper.pushReplacementNamed(context, Routes.homeRoute);
             _emailController.clear();
             _passwordController.clear();
           } else if (state is AuthRestSuccess) {
             NavigationHelper.pop(context);
-            _forgetPassController.clear();
             HelperFunctions.showSnackBar(
               context,
               AppStrings.checkEmail.tr(),
@@ -66,11 +66,11 @@ class AuthScreen extends StatelessWidget {
               HelperFunctions.showSnackBar(context, state.msg.tr());
             }
           } else if (state is AuthSocialPass) {
-            ctx.read<AuthBloc>().add(
-                  SignInWithCredentialEvent(
-                    authCredential: state.authCredential,
-                  ),
-                );
+            authBloc.add(
+              SignInWithCredentialEvent(
+                authCredential: state.authCredential,
+              ),
+            );
           } else if (state is AuthChanged) {
             isLogin = state.currentState;
           }
@@ -103,12 +103,7 @@ class AuthScreen extends StatelessWidget {
                       Visibility(
                         visible: isLogin,
                         child: ForgetPassword(
-                          forgetPassController: _forgetPassController,
-                          restFun: () => context.read<AuthBloc>().add(
-                                ForgetPasswordEvent(
-                                  email: _forgetPassController.text,
-                                ),
-                              ),
+                          forgetPassController: _emailController,
                         ),
                       ),
                     ],
@@ -117,44 +112,31 @@ class AuthScreen extends StatelessWidget {
                   AuthButton(
                     isLoading: state is AuthLoading,
                     isLogin: isLogin,
-                    authKey: _formKey,
-                    inputsCheck: () {
-                      if (HelperFunctions.isEmailValid(
-                          _emailController.text)) {
-                        if (_passwordController.text.length >= 8) {
-                          return true;
-                        } else {
-                          HelperFunctions.showSnackBar(
-                            context,
-                            AppStrings.notVaildPassword.tr(),
+                    tapFun: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        if (isLogin) {
+                          authBloc.add(
+                            LoginEvent(
+                              loginInputs: LoginInputs(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            ),
                           );
-                          return false;
+                        } else {
+                          authBloc.add(
+                            SignUpEvent(
+                              signUpInputs: SignUpInputs(
+                                name: _nameController.text,
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            ),
+                          );
                         }
-                      } else {
-                        HelperFunctions.showSnackBar(
-                          context,
-                          AppStrings.notVaildEmail.tr(),
-                        );
-                        return false;
                       }
                     },
-                    loginFun: () => context.read<AuthBloc>().add(
-                          LoginEvent(
-                            loginInputs: LoginInputs(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            ),
-                          ),
-                        ),
-                    signUpFun: () => context.read<AuthBloc>().add(
-                          SignUpEvent(
-                            signUpInputs: SignUpInputs(
-                              name: _nameController.text,
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            ),
-                          ),
-                        ),
                   ),
                   BlocBuilder<ConfigBloc, ConfigState>(
                     builder: (context, state) => state is ConfigLoaded
@@ -166,17 +148,7 @@ class AuthScreen extends StatelessWidget {
                                 const CustomOrDivider(),
                                 Text(AppStrings.loginUsingSm.tr()),
                                 SizedBox(height: AppSize.s48.h),
-                                SocialLogin(
-                                  facebookFun: () => context
-                                      .read<AuthBloc>()
-                                      .add(FacebookLoginEvent()),
-                                  twitterFun: () => context
-                                      .read<AuthBloc>()
-                                      .add(TwitterLoginEvent()),
-                                  googleFun: () => context
-                                      .read<AuthBloc>()
-                                      .add(GoogleLoginEvent()),
-                                ),
+                                const SocialLogin(),
                               ],
                             ),
                           )
@@ -190,9 +162,11 @@ class AuthScreen extends StatelessWidget {
                         FocusScope.of(context).unfocus();
                         _formKey.currentState!.reset();
                       }
-                      context.read<AuthBloc>().add(
-                            AuthToggleEvent(prevState: isLogin),
-                          );
+                      authBloc.add(
+                        AuthToggleEvent(
+                          prevState: isLogin,
+                        ),
+                      );
                     },
                   )
                 ],
