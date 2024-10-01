@@ -38,7 +38,6 @@ dependencies:
   launch_review: ^3.0.1
   advance_image_picker: ^0.1.7+1
   cached_network_image: ^3.2.3
-  http: ^0.13.5
   flutter_scroll_to_top: ^2.0.0
   table_calendar: ^3.0.8
   awesome_notifications: ^0.6.21

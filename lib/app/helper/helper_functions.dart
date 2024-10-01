@@ -9,8 +9,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
 import '../../app/helper/enums.dart';
 import 'dart:math' as math;
 import '../../modules/auth/domain/entities/user.dart';
@@ -158,44 +156,6 @@ class HelperFunctions {
   //getSignType
   static SignType getSignType(AuthUser authUser) =>
       authUser.password != null ? SignType.email : SignType.social;
-
-  //loadUserPic
-  static Future<File?> loadUserPic(AuthUser user) async {
-    AppShared _appShared = sl<AppShared>();
-    if (user.pic != null) {
-      if (user.pic!.isNotEmpty) {
-        String img = user.pic!.split('/').last;
-        String savedPic = _appShared.getVal(AppConstants.userPicKey) ?? '';
-        bool isExists = File(savedPic).existsSync();
-        if (savedPic.isEmpty
-            ? true
-            : isExists
-                ? savedPic.split('/').last != img
-                : true) {
-          http.Response response = await http.get(Uri.parse(user.pic!));
-          if (response.statusCode != 404) {
-            final bytes = response.bodyBytes;
-            var temp = await getTemporaryDirectory();
-            final path = '${temp.path}/$img';
-            File(path).writeAsBytesSync(bytes);
-            _appShared.setVal(
-              AppConstants.userPicKey,
-              path,
-            );
-            return File(path);
-          } else {
-            return null;
-          }
-        } else {
-          return File(savedPic);
-        }
-      } else {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  }
 
   //getLastUserName
   static String lastUserName() {

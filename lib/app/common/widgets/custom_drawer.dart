@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +15,7 @@ import '../../../../app/utils/strings_manager.dart';
 import '../../../../app/utils/values_manager.dart';
 import '../../../modules/auth/domain/entities/user.dart';
 import '../../../modules/auth/presentation/controller/auth_bloc.dart';
+import 'image_builder.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -93,57 +92,44 @@ class CustomDrawer extends StatelessWidget {
       height: ScreenUtil().screenHeight,
       child: Column(
         children: [
-          FutureBuilder<File?>(
-            future: HelperFunctions.loadUserPic(user),
-            builder: (context, snapshot) {
-              File? pic = snapshot.hasData ? snapshot.data : null;
-              return Container(
-                width: double.infinity,
-                color: ColorManager.primary,
-                padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SafeArea(
-                      left: false,
-                      right: false,
-                      bottom: false,
-                      child: CircleAvatar(
-                        backgroundColor: ColorManager.primaryLight,
-                        radius: AppSize.s110.r,
-                        child: snapshot.connectionState ==
-                                ConnectionState.waiting
-                            ? CircleAvatar(
-                                backgroundColor: ColorManager.primary,
-                                radius: AppSize.s100.r,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(AppPadding.p10),
-                                  child: CircularProgressIndicator(
-                                    color: ColorManager.primary,
-                                  ),
-                                ),
-                              )
-                            : CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: AppSize.s100.r,
-                                backgroundImage: pic != null
-                                    ? FileImage(pic)
-                                    : const AssetImage(ImageAssets.placeHolder)
-                                        as ImageProvider,
-                              ),
+          Container(
+            width: double.infinity,
+            color: ColorManager.primary,
+            padding: const EdgeInsets.symmetric(vertical: AppPadding.p5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SafeArea(
+                  left: false,
+                  right: false,
+                  bottom: false,
+                  child: Container(
+                    width: AppSize.s220.r,
+                    height: AppSize.s220.r,
+                    margin: const EdgeInsets.all(AppSize.s5),
+                    padding: const EdgeInsets.all(AppSize.s3),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(AppSize.s110.r),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppSize.s110.r),
+                      child: ImageBuilder(
+                        fit: BoxFit.cover,
+                        imageUrl: user.pic ?? '',
                       ),
                     ),
-                    SizedBox(
-                      height: AppSize.s10.h,
-                    ),
-                    Text(
-                      user.name.isEmpty ? AppStrings.user.tr() : user.name,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
+                  ),
                 ),
-              );
-            },
+                SizedBox(
+                  height: AppSize.s10.h,
+                ),
+                Text(
+                  user.name.isEmpty ? AppStrings.user.tr() : user.name,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: ListView.builder(
