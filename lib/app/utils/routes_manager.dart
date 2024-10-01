@@ -19,7 +19,7 @@ import 'constants_manager.dart';
 
 class Routes {
   static const String authRoute = "/auth";
-  static const String homeRoute = "/main";
+  static const String mainTasksRoute = "/mainTasks";
   static const String notificationRoute = "/notification";
   static const String searchRoute = "/searchRoute";
   static const String taskDetailsRoute = "/taskDetailsRoute";
@@ -35,7 +35,7 @@ class RouteGenerator {
     switch (settings.name) {
       case Routes.authRoute:
         return MaterialPageRoute(builder: (_) => const AuthScreen());
-      case Routes.homeRoute:
+      case Routes.mainTasksRoute:
         return MaterialPageRoute(builder: (_) => const MainTasksScreen());
       case Routes.notificationRoute:
         return MaterialPageRoute(

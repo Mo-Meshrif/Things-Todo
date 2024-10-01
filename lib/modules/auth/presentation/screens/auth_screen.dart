@@ -49,7 +49,10 @@ class AuthScreen extends StatelessWidget {
             sl<NotificationServices>().scheduledNotificationsAgain(
               state.user.id,
             );
-            NavigationHelper.pushReplacementNamed(context, Routes.homeRoute);
+            NavigationHelper.pushReplacementNamed(
+              context,
+              Routes.mainTasksRoute,
+            );
             _emailController.clear();
             _passwordController.clear();
           } else if (state is AuthRestSuccess) {
