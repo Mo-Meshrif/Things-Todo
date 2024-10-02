@@ -35,7 +35,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb756786132214258</string>
-				<string>flutter-twitter-login</string>
+				<string>twittersdk</string>
 				<string>com.googleusercontent.apps.1037098895285-8mhtq7cpo4kpi2nqstnorhclrudjr8au</string>
 			</array>
 		</dict>
