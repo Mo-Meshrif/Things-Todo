@@ -11,7 +11,7 @@ class SocialLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthBloc authBloc = sl<AuthBloc>();
-    //TODO re-config social login
+    //TODO Verify facebook bussiness account to enable it's login
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
