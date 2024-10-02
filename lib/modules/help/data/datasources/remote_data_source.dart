@@ -10,14 +10,12 @@ import '../../../../app/helper/enums.dart';
 import '../../../../app/helper/extentions.dart';
 import '../../../../app/services/notification_services.dart';
 import '../../../../app/utils/constants_manager.dart';
-import '../../domain/usecases/send_problem_use_case.dart';
 import '../models/chat_message_model.dart';
 
 abstract class BaseHelpRemoteDataSource {
   Future<bool> sendMessage(ChatMessageModel messageModel);
   Stream<List<ChatMessageModel>> getChatList(String chatGroupId);
   Future<void> updateMessage(ChatMessageModel messageModel);
-  Future<bool> sendProblem(ProblemInput problemInput);
 }
 
 class HelpRemoteDataSource implements BaseHelpRemoteDataSource {
@@ -105,31 +103,6 @@ class HelpRemoteDataSource implements BaseHelpRemoteDataSource {
           .collection(messageModel.groupId!)
           .doc(messageModel.msgId)
           .update(messageModel.toJson());
-    } catch (e) {
-      throw ServerExecption(e.toString());
-    }
-  }
-
-  @override
-  Future<bool> sendProblem(ProblemInput problemInput) async {
-    try {
-      DocumentReference<Map<String, dynamic>> val = await firebaseFirestore
-          .collection(AppConstants.complaintsCollection)
-          .add(problemInput.toJson());
-      if (val.id.isNotEmpty) {
-        return await notificationServices.sendNotification(
-          NotifyActionModel(
-            toToken: "topic/${AppConstants.toAdmin}",
-            toId: AppConstants.toAdmin,
-            fromId: problemInput.from,
-            title: 'Problem from user'.tr(),
-            body: problemInput.problem,
-            type: MessageType.problem,
-          ),
-        );
-      } else {
-        return false;
-      }
     } catch (e) {
       throw ServerExecption(e.toString());
     }

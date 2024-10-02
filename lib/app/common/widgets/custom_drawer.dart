@@ -1,20 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../app/common/models/custom_task_args_model.dart';
 import '../../../../app/common/models/drawer_item_model.dart';
 import '../../../../app/helper/helper_functions.dart';
 import '../../../../app/helper/navigation_helper.dart';
-import '../../../../app/utils/assets_manager.dart';
 import '../../../../app/utils/color_manager.dart';
-import '../../../../app/utils/routes_manager.dart';
 import '../../../../app/utils/strings_manager.dart';
 import '../../../../app/utils/values_manager.dart';
 import '../../../modules/auth/domain/entities/user.dart';
-import '../../../modules/auth/presentation/controller/auth_bloc.dart';
 import 'image_builder.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -23,69 +18,9 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthUser user = HelperFunctions.getSavedUser();
-    List<DrawerItemModel> pageList = [
-      DrawerItemModel(
-        title: AppStrings.important,
-        icon: IconAssets.importantWhite,
-        size: AppSize.s25,
-        rotate: false,
-        onTap: () => NavigationHelper.pushNamed(
-          context,
-          Routes.customRoute,
-          arguments: CustomTaskArgsModel(
-            appTitle: 'Important Tasks',
-            type: 'important',
-          ),
-        ),
-      ),
-      DrawerItemModel(
-        title: AppStrings.done,
-        icon: IconAssets.done,
-        size: AppSize.s25,
-        rotate: false,
-        onTap: () => NavigationHelper.pushNamed(
-          context,
-          Routes.customRoute,
-          arguments: CustomTaskArgsModel(
-            appTitle: 'Done Tasks',
-            type: 'done',
-          ),
-        ),
-      ),
-      DrawerItemModel(
-        title: AppStrings.later,
-        icon: IconAssets.later,
-        size: AppSize.s25,
-        rotate: false,
-        onTap: () => NavigationHelper.pushNamed(
-          context,
-          Routes.customRoute,
-          arguments: CustomTaskArgsModel(
-            appTitle: 'Later Tasks',
-            type: 'later',
-          ),
-        ),
-      ),
-      DrawerItemModel(
-        title: AppStrings.settings,
-        icon: IconAssets.settings,
-        size: AppSize.s25,
-        rotate: false,
-        onTap: () => NavigationHelper.pushNamed(
-          context,
-          Routes.settingsRoute,
-        ),
-      ),
-      DrawerItemModel(
-        title: AppStrings.logout,
-        icon: IconAssets.logout,
-        size: AppSize.s20,
-        rotate: true,
-        onTap: () => BlocProvider.of<AuthBloc>(context).add(
-          LogoutEvent(uid: user.id),
-        ),
-      ),
-    ];
+    List<DrawerItemModel> pageList = HelperFunctions.getDrawerItemList(
+      context,
+    );
     return Container(
       color: Colors.white,
       width: ScreenUtil().screenWidth * AppSize.s07,

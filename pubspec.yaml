@@ -49,7 +49,10 @@ dependencies:
   url_launcher: ^6.1.8
   need_resume: ^1.0.7+1
   dbcrypt: ^2.0.0
-
+  
+dependency_overrides:
+  uuid: ^4.1.0
+  
 dev_dependencies:
   flutter_native_splash: ^2.1.6
   flutter_test:

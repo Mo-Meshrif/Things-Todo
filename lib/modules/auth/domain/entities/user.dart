@@ -5,6 +5,7 @@ class AuthUser extends Equatable {
   final String? password;
   final String? pic;
   final String deviceToken;
+  final bool isLocal;
 
   const AuthUser({
     required this.id,
@@ -13,6 +14,7 @@ class AuthUser extends Equatable {
     this.password,
     this.pic,
     required this.deviceToken,
+    this.isLocal = false,
   });
 
   AuthUser copyWith({
@@ -27,6 +29,7 @@ class AuthUser extends Equatable {
         password: password ?? this.password,
         pic: pic ?? this.pic,
         deviceToken: deviceToken,
+        isLocal: isLocal,
       );
 
   @override
@@ -37,5 +40,6 @@ class AuthUser extends Equatable {
         password,
         pic,
         deviceToken,
+        isLocal,
       ];
 }

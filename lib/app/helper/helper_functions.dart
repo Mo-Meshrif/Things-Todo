@@ -1,34 +1,42 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
+
 import 'package:arabic_numbers/arabic_numbers.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dbcrypt/dbcrypt.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '/app/helper/extentions.dart';
+import '/app/helper/shared_helper.dart';
+import '/app/utils/values_manager.dart';
 import '../../app/helper/enums.dart';
-import 'dart:math' as math;
 import '../../modules/auth/domain/entities/user.dart';
+import '../../modules/auth/presentation/controller/auth_bloc.dart';
 import '../../modules/help/domain/entities/chat_message.dart';
 import '../../modules/task/domain/entities/task_to_do.dart';
 import '../../modules/task/presentation/controller/task_bloc.dart';
 import '../app.dart';
 import '../common/config/config_bloc.dart';
 import '../common/models/alert_action_model.dart';
+import '../common/models/custom_task_args_model.dart';
+import '../common/models/drawer_item_model.dart';
 import '../common/models/notifiy_model.dart';
 import '../services/notification_services.dart';
 import '../services/service_settings.dart';
-import '../utils/routes_manager.dart';
-import '../utils/strings_manager.dart';
-import '/app/helper/extentions.dart';
-import '/app/helper/shared_helper.dart';
 import '../services/services_locator.dart';
-import '/app/utils/values_manager.dart';
+import '../utils/assets_manager.dart';
 import '../utils/color_manager.dart';
 import '../utils/constants_manager.dart';
+import '../utils/routes_manager.dart';
+import '../utils/strings_manager.dart';
+import 'navigation_helper.dart';
 import 'update_checker.dart';
 
 class HelperFunctions {
@@ -144,11 +152,12 @@ class HelperFunctions {
     return savedData is Map
         ? AuthUser(
             id: savedData['id'],
-            name: savedData['name'],
-            email: savedData['email'],
+            name: savedData['name'] ?? '',
+            email: savedData['email'] ?? '',
             password: savedData['password'],
             pic: savedData['pic'],
-            deviceToken: savedData['deviceToken'],
+            deviceToken: savedData['deviceToken'] ?? '',
+            isLocal: savedData['isLocal'] ?? false,
           )
         : savedData;
   }
@@ -548,4 +557,102 @@ class HelperFunctions {
 
   static bool checkPassword(String plaintext, String hashed) =>
       DBCrypt().checkpw(plaintext, hashed);
+
+  //getDrawerItemList
+  static List<DrawerItemModel> getDrawerItemList(BuildContext context) {
+    AuthUser user = getSavedUser();
+    List<DrawerItemModel> pageList = [
+      DrawerItemModel(
+        title: AppStrings.important,
+        icon: IconAssets.importantWhite,
+        size: AppSize.s25,
+        rotate: false,
+        onTap: () => NavigationHelper.pushNamed(
+          context,
+          Routes.customRoute,
+          arguments: CustomTaskArgsModel(
+            appTitle: 'Important Tasks',
+            type: 'important',
+          ),
+        ),
+      ),
+      DrawerItemModel(
+        title: AppStrings.done,
+        icon: IconAssets.done,
+        size: AppSize.s25,
+        rotate: false,
+        onTap: () => NavigationHelper.pushNamed(
+          context,
+          Routes.customRoute,
+          arguments: CustomTaskArgsModel(
+            appTitle: 'Done Tasks',
+            type: 'done',
+          ),
+        ),
+      ),
+      DrawerItemModel(
+        title: AppStrings.later,
+        icon: IconAssets.later,
+        size: AppSize.s25,
+        rotate: false,
+        onTap: () => NavigationHelper.pushNamed(
+          context,
+          Routes.customRoute,
+          arguments: CustomTaskArgsModel(
+            appTitle: 'Later Tasks',
+            type: 'later',
+          ),
+        ),
+      ),
+      DrawerItemModel(
+        title: AppStrings.settings,
+        icon: IconAssets.settings,
+        size: AppSize.s25,
+        rotate: false,
+        onTap: () => NavigationHelper.pushNamed(
+          context,
+          Routes.settingsRoute,
+        ),
+      ),
+      DrawerItemModel(
+        title: AppStrings.logout,
+        icon: IconAssets.logout,
+        size: AppSize.s20,
+        rotate: true,
+        onTap: () => sl<AuthBloc>().add(
+          LogoutEvent(uid: user.id),
+        ),
+      ),
+    ];
+    if (user.isLocal) {
+      pageList.removeLast();
+    }
+    return pageList;
+  }
+
+  //contact with mail
+  static sendMail({
+    required BuildContext context,
+    required String mail,
+    required String message,
+  }) async {
+    final Uri url = Uri(
+      scheme: 'mailto',
+      path: mail,
+      query: Uri.encodeFull(
+        'subject=${AppConstants.appName} Problem&body=$message',
+      ),
+    );
+    if (await canLaunchUrl(url)) {
+      await launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      showSnackBar(
+        context,
+        AppStrings.later.tr(),
+      );
+    }
+  }
 }

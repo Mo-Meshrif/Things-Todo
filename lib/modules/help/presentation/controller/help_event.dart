@@ -15,8 +15,3 @@ class UpdateMessageEvent extends HelpEvent {
   final ChatMessage chatMessage;
   const UpdateMessageEvent(this.chatMessage);
 }
-
-class SendProblemEvent extends HelpEvent {
-  final ProblemInput problemInput;
-  const SendProblemEvent(this.problemInput);
-}

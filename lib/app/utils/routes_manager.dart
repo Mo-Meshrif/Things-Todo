@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../modules/auth/presentation/screens/auth_screen.dart';
 import '../../modules/help/presentation/pages/chat_screen.dart';
@@ -79,8 +80,22 @@ class RouteGenerator {
       builder: (_) {
         FlutterNativeSplash.remove();
         AppShared appShared = sl<AppShared>();
-        bool authPass = appShared.getVal(AppConstants.authPassKey) ?? false;
-        return authPass ? const MainTasksScreen() : const AuthScreen();
+        // ------> hint : remote features will be in commming versions
+        // bool authPass = appShared.getVal(AppConstants.authPassKey) ?? false;
+        // return authPass ? const MainTasksScreen() : const AuthScreen();
+        // ------> hint : local features
+        bool hasUser = appShared.getVal(AppConstants.userKey) != null;
+        if (!hasUser) {
+          String token = sl<Uuid>().v1();
+          appShared.setVal(
+            AppConstants.userKey,
+            {
+              'id': token,
+              'isLocal': true,
+            },
+          );
+        }
+        return const MainTasksScreen();
       },
     );
   }

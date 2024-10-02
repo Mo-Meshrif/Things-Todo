@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
+import 'package:uuid/uuid.dart';
 
 import '/app/services/network_services.dart';
 import '/app/utils/constants_manager.dart';
@@ -29,7 +30,6 @@ import '../../modules/help/data/repositories/help_repository_impl.dart';
 import '../../modules/help/domain/repositories/base_help_repository.dart';
 import '../../modules/help/domain/usecases/get_chat_list_use_case.dart';
 import '../../modules/help/domain/usecases/send_message_use_case.dart';
-import '../../modules/help/domain/usecases/send_problem_use_case.dart';
 import '../../modules/help/domain/usecases/update_message_use_case.dart';
 import '../../modules/help/presentation/controller/help_bloc.dart';
 import '../../modules/task/data/datasources/local_data_source.dart';
@@ -51,6 +51,8 @@ final sl = GetIt.instance;
 
 class ServicesLocator {
   static Future<void> init() async {
+    //Uuid
+    sl.registerLazySingleton(() => const Uuid());
     //Local shared
     final storage = GetStorage();
     sl.registerLazySingleton<GetStorage>(() => storage);
@@ -132,7 +134,6 @@ class ServicesLocator {
     sl.registerLazySingleton(() => SendMessageUseCase(sl()));
     sl.registerLazySingleton(() => GetChatListUseCae(sl()));
     sl.registerLazySingleton(() => UpdateMessageUseCase(sl()));
-    sl.registerLazySingleton(() => SendProblemUseCase(sl()));
     //blocs
     sl.registerLazySingleton(
       () => AuthBloc(
@@ -167,7 +168,6 @@ class ServicesLocator {
         sendMessageUseCase: sl(),
         getChatListUseCase: sl(),
         updateMessageUseCase: sl(),
-        sendProblemUseCase: sl(),
       ),
     );
   }

@@ -5,7 +5,6 @@ import '../../../../app/services/network_services.dart';
 import '../../../../app/utils/constants_manager.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/base_help_repository.dart';
-import '../../domain/usecases/send_problem_use_case.dart';
 import '../datasources/remote_data_source.dart';
 import '../models/chat_message_model.dart';
 
@@ -58,21 +57,6 @@ class HelpRepositoryImpl implements BaseHelpRespository {
             isMark: message.isMark,
           ),
         );
-        return Right(val);
-      } on ServerExecption catch (failure) {
-        return Left(ServerFailure(msg: failure.msg));
-      }
-    } else {
-      return const Left(ServerFailure(msg: AppConstants.noConnection));
-    }
-  }
-
-  @override
-  Future<Either<ServerFailure, bool>> sendProblem(
-      ProblemInput problemInput) async {
-    if (await networkServices.isConnected()) {
-      try {
-        final val = await baseHelpRemoteDataSource.sendProblem(problemInput);
         return Right(val);
       } on ServerExecption catch (failure) {
         return Left(ServerFailure(msg: failure.msg));

@@ -152,7 +152,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   builder: (context) => RingToneWidget(ringtones: ringtones),
                 );
               } else if (type == SettingType.help) {
-                NavigationHelper.pushNamed(context, Routes.helpRoute);
+                if (auhtUser.isLocal) {
+                  HelperFunctions.sendMail(
+                    context: context,
+                    mail: 'm.meshrif77@gmail.com',
+                    message: '',
+                  );
+                } else {
+                  NavigationHelper.pushNamed(
+                    context,
+                    Routes.helpRoute,
+                  );
+                }
               } else if (type == SettingType.rate) {
                 LaunchReview.launch(
                   androidAppId: AppConstants.androidAppId,

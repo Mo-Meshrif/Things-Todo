@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/usecases/get_chat_list_use_case.dart';
 import '../../domain/usecases/send_message_use_case.dart';
-import '../../domain/usecases/send_problem_use_case.dart';
 import '../../domain/usecases/update_message_use_case.dart';
 
 part 'help_event.dart';
@@ -16,16 +15,13 @@ class HelpBloc extends Bloc<HelpEvent, HelpState> {
   final SendMessageUseCase sendMessageUseCase;
   final GetChatListUseCae getChatListUseCase;
   final UpdateMessageUseCase updateMessageUseCase;
-  final SendProblemUseCase sendProblemUseCase;
   HelpBloc({
     required this.sendMessageUseCase,
     required this.getChatListUseCase,
     required this.updateMessageUseCase,
-    required this.sendProblemUseCase,
   }) : super(HelpInitial()) {
     on<SendMessageEvent>(_sendMessage);
     on<UpdateMessageEvent>(_updateMessage);
-    on<SendProblemEvent>(_sendProblem);
   }
   FutureOr<void> _sendMessage(
       SendMessageEvent event, Emitter<HelpState> emit) async {
@@ -47,16 +43,6 @@ class HelpBloc extends Bloc<HelpEvent, HelpState> {
     result.fold(
       (failure) => emit(MessageFailure(msg: failure.msg)),
       (_) => emit(const MessageLoaded(val: true)),
-    );
-  }
-
-  FutureOr<void> _sendProblem(
-      SendProblemEvent event, Emitter<HelpState> emit) async {
-    emit(ProblemLoading());
-    final result = await sendProblemUseCase(event.problemInput);
-    result.fold(
-      (failure) => emit(ProblemFailure(msg: failure.msg)),
-      (val) => emit(ProblemLoaded(val: val)),
     );
   }
 }
