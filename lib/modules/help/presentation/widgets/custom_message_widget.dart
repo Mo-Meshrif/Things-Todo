@@ -29,9 +29,8 @@ class MessageWidget extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    String message = AppConstants.emptyVal;
     bool hideChatBox = false;
-    TextEditingController textEditingController = TextEditingController();
+    TextEditingController messageController = TextEditingController();
     return StatefulBuilder(
       builder: (context, innerState) => Padding(
         padding: EdgeInsets.only(
@@ -76,9 +75,9 @@ class MessageWidget extends StatelessWidget {
                         visible: !hideChatBox,
                         child: Expanded(
                           child: TextFormField(
-                            controller: textEditingController,
+                            controller: messageController,
                             onChanged: (value) => innerState(
-                              () => message = value,
+                              () {},
                             ),
                             textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
@@ -101,7 +100,7 @@ class MessageWidget extends StatelessWidget {
                                 ),
                               ),
                               suffixIcon: Visibility(
-                                visible: message.isEmpty,
+                                visible: messageController.text.isEmpty,
                                 child: GestureDetector(
                                   onTap: () async {
                                     final configs = ImagePickerConfigs();
@@ -145,28 +144,32 @@ class MessageWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: () =>
-                            sendMessage(message, MessageType.text).then(
-                          (_) => textEditingController.clear(),
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: AppPadding.p10,
-                          ),
-                          height: AppSize.s45,
-                          width: AppSize.s45,
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorManager.primary,
-                          ),
-                          child: Icon(
-                            Icons.send,
-                            color: ColorManager.kWhite,
-                          ),
-                        ),
-                      )
+                      messageController.text.isEmpty
+                          ? const SizedBox(width: AppSize.s10)
+                          : InkWell(
+                              onTap: () => sendMessage(
+                                messageController.text,
+                                MessageType.text,
+                              ).then(
+                                (_) => messageController.clear(),
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: AppPadding.p10,
+                                ),
+                                height: AppSize.s45,
+                                width: AppSize.s45,
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorManager.primary,
+                                ),
+                                child: Icon(
+                                  Icons.send,
+                                  color: ColorManager.kWhite,
+                                ),
+                              ),
+                            )
                     ],
                   ),
                 ),
