@@ -6,13 +6,13 @@ import 'package:launch_review/launch_review.dart';
 
 import '../../../modules/auth/domain/entities/user.dart';
 import '../../../modules/auth/presentation/controller/auth_bloc.dart';
+import '../../../modules/help/presentation/widgets/help_widget.dart';
 import '../../helper/enums.dart';
 import '../../helper/helper_functions.dart';
 import '../../helper/navigation_helper.dart';
 import '../../helper/shared_helper.dart';
 import '../../services/services_locator.dart';
 import '../../utils/constants_manager.dart';
-import '../../utils/routes_manager.dart';
 import '../../utils/strings_manager.dart';
 import '../../utils/values_manager.dart';
 import '../config/config_bloc.dart';
@@ -156,12 +156,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   HelperFunctions.sendMail(
                     context: context,
                     mail: 'm.meshrif77@gmail.com',
-                    message: '',
                   );
                 } else {
-                  NavigationHelper.pushNamed(
-                    context,
-                    Routes.helpRoute,
+                  showModalBottomSheet(
+                    context: context,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppSize.s30.r),
+                        topRight: Radius.circular(AppSize.s30.r),
+                      ),
+                    ),
+                    builder: (context) => const HelpWidget(),
                   );
                 }
               } else if (type == SettingType.rate) {

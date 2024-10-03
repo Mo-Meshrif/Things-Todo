@@ -634,7 +634,7 @@ class HelperFunctions {
   static sendMail({
     required BuildContext context,
     required String mail,
-    required String message,
+    String message = '',
   }) async {
     final Uri url = Uri(
       scheme: 'mailto',

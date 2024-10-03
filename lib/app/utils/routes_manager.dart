@@ -4,7 +4,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../modules/auth/presentation/screens/auth_screen.dart';
 import '../../modules/help/presentation/pages/chat_screen.dart';
-import '../../modules/help/presentation/pages/help_screen.dart';
 import '../../modules/task/presentation/pages/custom_tasks_screen.dart';
 import '../../modules/task/presentation/pages/task_details_screen.dart';
 import '../common/models/custom_task_args_model.dart';
@@ -26,7 +25,6 @@ class Routes {
   static const String taskDetailsRoute = "/taskDetailsRoute";
   static const String customRoute = "/custom";
   static const String settingsRoute = "/settings";
-  static const String helpRoute = "/help";
   static const String chatRoute = "/chat";
   static const String tempNotifyScreenRoute = "/tempNotifyScreen";
 }
@@ -60,8 +58,6 @@ class RouteGenerator {
         );
       case Routes.settingsRoute:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
-      case Routes.helpRoute:
-        return MaterialPageRoute(builder: (_) => const HelpScreen());
       case Routes.chatRoute:
         return MaterialPageRoute(builder: (_) => const ChatScreen());
       case Routes.tempNotifyScreenRoute:
